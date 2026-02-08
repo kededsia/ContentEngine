@@ -9,11 +9,36 @@ import { toast } from "@/hooks/use-toast";
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-script`;
 
 function parseScripts(text: string): string[] {
-  // Split by "---" or "Script 1/2/3" patterns
-  const parts = text.split(/(?:^|\n)---\s*\n|(?:^|\n)(?:Script|SCRIPT)\s*\d\s*[:\n]/i).filter((s) => s.trim());
-  if (parts.length >= 3) return parts.slice(0, 3).map((s) => s.trim());
-  if (parts.length === 1) return [parts[0].trim()];
-  return parts.map((s) => s.trim());
+  // Better parsing: Look for actual script content starting with "## SCRIPT" or similar headers
+  // First, try to find scripts marked with ## SCRIPT 1, ## SCRIPT 2, etc.
+  const scriptHeaderPattern = /(?:^|\n)##\s*(?:SCRIPT|Script)\s*(\d+)/gi;
+  const matches = [...text.matchAll(scriptHeaderPattern)];
+  
+  if (matches.length >= 2) {
+    // Split by script headers and extract content
+    const scripts: string[] = [];
+    for (let i = 0; i < matches.length; i++) {
+      const start = matches[i].index!;
+      const end = i < matches.length - 1 ? matches[i + 1].index! : text.length;
+      const scriptContent = text.slice(start, end).trim();
+      if (scriptContent) scripts.push(scriptContent);
+    }
+    return scripts.slice(0, 3);
+  }
+  
+  // Fallback: Split by "---" separator
+  const parts = text.split(/\n---+\s*\n/).filter((s) => s.trim());
+  
+  // Filter out intro/preamble text (usually before actual scripts)
+  const validScripts = parts.filter(part => {
+    // A valid script should have scene/hook content, not just intro text
+    return part.includes("HOOK") || part.includes("Scene") || part.includes("CTA") || part.length > 500;
+  });
+  
+  if (validScripts.length >= 1) return validScripts.slice(0, 3).map((s) => s.trim());
+  if (parts.length >= 1) return parts.slice(0, 3).map((s) => s.trim());
+  
+  return [text.trim()];
 }
 
 const Index: React.FC = () => {
