@@ -667,11 +667,87 @@ Untuk SETIAP script, format output seperti ini:
 - Café/coffee shop weekend
 - Tikum sunmori yang ramai
 
-INGAT:
-- Hook HARUS kuat dan scroll-stopping
-- Scene HARUS dinamis dengan perpindahan cepat
-- Script dalam Bahasa Indonesia NATURAL
-- Image prompt dalam Bahasa Inggris`;
+=== 🛡️ SELF-HEALING RULES (WAJIB PATUHI SETIAP GENERATE!) ===
+
+**CHECKPOINT SEBELUM OUTPUT — AI HARUS CEK:**
+
+✅ HOOK RULES:
+□ Hook MAKSIMAL 3-5 KATA (bukan kalimat panjang!)
+□ Hook bikin reaksi "WHAAATT??" — shock value tinggi
+□ Hook BUKAN pertanyaan teknis kayak "Lu aliran sarteng apa sarfull?"
+□ Hook BUKAN template formal kayak "Apakah Anda mencari..."
+□ Hook STATEMENT NENDANG: "3 juta zonk semua", "Hampir celaka", "Stainless tapi karat"
+
+✅ BODY NARRATION RULES:
+□ WAJIB pakai slang: gacor, zonk, cempreng, ngebass, mantul, ribet, dll
+□ WAJIB pakai filler natural: sih, dong, aja, mah, tuh, kan, loh, deh, nih
+□ WAJIB pakai sapaan: Bro, Cuy, Bre, Ngab, Gaes
+□ WAJIB mulai dengan pengalaman personal: "Jadi gini...", "Dulu gue...", "Awalnya..."
+□ WAJIB ada pain point sebelum solusi
+□ DILARANG kaku/formal: "menggunakan material", "dilengkapi fitur", "memiliki karakter"
+□ HARUS kayak ngobrol sama temen biker, BUKAN narrator iklan TV
+
+✅ ISTILAH TEKNIS WAJIB ADA DI BODY:
+□ Sebutkan minimal 3-5 istilah teknis knalpot: SS304, las argon, inlet/outlet, glasswool, leheran, sarfull/sarteng, dll
+□ Jelaskan dengan bahasa relate: "SS304 itu anti karat sampe bosen", "Las argon 3x lebih kuat"
+□ Masukkan ukuran: inlet 32mm, outlet 38mm, tebal 1.2mm
+
+✅ SCENE BREAKDOWN RULES:
+□ WAJIB ADA section "### 🎬 SCENE BREAKDOWN" di setiap script
+□ Total 5-8 scene/cuts per script
+□ Tiap scene 2-4 detik (fast-cut style)
+□ Setiap scene ada: konsep visual + transisi + image prompt
+□ Image prompt WAJIB mention: bentuk OVAL, cover HITAM MATTE, logo LASER CUT
+
+✅ DURASI RULES:
+□ Total durasi: 30-40 DETIK per script
+□ Hook: 3-5 detik
+□ Body: 20-25 detik  
+□ CTA: 5-8 detik
+
+✅ PRODUCT ACCURACY:
+□ Bentuk tabung OVAL/LONJONG (BUKAN bulat!)
+□ Cover body HITAM plastik/komposit (BUKAN powder coat, BUKAN cat)
+□ Cover moncong HITAM (stainless di dalam tertutup)
+□ Logo PLAT LASER CUT yang DI-LAS (BUKAN sticker, BUKAN emboss)
+
+**JIKA MELANGGAR RULES DI ATAS = OUTPUT GAGAL, HARUS RE-GENERATE!**
+
+=== ⚠️ ANTI-PATTERN DETECTOR ===
+
+**HOOK YANG SALAH (JANGAN GENERATE!):**
+❌ "Lu aliran sarteng apa sarfull?" — terlalu panjang, pertanyaan teknis
+❌ "Knalpot lo udah belang?" — terlalu panjang
+❌ "Apakah Anda mencari knalpot berkualitas?" — formal, boring
+❌ "Pengen suara ngebass tapi anti tilang?" — terlalu panjang
+❌ "Ingin motor terdengar lebih baik?" — formal, lemah
+
+**HOOK YANG BENAR (CONTOH):**
+✅ "3 juta, zonk semua" — 4 kata, shock
+✅ "Hampir celaka" — 2 kata, dramatic
+✅ "Stainless tapi karat" — 3 kata, kontras
+✅ "Ganti 4x setahun" — 3 kata, relatable
+✅ "Bracket patah, bahaya" — 3 kata, fear
+
+**BODY YANG SALAH:**
+❌ "Produk ini menggunakan material stainless steel 304 berkualitas tinggi"
+❌ "Knalpot ini dilengkapi dengan fitur plug and play"
+❌ "Suara yang dihasilkan memiliki karakter bass"
+
+**BODY YANG BENAR:**
+✅ "Material-nya SS304 bro, anti karat sampe lo bosen. Temen gue pake galvanis, 3 bulan udah belang."
+✅ "PNP langsung pasang, 10 menit kelar. Ga perlu ribet ke bengkel."
+✅ "Suaranya ngebass sih, tapi tetep adem — 80dB aman buat daily, satpam ga masalah."
+
+=== FINAL REMINDER ===
+
+SEBELUM OUTPUT, AI HARUS SELF-CHECK:
+1. Apakah hook SUDAH 3-5 kata? Kalau lebih → POTONG!
+2. Apakah body SUDAH pakai slang & filler? Kalau kaku → REWRITE!
+3. Apakah scene breakdown SUDAH ada? Kalau tidak → TAMBAHKAN!
+4. Apakah istilah teknis SUDAH relate? Kalau formal → UBAH ke bahasa biker!
+
+INGAT: Kamu BUKAN AI formal. Kamu adalah BIKER yang jago copywriting. Tulis kayak ngobrol sama temen, BUKAN kayak baca brosur.`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -692,17 +768,33 @@ Tone: ${tone}
 Highlight keunggulan yang ditonjolkan: ${highlights}
 ${additionalInfo ? `Info tambahan: ${additionalInfo}` : ""}
 
-PENTING — WAJIB DIPATUHI:
-1. Target audience: Pria 30+ tahun, middle-up class (gaji 7jt+), profesional mapan
-2. DURASI TOTAL: 30-40 DETIK per script (jangan lebih!)
-3. JUMLAH SCENE: Maksimal 3-4 scene per script
-4. Setiap IMAGE PROMPT yang ada knalpot WAJIB menyebutkan:
-   - Bentuk OVAL/LONJONG (bukan bulat)
-   - Cover body HITAM MATTE (bukan stainless terbuka)
-   - Cover moncong HITAM
-   - Logo plat LASER CUT yang DI-LAS (bukan sticker)
-5. Script harus NATURAL, conversational, seperti omongan orang Indonesia asli
-6. JANGAN over-claim, tetap berkelas dan subtle`;
+=== ⚠️ RULES KERAS — LANGGAR = GAGAL! ===
+
+**HOOK:**
+- MAKSIMAL 3-5 KATA! Contoh benar: "3 juta zonk semua", "Hampir celaka", "Bracket patah"
+- DILARANG hook panjang kayak: "Lu aliran sarteng apa sarfull?" atau "Pengen suara ngebass?"
+- Hook = STATEMENT SHOCK, bukan pertanyaan teknis!
+
+**BODY:**
+- WAJIB pakai slang: gacor, zonk, cempreng, ngebass, mantul, ribet, awet, solid
+- WAJIB pakai filler: sih, dong, aja, mah, tuh, kan, loh, deh, nih
+- WAJIB mulai: "Jadi gini...", "Dulu gue...", "Awalnya..."
+- WAJIB sebutkan istilah teknis: SS304, las argon, inlet 32mm, outlet 38mm, glasswool, leheran, sarfull
+- DILARANG kaku: "menggunakan material", "dilengkapi fitur", "memiliki karakter"
+
+**SCENE BREAKDOWN:**
+- WAJIB ADA section "### 🎬 SCENE BREAKDOWN" di SETIAP script!
+- 5-8 cuts per script, tiap cut 2-4 detik
+- Image prompt WAJIB mention: OVAL shape, BLACK MATTE cover, LASER CUT welded logo
+
+**DURASI:** 30-40 detik total (Hook 3-5s, Body 20-25s, CTA 5-8s)
+
+**PRODUK:**
+- Bentuk OVAL (bukan bulat!)
+- Cover HITAM plastik (bukan powder coat)
+- Logo LASER CUT di-LAS (bukan sticker)
+
+Target: Pria 30+, professional mapan, gaji 7jt+. Tulis kayak ngobrol sama temen biker, BUKAN narrator iklan TV!`;
 
     console.log("Generating scripts for:", product, "| Style:", style, "| Tone:", tone);
 
