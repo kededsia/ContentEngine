@@ -797,6 +797,155 @@ SEBELUM OUTPUT, AI HARUS SELF-CHECK:
 
 INGAT: Kamu BUKAN AI formal. Kamu adalah BIKER yang jago copywriting. Tulis kayak ngobrol sama temen, BUKAN kayak baca brosur.`;
 
+// === FUNGSI RISET WEB GRATIS ===
+
+// Database trending topics yang di-update manual + auto-refresh dari web
+const TRENDING_TOPICS_DB = [
+  // Format: [topic, angle, hook_inspiration]
+  ["harga BBM naik", "hemat bensin", "BBM naik, irit makin penting"],
+  ["sunmori viral", "komunitas motor", "Sunmori kemarin viral"],
+  ["tilang elektronik", "anti tilang", "ETLE makin ketat"],
+  ["motor listrik vs bensin", "suara motor", "Motor listrik senyap, boring"],
+  ["musim hujan", "anti karat", "Musim hujan, knalpot karatan"],
+  ["mudik lebaran", "touring", "Mudik pake motor, siap?"],
+  ["cafe racer trend", "style motor", "Cafe racer makin rame"],
+  ["vlog motovlog", "content creator", "Motovlog makin banyak"],
+  ["motor matic 160cc", "performa matic", "Matic 160cc makin gahar"],
+  ["review jujur", "testimoni", "Review jujur, tanpa endorse"],
+  ["part aftermarket", "modifikasi", "Aftermarket vs OEM"],
+  ["bengkel nakal", "trust issue", "Bengkel suka bohongin"],
+  ["motor second", "kondisi knalpot", "Beli motor second, cek knalpot"],
+  ["sound system motor", "audio", "Suara motor = identitas"],
+  ["racing illegal", "legal vs ilegal", "Racing jalanan, bahaya"],
+  ["motor harian", "daily commute", "Tiap hari macet Jakarta"],
+  ["modif minimalis", "clean look", "Modif simple tapi beda"],
+  ["grup WA motor", "komunitas", "Grup WA motor rame"],
+  ["unboxing viral", "first impression", "Unboxing yang ditunggu"],
+  ["before after", "transformasi", "Sebelum vs sesudah"],
+];
+
+// Fungsi untuk search DuckDuckGo (gratis, no API key)
+async function searchTrendingTopics(query: string): Promise<string[]> {
+  try {
+    const searchUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`;
+    const response = await fetch(searchUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; UGCBot/1.0)' }
+    });
+    
+    if (!response.ok) {
+      console.log("DuckDuckGo search failed, using fallback");
+      return [];
+    }
+    
+    const data = await response.json();
+    const topics: string[] = [];
+    
+    // Extract related topics
+    if (data.RelatedTopics) {
+      for (const topic of data.RelatedTopics.slice(0, 5)) {
+        if (topic.Text) {
+          topics.push(topic.Text.substring(0, 100));
+        }
+      }
+    }
+    
+    // Extract abstract
+    if (data.AbstractText) {
+      topics.push(data.AbstractText.substring(0, 150));
+    }
+    
+    return topics;
+  } catch (error) {
+    console.log("Search error, using fallback:", error);
+    return [];
+  }
+}
+
+// Fungsi untuk generate fresh angle dari riset
+async function generateFreshInsights(product: string): Promise<{
+  trendingAngle: string;
+  freshHookIdea: string;
+  currentContext: string;
+}> {
+  // 1. Coba search web untuk topik trending
+  const searchQueries = [
+    "knalpot motor matic 2024 Indonesia",
+    "viral tiktok motor matic",
+    "komunitas motor matic Indonesia",
+  ];
+  
+  const randomQuery = searchQueries[Math.floor(Math.random() * searchQueries.length)];
+  const webResults = await searchTrendingTopics(randomQuery);
+  
+  // 2. Ambil random dari database trending topics
+  const shuffledTopics = [...TRENDING_TOPICS_DB].sort(() => Math.random() - 0.5);
+  const selectedTopics = shuffledTopics.slice(0, 3);
+  
+  // 3. Generate current context berdasarkan waktu
+  const now = new Date();
+  const hour = now.getHours();
+  const dayOfWeek = now.getDay();
+  const month = now.getMonth();
+  
+  let timeContext = "";
+  if (hour >= 5 && hour < 10) {
+    timeContext = "pagi-pagi mau berangkat kerja";
+  } else if (hour >= 10 && hour < 14) {
+    timeContext = "istirahat siang, scrolling HP";
+  } else if (hour >= 14 && hour < 18) {
+    timeContext = "sore pulang kantor";
+  } else if (hour >= 18 && hour < 22) {
+    timeContext = "malam santai di rumah";
+  } else {
+    timeContext = "malam-malam gabut";
+  }
+  
+  if (dayOfWeek === 0) {
+    timeContext = "Minggu pagi habis sunmori";
+  } else if (dayOfWeek === 6) {
+    timeContext = "weekend mode, mau nongki";
+  }
+  
+  // Seasonal context
+  let seasonContext = "";
+  if (month >= 10 || month <= 2) {
+    seasonContext = "musim hujan, knalpot gampang karat";
+  } else if (month >= 5 && month <= 7) {
+    seasonContext = "musim kemarau, enak buat touring";
+  }
+  
+  // 4. Combine all insights
+  const trendingAngle = selectedTopics[0][1] + (webResults.length > 0 ? ` (trending: ${webResults[0]?.substring(0, 50)}...)` : "");
+  const freshHookIdea = selectedTopics[0][2];
+  const currentContext = `${timeContext}${seasonContext ? ", " + seasonContext : ""}`;
+  
+  return {
+    trendingAngle,
+    freshHookIdea,
+    currentContext,
+  };
+}
+
+// 30 Hook templates yang bisa di-mix dengan trending topics
+const DYNAMIC_HOOK_TEMPLATES = [
+  // Template dengan placeholder {topic}
+  "{topic}, siapa relate?",
+  "{topic}? Ini solusinya",
+  "Gara-gara {topic}",
+  "{topic} tapi tetep kece",
+  "Dulu {topic}, sekarang beda",
+  "{topic}, worth it ga?",
+  "3 alasan {topic}",
+  "{topic}? Cek dulu ini",
+  "Rahasia {topic}",
+  "{topic}, jangan sampai zonk",
+  "Baru tau soal {topic}",
+  "{topic}, pengalaman gue",
+  "Review jujur: {topic}",
+  "{topic}? Lo harus tau ini",
+  "Fakta {topic} yang jarang dibahas",
+];
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -808,12 +957,34 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    // Generate random seed untuk memaksa variasi
+    // === FASE 1: RISET WEB & GENERATE FRESH INSIGHTS ===
+    console.log("🔍 Starting web research for fresh content...");
+    const freshInsights = await generateFreshInsights(product);
+    console.log("📊 Fresh insights:", freshInsights);
+
+    // Generate random seed untuk variasi tambahan
     const randomSeed = Math.floor(Math.random() * 1000000);
+    const timestamp = Date.now();
+    
+    // Pilih random trending topics untuk di-inject ke prompt
+    const shuffledTopics = [...TRENDING_TOPICS_DB].sort(() => Math.random() - 0.5);
+    const topic1 = shuffledTopics[0];
+    const topic2 = shuffledTopics[1];
+    const topic3 = shuffledTopics[2];
+    
+    // Generate dynamic hooks dari templates
+    const hookTemplate1 = DYNAMIC_HOOK_TEMPLATES[Math.floor(Math.random() * DYNAMIC_HOOK_TEMPLATES.length)];
+    const hookTemplate2 = DYNAMIC_HOOK_TEMPLATES[Math.floor(Math.random() * DYNAMIC_HOOK_TEMPLATES.length)];
+    const hookTemplate3 = DYNAMIC_HOOK_TEMPLATES[Math.floor(Math.random() * DYNAMIC_HOOK_TEMPLATES.length)];
+    
+    const dynamicHook1 = hookTemplate1.replace("{topic}", topic1[0]);
+    const dynamicHook2 = hookTemplate2.replace("{topic}", topic2[0]);
+    const dynamicHook3 = hookTemplate3.replace("{topic}", topic3[0]);
+
+    // Kategori hook & tema (tetap ada untuk struktur)
     const hookCategories = ["ANGKA SHOCK", "SITUASI EXTREME", "KONTRAS TAJAM", "PENGAKUAN JUJUR", "FAKTA MENGEJUTKAN", "REAKSI SOSIAL", "PERBANDINGAN", "CLIFFHANGER", "PROVOCATIVE", "DAILY CONTEXT"];
     const themeCategories = ["CERITA KEGAGALAN", "DISCOVERY", "SOCIAL PROOF", "TECHNICAL DEEP DIVE", "DAILY USE", "COMPARISON", "MONEY TALK", "FEAR AVOIDANCE", "ASPIRATION", "HONEST REVIEW"];
     
-    // Shuffle dan pilih 3 berbeda untuk masing-masing
     const shuffledHooks = hookCategories.sort(() => Math.random() - 0.5).slice(0, 3);
     const shuffledThemes = themeCategories.sort(() => Math.random() - 0.5).slice(0, 3);
 
@@ -825,25 +996,39 @@ Tone: ${tone}
 Highlight keunggulan yang ditonjolkan: ${highlights}
 ${additionalInfo ? `Info tambahan: ${additionalInfo}` : ""}
 
-=== 🎲 VARIASI WAJIB SESSION #${randomSeed} ===
+=== 🔥 FRESH INSIGHTS DARI RISET WEB (SESSION #${randomSeed}-${timestamp}) ===
 
-**KOMBINASI YANG HARUS DIPAKAI (JANGAN DIGANTI!):**
-- Script 1: Hook kategori "${shuffledHooks[0]}" + Tema "${shuffledThemes[0]}"
-- Script 2: Hook kategori "${shuffledHooks[1]}" + Tema "${shuffledThemes[1]}"
-- Script 3: Hook kategori "${shuffledHooks[2]}" + Tema "${shuffledThemes[2]}"
+**Konteks Waktu:** ${freshInsights.currentContext}
+**Trending Angle:** ${freshInsights.trendingAngle}
 
-Tulis hook dan cerita yang SESUAI dengan kategori di atas! Jangan pakai kategori lain!
+**3 TOPIK TRENDING YANG HARUS DIPAKAI:**
+1. "${topic1[0]}" — Angle: ${topic1[1]} — Hook idea: "${dynamicHook1}"
+2. "${topic2[0]}" — Angle: ${topic2[1]} — Hook idea: "${dynamicHook2}"
+3. "${topic3[0]}" — Angle: ${topic3[1]} — Hook idea: "${dynamicHook3}"
+
+**INSTRUKSI KREATIVITAS:**
+- Script 1 WAJIB relate dengan topik "${topic1[0]}" — gunakan angle ${topic1[1]}
+- Script 2 WAJIB relate dengan topik "${topic2[0]}" — gunakan angle ${topic2[1]}
+- Script 3 WAJIB relate dengan topik "${topic3[0]}" — gunakan angle ${topic3[1]}
+- JANGAN copy paste hook idea di atas, tapi JADIKAN INSPIRASI untuk buat yang lebih UNIK!
+- Kontekskan dengan situasi "${freshInsights.currentContext}"
+
+=== 🎲 KOMBINASI STRUKTUR ===
+
+- Script 1: Hook style "${shuffledHooks[0]}" + Tema "${shuffledThemes[0]}" + Topik "${topic1[0]}"
+- Script 2: Hook style "${shuffledHooks[1]}" + Tema "${shuffledThemes[1]}" + Topik "${topic2[0]}"
+- Script 3: Hook style "${shuffledHooks[2]}" + Tema "${shuffledThemes[2]}" + Topik "${topic3[0]}"
 
 === ⚠️ RULES KERAS — LANGGAR = GAGAL! ===
 
 **HOOK:**
 - MAKSIMAL 8 KATA! Target: bikin viewer bereaksi "WHAAAAT??!!"
-- IKUTI kategori hook yang sudah ditentukan di atas!
+- HARUS relate dengan topik trending yang sudah ditentukan!
+- JANGAN generic! Hook harus UNIK dan FRESH setiap generate!
 - DILARANG hook formal/boring kayak: "Apakah Anda mencari..." atau "Ingin motor terdengar..."
-- Hook = STATEMENT SHOCK atau CURIOSITY TRIGGER yang bikin penasaran!
 
 **BODY:**
-- IKUTI tema cerita yang sudah ditentukan di atas!
+- WAJIB nyambung dengan topik trending yang dipilih!
 - WAJIB pakai slang: gacor, zonk, cempreng, ngebass, mantul, ribet, awet, solid
 - WAJIB pakai filler: sih, dong, aja, mah, tuh, kan, loh, deh, nih
 - WAJIB sebutkan istilah teknis: SS304, las argon, inlet 32mm, outlet 38mm, glasswool, leheran, sarfull
@@ -861,9 +1046,13 @@ Tulis hook dan cerita yang SESUAI dengan kategori di atas! Jangan pakai kategori
 - Cover HITAM plastik (bukan powder coat)
 - Logo LASER CUT di-LAS (bukan sticker)
 
-Target: Pria 30+, professional mapan, gaji 7jt+. Tulis kayak ngobrol sama temen biker, BUKAN narrator iklan TV!`;
+Target: Pria 30+, professional mapan, gaji 7jt+. Tulis kayak ngobrol sama temen biker, BUKAN narrator iklan TV!
 
-    console.log("Generating scripts for:", product, "| Style:", style, "| Tone:", tone);
+**REMINDER KREATIVITAS:**
+Setiap kali generate, hook dan angle HARUS BERBEDA! Jangan muter-muter di tema yang sama!
+Session ini unik: #${randomSeed}-${timestamp} — JANGAN duplikasi output sebelumnya!`;
+
+    console.log("🚀 Generating scripts with fresh insights for:", product, "| Topics:", topic1[0], topic2[0], topic3[0]);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -878,6 +1067,7 @@ Target: Pria 30+, professional mapan, gaji 7jt+. Tulis kayak ngobrol sama temen 
           { role: "user", content: userPrompt },
         ],
         stream: true,
+        temperature: 0.9, // Higher temperature untuk lebih kreatif
       }),
     });
 
