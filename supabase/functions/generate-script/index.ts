@@ -261,30 +261,93 @@ PENTING: Kamu HARUS menulis dengan gaya yang RELATE dan NATURAL seperti biker as
 - "Bocor mulu" = sering ada masalah kebocoran
 - "Ribet" = banyak masalah, maintenance tinggi
 
+=== POLA HOOK VIRAL TIKTOK/REELS 2024-2025 ===
+
+**SCRIPT 1 WAJIB PAKAI FORMAT VIRAL — Pilih salah satu pola ini:**
+
+*1. POV Hook (Point of View) — Immerse viewer dalam cerita:*
+- "POV: Lo akhirnya nemuin knalpot yang suaranya ngebass tapi ga bikin kena tilang"
+- "POV: Temen sunmori nanya 'bro itu knalpot apaan? Suaranya enak banget'"
+- "POV: Lo udah ganti knalpot 3x dalam setahun, dan akhirnya nemuin yang awet"
+
+*2. Story Time / Real Talk Hook — Cerita personal yang relatable:*
+- "Story time: Gue hampir menyerah cari knalpot yang pas, sampe akhirnya..."
+- "Real talk, gue udah zonk 2x beli knalpot murah sebelum nemuin ini"
+- "Jujur review setelah 6 bulan pake: apakah worth it?"
+
+*3. "Stop Scrolling If..." Hook — Target langsung audience spesifik:*
+- "Stop scrolling kalau lo punya PCX dan masih pake knalpot standar"
+- "Stop scrolling kalau lo pengen suara motor ngebass tapi takut tilang"
+- "Ini buat lo yang udah capek beli knalpot tapi cepet belang"
+
+*4. "I Bet You Didn't Know..." / Curiosity Gap Hook:*
+- "Lo pasti ga tau kenapa knalpot mahal bisa awet sampe 5 tahun"
+- "Ternyata ini bedanya knalpot SS304 sama galvanis yang banyak orang ga tau"
+- "Rahasia kenapa knalpot ini ga bikin motor mentok"
+
+*5. "Here's How I..." / Transformation Hook:*
+- "Here's how gue upgrade suara motor tanpa kena tilang"
+- "Ini caranya dapet knalpot premium lebih murah dari marketplace"
+- "3 bulan lalu motor gue masih cempreng, sekarang..."
+
+*6. "Don't Make This Mistake..." / Fear of Missing Out:*
+- "Jangan sampe lo beli knalpot tanpa cek ini dulu"
+- "Kesalahan yang gue lakuin waktu pertama beli knalpot racing"
+- "Lo bakal nyesel kalau skip video ini sebelum beli knalpot"
+
+*7. Unpopular Opinion Hook — Provocative tapi tetap berkelas:*
+- "Unpopular opinion: Knalpot mahal itu lebih hemat jangka panjang"
+- "Hot take: Mending beli satu yang bagus daripada gonta-ganti"
+- "Kontroversial tapi fakta: Ga semua knalpot stainless itu sama"
+
+*8. "Secret Weapon" / Insider Knowledge Hook:*
+- "Secret weapon buat dapet suara ngebass yang aman buat daily"
+- "Ini yang bengkel ga kasih tau ke lo soal knalpot"
+- "Alasan kenapa 12.000+ orang pilih knalpot ini"
+
+*9. Honest Review / After X Months Hook:*
+- "Honest review setelah 6 bulan pake: no settingan, no endorse"
+- "Update setelah 1 tahun: masih kinclong atau udah belang?"
+- "Real review dari user bukan paid review"
+
+*10. "Trust Me" / Game Changer Hook:*
+- "Trust me, ini game changer buat daily commuter"
+- "Kalau lo cuma mau beli satu knalpot seumur hidup, pilih yang ini"
+- "Satu-satunya knalpot yang bikin gue ga nyesel"
+
+**SCRIPT 2 & 3 PAKAI FORMAT STANDAR** (seperti sebelumnya — conversational, relate, natural)
+
 === DURASI & TIMING (WAJIB DIPATUHI) ===
 
 **Total Durasi: 30-40 DETIK per script (TIDAK BOLEH LEBIH)**
 
 Breakdown waktu:
 - HOOK: 3-5 detik (1-2 kalimat pendek, langsung relate dan menarik perhatian)
-- BODY: 20-25 detik (3-5 kalimat, informasi inti dengan bahasa natural)
+- BODY/PROBLEM-SOLUTION: 20-25 detik (3-5 kalimat, informasi inti dengan bahasa natural)
 - CTA: 5-8 detik (1-2 kalimat, ajakan action yang ga maksa)
 
 **Jumlah Scene: 3-4 scene saja per script (jangan terlalu banyak)**
+
+=== VARIASI OUTPUT WAJIB ===
+
+**Script 1:** HARUS pakai salah satu pola VIRAL HOOK di atas (POV, Story Time, Stop Scrolling, dll)
+**Script 2:** Format conversational standar — ngobrol santai, relate dengan daily life
+**Script 3:** Format testimonial/review — fokus ke pengalaman dan bukti nyata
 
 === FORMAT OUTPUT WAJIB ===
 
 Untuk SETIAP script, format output HARUS seperti ini:
 
 ---
-## Script 1
+## Script 1 (🔥 VIRAL STYLE)
 
 **⏱️ Total Durasi: [estimasi detik] detik**
+**📌 Hook Style: [sebutkan jenis hook yang dipakai, misal: POV Hook, Story Time, dll]**
 
 ### 📝 SCRIPT
 
 **[HOOK - 3-5 detik]**
-(tuliskan dialog/narasi hook - SINGKAT, 1-2 kalimat, HARUS RELATE)
+(tuliskan dialog/narasi hook - SINGKAT, 1-2 kalimat, HARUS VIRAL & SCROLL-STOPPING)
 
 **[BODY - 20-25 detik]**
 (tuliskan dialog/narasi body - 3-5 kalimat, natural kayak ngobrol)
@@ -295,14 +358,22 @@ Untuk SETIAP script, format output HARUS seperti ini:
 ### 🎬 SCENE BREAKDOWN (3-4 scene saja)
 
 **Scene 1: [nama scene] — [durasi] detik**
-📸 IMAGE PROMPT: [prompt HARUS mencakup detail produk yang akurat - lihat instruksi di bawah]
+📸 IMAGE PROMPT: [prompt HARUS mencakup detail produk yang akurat]
 🎥 VIDEO PROMPT: [gerakan kamera dan aksi]
 
-**Scene 2: [nama scene] — [durasi] detik**
-📸 IMAGE PROMPT: [...]
-🎥 VIDEO PROMPT: [...]
-
 (dst, maksimal 4 scene)
+
+---
+
+## Script 2 (💬 CONVERSATIONAL)
+
+(format sama dengan di atas, tapi hook style: Casual Relate)
+
+---
+
+## Script 3 (⭐ TESTIMONIAL/REVIEW)
+
+(format sama dengan di atas, tapi hook style: Honest Review)
 
 ---
 
@@ -335,7 +406,11 @@ Untuk SETIAP script, format output HARUS seperti ini:
 - Bengkel premium yang bersih
 - Tikum (titik kumpul) sunmori yang ramai
 
-INGAT: Tulis script dalam Bahasa Indonesia yang NATURAL dan RELATE seperti anak motor beneran ngobrol. Prompt image/video dalam Bahasa Inggris.`;
+INGAT: 
+- Script 1 WAJIB pakai format viral hook
+- Script 2 & 3 boleh lebih santai tapi tetap RELATE
+- Tulis script dalam Bahasa Indonesia yang NATURAL seperti anak motor beneran ngobrol
+- Prompt image/video dalam Bahasa Inggris`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
