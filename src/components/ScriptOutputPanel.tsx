@@ -199,30 +199,53 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
 
       {scripts.map((script, i) => {
         const imagePrompts = extractImagePrompts(script);
+        
+        // Split script into main content and scene breakdown for better visual separation
+        const hasSceneBreakdown = script.includes("SCENE BREAKDOWN") || script.includes("Scene 1:");
+        const [mainScript, sceneBreakdown] = hasSceneBreakdown 
+          ? script.split(/(?=###?\s*🎬?\s*SCENE BREAKDOWN|(?=\*\*Scene 1:))/i)
+          : [script, ""];
+        
         return (
-          <Card key={i} className="bg-card border-border">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold text-primary uppercase tracking-wider">
-                  Script {i + 1}
+          <Card key={i} className="bg-card border-border overflow-hidden">
+            <CardContent className="p-0">
+              {/* Script Header */}
+              <div className="flex items-center justify-between p-4 bg-primary/5 border-b border-border">
+                <span className="text-sm font-bold text-primary uppercase tracking-wider">
+                  📝 Script {i + 1}
                 </span>
-                <div className="flex gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => copyScript(script, i)}
-                  >
-                    <Copy className="h-3 w-3" /> Copy
-                  </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => copyScript(script, i)}
+                >
+                  <Copy className="h-3 w-3" /> Copy
+                </Button>
+              </div>
+
+              {/* Main Script Content */}
+              <div className="p-5">
+                <div className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
+                  {mainScript.trim()}
                 </div>
               </div>
-
-              <div className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90 mb-4">
-                {script}
-              </div>
+              
+              {/* Scene Breakdown - Visually Separated */}
+              {sceneBreakdown && (
+                <div className="border-t-2 border-dashed border-primary/20 bg-secondary/20">
+                  <div className="p-4 border-b border-border bg-secondary/30">
+                    <span className="text-sm font-bold text-primary/80">🎬 Scene Breakdown</span>
+                  </div>
+                  <div className="p-5">
+                    <div className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/80">
+                      {sceneBreakdown.replace(/^###?\s*🎬?\s*SCENE BREAKDOWN\s*/i, "").trim()}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* TTS Section */}
-              <div className="border-t border-border pt-4 mt-4">
+              <div className="border-t border-border p-5 bg-card">
                 <div className="flex items-center gap-2 mb-3">
                   <Mic className="h-4 w-4 text-primary" />
                   <span className="text-sm font-semibold">Voiceover</span>
@@ -262,7 +285,7 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
 
               {/* Image Generation Section */}
               {imagePrompts.length > 0 && (
-                <div className="border-t border-border pt-4 mt-4">
+                <div className="border-t border-border p-5">
                   <div className="flex items-center gap-2 mb-3">
                     <Image className="h-4 w-4 text-primary" />
                     <span className="text-sm font-semibold">Scene Images</span>
