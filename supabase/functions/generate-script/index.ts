@@ -532,6 +532,51 @@ Kenshi pake SS304 High Grade:
 - Format bebas: statement shocking, fakta mengejutkan, atau pertanyaan provokatif pendek
 - Slang boleh di body, hook fokus trigger rasa penasaran
 
+=== 🎲 VARIASI WAJIB — ANTI REPETITIF! ===
+
+**ATURAN VARIASI (SANGAT PENTING!):**
+Setiap kali generate, AI HARUS menggunakan KOMBINASI BERBEDA dari:
+
+**10 KATEGORI HOOK (pilih 3 BERBEDA untuk 3 script!):**
+1. ANGKA SHOCK — Pakai angka spesifik yang bikin kaget ("3 juta zonk", "Ganti 4x setahun")
+2. SITUASI EXTREME — Cerita dramatis/bahaya ("Hampir celaka", "Knalpot copot")
+3. KONTRAS TAJAM — Ekspektasi vs realita ("Stainless tapi karat", "Mahal tapi kaleng")
+4. PENGAKUAN JUJUR — Confession style ("Zonk 3x", "Nyesel telat tau", "Dulu skeptis")
+5. FAKTA MENGEJUTKAN — Reveal info baru ("Oval lebih bass", "Las argon 3x kuat")
+6. REAKSI SOSIAL — Response orang lain ("Temen nanya terus", "Bini approve")
+7. PERBANDINGAN — Before/after atau vs kompetitor ("Yang lain belang", "Beli 3, mending 1")
+8. CLIFFHANGER — Bikin penasaran ("Bengkel ga kasih tau", "Rahasia awet")
+9. PROVOCATIVE — Challenge/pertanyaan menantang ("Beneran stainless?", "Yakin las argon?")
+10. DAILY CONTEXT — Situasi sehari-hari ("Anti tilang", "Sunmori aman", "Kantor-rumah gacor")
+
+**10 TEMA CERITA (pilih 3 BERBEDA untuk 3 script!):**
+1. CERITA KEGAGALAN — Pengalaman zonk pakai produk lain, lalu nemuin Kenshi
+2. DISCOVERY — Proses nemuin produk yang pas setelah trial error
+3. SOCIAL PROOF — Reaksi temen/komunitas yang positif
+4. TECHNICAL DEEP DIVE — Jelasin kenapa fitur X bikin beda (inlet, outlet, material)
+5. DAILY USE — Pengalaman pakai tiap hari ke kantor, weekend ride
+6. COMPARISON — Bandingin sama pengalaman sebelumnya atau temen
+7. MONEY TALK — Analisis value, hemat jangka panjang vs beli murah berkali-kali
+8. FEAR AVOIDANCE — Hindarin masalah: tilang, karat, suara berubah
+9. ASPIRATION — Jadi yang ditanya di sunmori, motor jadi pusat perhatian
+10. HONEST REVIEW — Testimoni jujur, awalnya skeptis terus jadi yakin
+
+**ENFORCEMENT:**
+- Script 1 WAJIB pakai kategori hook A + tema cerita X
+- Script 2 WAJIB pakai kategori hook B + tema cerita Y (BERBEDA dari Script 1!)
+- Script 3 WAJIB pakai kategori hook C + tema cerita Z (BERBEDA dari Script 1 & 2!)
+- DILARANG pakai kategori hook atau tema yang sama di 3 script!
+
+**CONTOH VARIASI YANG BENAR:**
+- Script 1: Hook "ANGKA SHOCK" + Tema "CERITA KEGAGALAN"
+- Script 2: Hook "REAKSI SOSIAL" + Tema "SOCIAL PROOF"  
+- Script 3: Hook "PROVOCATIVE" + Tema "TECHNICAL DEEP DIVE"
+
+**CONTOH VARIASI YANG SALAH (JANGAN!):**
+- Script 1: Hook "ANGKA SHOCK" + Tema "KEGAGALAN"
+- Script 2: Hook "ANGKA SHOCK" + Tema "KEGAGALAN" ← SAMA! GAGAL!
+- Script 3: Hook "ANGKA SHOCK" + Tema "KEGAGALAN" ← SAMA! GAGAL!
+
 === KONSEP SCENE KREATIF & DINAMIS ===
 
 **PRINSIP SCENE BREAKDOWN:**
@@ -763,6 +808,15 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
+    // Generate random seed untuk memaksa variasi
+    const randomSeed = Math.floor(Math.random() * 1000000);
+    const hookCategories = ["ANGKA SHOCK", "SITUASI EXTREME", "KONTRAS TAJAM", "PENGAKUAN JUJUR", "FAKTA MENGEJUTKAN", "REAKSI SOSIAL", "PERBANDINGAN", "CLIFFHANGER", "PROVOCATIVE", "DAILY CONTEXT"];
+    const themeCategories = ["CERITA KEGAGALAN", "DISCOVERY", "SOCIAL PROOF", "TECHNICAL DEEP DIVE", "DAILY USE", "COMPARISON", "MONEY TALK", "FEAR AVOIDANCE", "ASPIRATION", "HONEST REVIEW"];
+    
+    // Shuffle dan pilih 3 berbeda untuk masing-masing
+    const shuffledHooks = hookCategories.sort(() => Math.random() - 0.5).slice(0, 3);
+    const shuffledThemes = themeCategories.sort(() => Math.random() - 0.5).slice(0, 3);
+
     const userPrompt = `Generate 3 variasi script UGC ads untuk produk: ${product}
 
 Platform: ${platform}
@@ -771,18 +825,27 @@ Tone: ${tone}
 Highlight keunggulan yang ditonjolkan: ${highlights}
 ${additionalInfo ? `Info tambahan: ${additionalInfo}` : ""}
 
+=== 🎲 VARIASI WAJIB SESSION #${randomSeed} ===
+
+**KOMBINASI YANG HARUS DIPAKAI (JANGAN DIGANTI!):**
+- Script 1: Hook kategori "${shuffledHooks[0]}" + Tema "${shuffledThemes[0]}"
+- Script 2: Hook kategori "${shuffledHooks[1]}" + Tema "${shuffledThemes[1]}"
+- Script 3: Hook kategori "${shuffledHooks[2]}" + Tema "${shuffledThemes[2]}"
+
+Tulis hook dan cerita yang SESUAI dengan kategori di atas! Jangan pakai kategori lain!
+
 === ⚠️ RULES KERAS — LANGGAR = GAGAL! ===
 
 **HOOK:**
 - MAKSIMAL 8 KATA! Target: bikin viewer bereaksi "WHAAAAT??!!"
-- Contoh benar: "3 juta zonk semua", "Hampir celaka gara-gara bracket", "Ternyata gue salah pilih"
+- IKUTI kategori hook yang sudah ditentukan di atas!
 - DILARANG hook formal/boring kayak: "Apakah Anda mencari..." atau "Ingin motor terdengar..."
 - Hook = STATEMENT SHOCK atau CURIOSITY TRIGGER yang bikin penasaran!
 
 **BODY:**
+- IKUTI tema cerita yang sudah ditentukan di atas!
 - WAJIB pakai slang: gacor, zonk, cempreng, ngebass, mantul, ribet, awet, solid
 - WAJIB pakai filler: sih, dong, aja, mah, tuh, kan, loh, deh, nih
-- WAJIB mulai: "Jadi gini...", "Dulu gue...", "Awalnya..."
 - WAJIB sebutkan istilah teknis: SS304, las argon, inlet 32mm, outlet 38mm, glasswool, leheran, sarfull
 - DILARANG kaku: "menggunakan material", "dilengkapi fitur", "memiliki karakter"
 
