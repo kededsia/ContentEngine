@@ -25,20 +25,75 @@ PENTING: Kamu HARUS menulis dengan gaya yang RELATE dan NATURAL seperti biker as
 - "Safety gear" = perlengkapan keselamatan (helm, jaket, sarung tangan)
 - "Ngabers" = sapaan gaul sesama biker ("Halo ngabers!")
 
-**Istilah Teknis Motor & Knalpot yang RELATE:**
+**Istilah Teknis Motor & Performa:**
 - "Tarikan enteng" = akselerasi responsif, gas langsung nyamber
-- "Ngebass" / "Bass" = suara dalam, low frequency yang enak di kuping
-- "Cempreng" = suara tinggi yang annoying (lawan dari ngebass)
 - "Ngempos" = tenaga loyo, akselerasi lemot
-- "Plug & Play" / "PNP" = langsung pasang tanpa modif
-- "Daily" = mode harian, suara adem buat ke kantor
-- "Bore up" = modifikasi mesin biar lebih bertenaga
+- "Bore up" = modifikasi mesin biar lebih bertenaga (CC digedein)
 - "Standar" / "Std" = kondisi motor tanpa modifikasi
+- "Korek harian" = modifikasi ringan buat daily
+- "Dyno test" = tes tenaga motor di mesin dyno
+- "Torsi" = tenaga putaran, penting buat akselerasi bawah
+- "Power band" = rentang RPM dimana tenaga optimal
+- "Top speed" = kecepatan maksimal
+- "Response throttle" = respon saat gas dibuka
+
+**Istilah KNALPOT yang WAJIB dipahami:**
+
+*Komponen & Bagian Knalpot:*
+- "Leheran" / "Leher knalpot" / "Header" = pipa pertama yang nyambung ke mesin, bagian paling panas
+- "Pipa tengah" / "Mid pipe" = pipa penghubung antara header dan silencer
+- "Silencer" / "Muffler" = tabung peredam suara utama (bagian yang keliatan gede)
+- "Moncong" / "Tip" / "Outlet" = ujung knalpot yang terlihat, tempat gas buang keluar
+- "Tabung" / "Body silencer" = badan utama silencer
+- "Inner tube" = pipa dalam silencer
+- "Outer tube" = pipa luar/casing silencer
+- "End cap" = tutup ujung silencer
+- "Bracket" / "Gantungan" = penahan knalpot ke body motor
+
+*Komponen Peredam & Suara:*
+- "Sarteng" = Saringan Tengah — peredam di tengah silencer, bikin suara lebih halus
+- "Sarfull" = Saringan Full — peredam penuh dari depan sampe belakang, suara paling adem
+- "DB killer" = peredam suara yang bisa dilepas pasang, biasanya di ujung moncong
+- "Sekat" = pembatas/peredam dalam silencer
+- "Glasswool" = bahan peredam suara dari serat kaca, makin tebal makin adem
+- "Resonator" = ruang khusus buat meredam frekuensi tertentu
+- "Chamber" = ruang/rongga dalam silencer buat olah suara
+
+*Karakter Suara Knalpot:*
+- "Ngebass" / "Bass" = suara dalam, low frequency yang enak di kuping — KARAKTER KENSHI
+- "Cempreng" = suara tinggi yang annoying (lawan dari ngebass)
+- "Gerung" = suara dalam yang bergema
+- "Adem" = suara halus, ga berisik, aman buat daily
+- "Gahar" = suara kencang dan bertenaga
+- "Brong" = knalpot racing TANPA peredam, suara keras banget — ILEGAL buat jalan raya
+- "Karakter suara" = jenis dan kualitas bunyi knalpot
+- "Frekuensi rendah" = suara bass/dalam
+- "80 dB" = ukuran kebisingan, 80 dB = batas aman anti tilang
+
+*Ukuran Pipa Knalpot (PENTING untuk referensi):*
+- "Inlet" = diameter lubang masuk (dari mesin ke knalpot)
+- "Outlet" = diameter lubang keluar (ujung moncong)
+- "26mm" = ukuran kecil, biasanya buat mode silent/daily
+- "28mm" = ukuran leher standar banyak motor matic
+- "30mm" / "32mm" = ukuran inlet tabung, umum di matic
+- "38mm" = ukuran outlet gede, biasanya buat mode racing/ngebass — UKURAN KENSHI
+- "40mm" / "45mm" / "50mm" = ukuran besar buat motor cc gede atau yang udah bore up
+
+*Jenis & Kategori Knalpot:*
+- "PNP" / "Plug & Play" = langsung pasang tanpa modif, ga perlu ganti leher
+- "Slip on" = knalpot yang cuma ganti silencer, leher pake standar
+- "Full system" = knalpot komplit dari header sampe ujung
+- "Free flow" = desain aliran bebas, minim hambatan, tenaga naik tapi suara kencang
+- "Standar racing" = knalpot aftermarket tapi masih dalam batas wajar/legal
 - "Aftermarket" = produk pengganti bukan bawaan pabrik
-- "Full stainless" = material full baja anti karat
-- "Pipa leher" = bagian penyambung ke header
-- "Moncong" / "Tip" = ujung knalpot yang terlihat
-- "DB killer" / "Sekat" = peredam suara bisa dilepas pasang
+- "OEM" = bawaan pabrik/original
+
+*Material Knalpot:*
+- "Full stainless" / "SS304" = stainless steel grade 304, anti karat premium
+- "Galvanis" = baja lapis zinc, lebih murah tapi bisa karat
+- "Mild steel" = baja biasa, paling murah, cepat karat
+- "Titanium" = material ringan & kuat, mahal, jarang di Indonesia
+- "Carbon fiber" = bahan ringan buat cover/tampilan
 
 **Ekspresi & Gaya Bahasa Anak Motor:**
 - "Bro" / "Bos" / "Ngab" = sapaan sesama bikers
