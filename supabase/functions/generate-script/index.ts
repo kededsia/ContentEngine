@@ -797,153 +797,248 @@ SEBELUM OUTPUT, AI HARUS SELF-CHECK:
 
 INGAT: Kamu BUKAN AI formal. Kamu adalah BIKER yang jago copywriting. Tulis kayak ngobrol sama temen, BUKAN kayak baca brosur.`;
 
-// === FUNGSI RISET WEB GRATIS ===
+// === RISET WEB REAL-TIME DENGAN SCRAPINGBEE ===
 
-// Database trending topics yang di-update manual + auto-refresh dari web
-const TRENDING_TOPICS_DB = [
-  // Format: [topic, angle, hook_inspiration]
-  ["harga BBM naik", "hemat bensin", "BBM naik, irit makin penting"],
-  ["sunmori viral", "komunitas motor", "Sunmori kemarin viral"],
-  ["tilang elektronik", "anti tilang", "ETLE makin ketat"],
-  ["motor listrik vs bensin", "suara motor", "Motor listrik senyap, boring"],
-  ["musim hujan", "anti karat", "Musim hujan, knalpot karatan"],
-  ["mudik lebaran", "touring", "Mudik pake motor, siap?"],
-  ["cafe racer trend", "style motor", "Cafe racer makin rame"],
-  ["vlog motovlog", "content creator", "Motovlog makin banyak"],
-  ["motor matic 160cc", "performa matic", "Matic 160cc makin gahar"],
-  ["review jujur", "testimoni", "Review jujur, tanpa endorse"],
-  ["part aftermarket", "modifikasi", "Aftermarket vs OEM"],
-  ["bengkel nakal", "trust issue", "Bengkel suka bohongin"],
-  ["motor second", "kondisi knalpot", "Beli motor second, cek knalpot"],
-  ["sound system motor", "audio", "Suara motor = identitas"],
-  ["racing illegal", "legal vs ilegal", "Racing jalanan, bahaya"],
-  ["motor harian", "daily commute", "Tiap hari macet Jakarta"],
-  ["modif minimalis", "clean look", "Modif simple tapi beda"],
-  ["grup WA motor", "komunitas", "Grup WA motor rame"],
-  ["unboxing viral", "first impression", "Unboxing yang ditunggu"],
-  ["before after", "transformasi", "Sebelum vs sesudah"],
-];
+// ScrapingBee API untuk scrape konten web real-time
+async function scrapeWebContent(url: string): Promise<string> {
+  const apiKey = Deno.env.get("SCRAPINGBEE_API_KEY");
+  if (!apiKey) {
+    console.log("⚠️ SCRAPINGBEE_API_KEY not configured");
+    return "";
+  }
 
-// Fungsi untuk search DuckDuckGo (gratis, no API key)
-async function searchTrendingTopics(query: string): Promise<string[]> {
   try {
-    const searchUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`;
-    const response = await fetch(searchUrl, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; UGCBot/1.0)' }
+    const scrapingBeeUrl = `https://app.scrapingbee.com/api/v1/?api_key=${apiKey}&url=${encodeURIComponent(url)}&render_js=false&extract_rules={"text":"body"}`;
+    
+    const response = await fetch(scrapingBeeUrl, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" }
     });
     
     if (!response.ok) {
-      console.log("DuckDuckGo search failed, using fallback");
-      return [];
+      console.log(`ScrapingBee error: ${response.status}`);
+      return "";
     }
     
     const data = await response.json();
-    const topics: string[] = [];
-    
-    // Extract related topics
-    if (data.RelatedTopics) {
-      for (const topic of data.RelatedTopics.slice(0, 5)) {
-        if (topic.Text) {
-          topics.push(topic.Text.substring(0, 100));
-        }
-      }
-    }
-    
-    // Extract abstract
-    if (data.AbstractText) {
-      topics.push(data.AbstractText.substring(0, 150));
-    }
-    
-    return topics;
+    return data.text?.substring(0, 2000) || "";
   } catch (error) {
-    console.log("Search error, using fallback:", error);
-    return [];
+    console.log("ScrapingBee scrape error:", error);
+    return "";
   }
 }
 
-// Fungsi untuk generate fresh angle dari riset
+// Fungsi untuk riset Google trends & berita motor Indonesia
+async function researchTrendingMotorTopics(): Promise<{
+  trendingNews: string[];
+  viralTopics: string[];
+  communityBuzz: string[];
+}> {
+  const apiKey = Deno.env.get("SCRAPINGBEE_API_KEY");
+  if (!apiKey) {
+    console.log("⚠️ No ScrapingBee API key, using fallback data");
+    return { trendingNews: [], viralTopics: [], communityBuzz: [] };
+  }
+
+  const results = {
+    trendingNews: [] as string[],
+    viralTopics: [] as string[],
+    communityBuzz: [] as string[],
+  };
+
+  // Scrape multiple sources for fresh content
+  const sources = [
+    {
+      url: "https://www.google.com/search?q=knalpot+motor+matic+viral+tiktok+2025&tbm=nws",
+      type: "news"
+    },
+    {
+      url: "https://www.google.com/search?q=komunitas+motor+matic+indonesia+trend+2025",
+      type: "community"
+    },
+    {
+      url: "https://www.google.com/search?q=review+knalpot+aftermarket+motor+matic",
+      type: "viral"
+    }
+  ];
+
+  // Pilih random source untuk efisiensi API calls
+  const randomSource = sources[Math.floor(Math.random() * sources.length)];
+  
+  try {
+    const scrapingBeeUrl = `https://app.scrapingbee.com/api/v1/?api_key=${apiKey}&url=${encodeURIComponent(randomSource.url)}&render_js=false`;
+    
+    console.log(`🔍 Scraping: ${randomSource.type} trends...`);
+    
+    const response = await fetch(scrapingBeeUrl, {
+      method: "GET",
+    });
+    
+    if (response.ok) {
+      const html = await response.text();
+      // Extract relevant snippets from search results
+      const snippets = html.match(/(?:<span[^>]*>|<div[^>]*>)([^<]{30,200})(?:<\/span>|<\/div>)/gi) || [];
+      const cleanSnippets = snippets
+        .map(s => s.replace(/<[^>]*>/g, "").trim())
+        .filter(s => s.length > 30 && !s.includes("cookie") && !s.includes("privacy"))
+        .slice(0, 5);
+      
+      if (randomSource.type === "news") {
+        results.trendingNews = cleanSnippets;
+      } else if (randomSource.type === "viral") {
+        results.viralTopics = cleanSnippets;
+      } else {
+        results.communityBuzz = cleanSnippets;
+      }
+      
+      console.log(`✅ Found ${cleanSnippets.length} ${randomSource.type} insights`);
+    }
+  } catch (error) {
+    console.log("Research error:", error);
+  }
+
+  return results;
+}
+
+// Fungsi untuk generate fresh angle dari riset REAL-TIME
 async function generateFreshInsights(product: string): Promise<{
   trendingAngle: string;
   freshHookIdea: string;
   currentContext: string;
+  realTimeInsights: string[];
 }> {
-  // 1. Coba search web untuk topik trending
-  const searchQueries = [
-    "knalpot motor matic 2024 Indonesia",
-    "viral tiktok motor matic",
-    "komunitas motor matic Indonesia",
-  ];
+  // 1. RISET WEB REAL-TIME dengan ScrapingBee
+  console.log("🌐 Starting real-time web research...");
+  const webResearch = await researchTrendingMotorTopics();
   
-  const randomQuery = searchQueries[Math.floor(Math.random() * searchQueries.length)];
-  const webResults = await searchTrendingTopics(randomQuery);
+  // Combine all web insights
+  const allWebInsights = [
+    ...webResearch.trendingNews,
+    ...webResearch.viralTopics,
+    ...webResearch.communityBuzz,
+  ].filter(i => i.length > 20);
   
-  // 2. Ambil random dari database trending topics
-  const shuffledTopics = [...TRENDING_TOPICS_DB].sort(() => Math.random() - 0.5);
-  const selectedTopics = shuffledTopics.slice(0, 3);
-  
-  // 3. Generate current context berdasarkan waktu
+  console.log(`📊 Total web insights: ${allWebInsights.length}`);
+
+  // 2. Generate current context berdasarkan waktu WIB
   const now = new Date();
-  const hour = now.getHours();
-  const dayOfWeek = now.getDay();
-  const month = now.getMonth();
+  // Adjust to WIB (UTC+7)
+  const wibOffset = 7 * 60 * 60 * 1000;
+  const wibTime = new Date(now.getTime() + wibOffset);
+  const hour = wibTime.getUTCHours();
+  const dayOfWeek = wibTime.getUTCDay();
+  const month = wibTime.getUTCMonth();
+  const date = wibTime.getUTCDate();
   
   let timeContext = "";
   if (hour >= 5 && hour < 10) {
-    timeContext = "pagi-pagi mau berangkat kerja";
+    timeContext = "pagi-pagi mau berangkat kerja, macet Jakarta";
   } else if (hour >= 10 && hour < 14) {
-    timeContext = "istirahat siang, scrolling HP";
-  } else if (hour >= 14 && hour < 18) {
-    timeContext = "sore pulang kantor";
-  } else if (hour >= 18 && hour < 22) {
-    timeContext = "malam santai di rumah";
+    timeContext = "istirahat siang, scrolling HP sambil ngopi";
+  } else if (hour >= 14 && hour < 17) {
+    timeContext = "sore-sore, bentar lagi pulang kantor";
+  } else if (hour >= 17 && hour < 20) {
+    timeContext = "jam pulang kantor, macet dimana-mana";
+  } else if (hour >= 20 && hour < 23) {
+    timeContext = "malam santai di rumah, browsing motor";
   } else {
-    timeContext = "malam-malam gabut";
+    timeContext = "malam-malam gabut, insomnia scrolling TikTok";
   }
   
+  // Weekend override
   if (dayOfWeek === 0) {
-    timeContext = "Minggu pagi habis sunmori";
+    if (hour >= 5 && hour < 10) {
+      timeContext = "Minggu pagi SUNMORI time! Motor-motor pada keluar";
+    } else {
+      timeContext = "Minggu santai, quality time sama motor";
+    }
   } else if (dayOfWeek === 6) {
-    timeContext = "weekend mode, mau nongki";
+    timeContext = "Sabtu weekend, waktunya nongki & bahas motor";
   }
   
-  // Seasonal context
-  let seasonContext = "";
+  // Special dates & seasonal context
+  let seasonalContext = "";
   if (month >= 10 || month <= 2) {
-    seasonContext = "musim hujan, knalpot gampang karat";
+    seasonalContext = "musim hujan, motor kena air terus, knalpot gampang karat";
   } else if (month >= 5 && month <= 7) {
-    seasonContext = "musim kemarau, enak buat touring";
+    seasonalContext = "musim kemarau, perfect buat touring jauh";
   }
   
-  // 4. Combine all insights
-  const trendingAngle = selectedTopics[0][1] + (webResults.length > 0 ? ` (trending: ${webResults[0]?.substring(0, 50)}...)` : "");
-  const freshHookIdea = selectedTopics[0][2];
-  const currentContext = `${timeContext}${seasonContext ? ", " + seasonContext : ""}`;
+  // Ramadan/Lebaran context (approximate)
+  if ((month === 2 && date >= 10) || (month === 3 && date <= 20)) {
+    seasonalContext = "bulan puasa, sunmori abis sahur hits banget";
+  } else if ((month === 3 && date >= 20) || (month === 4 && date <= 10)) {
+    seasonalContext = "momen mudik Lebaran, motor jadi andalan";
+  }
+
+  // 3. Generate dynamic trending angles dari web research
+  const dynamicAngles = [
+    "suara knalpot viral di TikTok",
+    "review jujur dari pengguna asli",
+    "perbandingan harga vs kualitas",
+    "tips anti tilang ETLE",
+    "motor matic makin rame di jalanan",
+    "komunitas sunmori growing",
+    "knalpot aftermarket booming",
+    "BBM naik, efisiensi penting",
+  ];
   
+  // Mix web insights dengan static angles
+  const allAngles = allWebInsights.length > 0 
+    ? [...allWebInsights.slice(0, 3), ...dynamicAngles]
+    : dynamicAngles;
+  
+  const shuffledAngles = allAngles.sort(() => Math.random() - 0.5);
+  
+  // 4. Generate fresh hook ideas based on real-time data
+  const hookIdeas = [
+    `${timeContext} — relate banget`,
+    seasonalContext ? `${seasonalContext}, solusinya?` : "Motor lo udah siap belum?",
+    allWebInsights[0] ? `"${allWebInsights[0].substring(0, 50)}..."` : "Ini yang lagi viral",
+  ];
+
   return {
-    trendingAngle,
-    freshHookIdea,
-    currentContext,
+    trendingAngle: shuffledAngles[0] || "knalpot aftermarket lagi trending",
+    freshHookIdea: hookIdeas[Math.floor(Math.random() * hookIdeas.length)],
+    currentContext: `${timeContext}${seasonalContext ? ". " + seasonalContext : ""}`,
+    realTimeInsights: allWebInsights.slice(0, 5),
   };
 }
 
-// 30 Hook templates yang bisa di-mix dengan trending topics
-const DYNAMIC_HOOK_TEMPLATES = [
-  // Template dengan placeholder {topic}
-  "{topic}, siapa relate?",
-  "{topic}? Ini solusinya",
-  "Gara-gara {topic}",
-  "{topic} tapi tetep kece",
-  "Dulu {topic}, sekarang beda",
-  "{topic}, worth it ga?",
-  "3 alasan {topic}",
-  "{topic}? Cek dulu ini",
-  "Rahasia {topic}",
-  "{topic}, jangan sampai zonk",
-  "Baru tau soal {topic}",
-  "{topic}, pengalaman gue",
-  "Review jujur: {topic}",
-  "{topic}? Lo harus tau ini",
-  "Fakta {topic} yang jarang dibahas",
+// Dynamic creative prompts untuk variasi maksimal
+const CREATIVE_FRAMEWORKS = [
+  {
+    name: "STORYTELLING",
+    prompt: "Ceritakan pengalaman personal dengan plot twist di akhir",
+  },
+  {
+    name: "CONTROVERSY",
+    prompt: "Angkat pendapat kontroversial tentang knalpot yang bikin orang debat",
+  },
+  {
+    name: "EDUCATIONAL",
+    prompt: "Jelaskan fakta teknis yang jarang orang tau dengan cara yang mind-blowing",
+  },
+  {
+    name: "SOCIAL EXPERIMENT",
+    prompt: "Reaksi orang-orang di jalanan/sunmori terhadap suara knalpot",
+  },
+  {
+    name: "COMPARISON",
+    prompt: "Head to head dengan pengalaman sebelumnya atau produk lain (tanpa sebut merk)",
+  },
+  {
+    name: "BEHIND THE SCENES",
+    prompt: "Proses pasang, detail yang jarang keliatan, atau momen-momen candid",
+  },
+  {
+    name: "TRANSFORMATION",
+    prompt: "Before-after yang dramatis, perubahan yang bikin WHAAAAT",
+  },
+  {
+    name: "MYTH BUSTING",
+    prompt: "Patahkan mitos atau kesalahpahaman umum tentang knalpot",
+  },
 ];
 
 serve(async (req) => {
@@ -957,36 +1052,33 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    // === FASE 1: RISET WEB & GENERATE FRESH INSIGHTS ===
-    console.log("🔍 Starting web research for fresh content...");
+    // === FASE 1: RISET WEB REAL-TIME DENGAN SCRAPINGBEE ===
+    console.log("🔍 Starting REAL-TIME web research with ScrapingBee...");
     const freshInsights = await generateFreshInsights(product);
-    console.log("📊 Fresh insights:", freshInsights);
+    console.log("📊 Fresh insights from web:", freshInsights);
+    console.log("🌐 Real-time insights:", freshInsights.realTimeInsights);
 
     // Generate random seed untuk variasi tambahan
     const randomSeed = Math.floor(Math.random() * 1000000);
     const timestamp = Date.now();
     
-    // Pilih random trending topics untuk di-inject ke prompt
-    const shuffledTopics = [...TRENDING_TOPICS_DB].sort(() => Math.random() - 0.5);
-    const topic1 = shuffledTopics[0];
-    const topic2 = shuffledTopics[1];
-    const topic3 = shuffledTopics[2];
-    
-    // Generate dynamic hooks dari templates
-    const hookTemplate1 = DYNAMIC_HOOK_TEMPLATES[Math.floor(Math.random() * DYNAMIC_HOOK_TEMPLATES.length)];
-    const hookTemplate2 = DYNAMIC_HOOK_TEMPLATES[Math.floor(Math.random() * DYNAMIC_HOOK_TEMPLATES.length)];
-    const hookTemplate3 = DYNAMIC_HOOK_TEMPLATES[Math.floor(Math.random() * DYNAMIC_HOOK_TEMPLATES.length)];
-    
-    const dynamicHook1 = hookTemplate1.replace("{topic}", topic1[0]);
-    const dynamicHook2 = hookTemplate2.replace("{topic}", topic2[0]);
-    const dynamicHook3 = hookTemplate3.replace("{topic}", topic3[0]);
+    // Pilih random creative framework
+    const shuffledFrameworks = [...CREATIVE_FRAMEWORKS].sort(() => Math.random() - 0.5);
+    const framework1 = shuffledFrameworks[0];
+    const framework2 = shuffledFrameworks[1];
+    const framework3 = shuffledFrameworks[2];
 
-    // Kategori hook & tema (tetap ada untuk struktur)
+    // Kategori hook & tema dengan random shuffle
     const hookCategories = ["ANGKA SHOCK", "SITUASI EXTREME", "KONTRAS TAJAM", "PENGAKUAN JUJUR", "FAKTA MENGEJUTKAN", "REAKSI SOSIAL", "PERBANDINGAN", "CLIFFHANGER", "PROVOCATIVE", "DAILY CONTEXT"];
     const themeCategories = ["CERITA KEGAGALAN", "DISCOVERY", "SOCIAL PROOF", "TECHNICAL DEEP DIVE", "DAILY USE", "COMPARISON", "MONEY TALK", "FEAR AVOIDANCE", "ASPIRATION", "HONEST REVIEW"];
     
-    const shuffledHooks = hookCategories.sort(() => Math.random() - 0.5).slice(0, 3);
-    const shuffledThemes = themeCategories.sort(() => Math.random() - 0.5).slice(0, 3);
+    const shuffledHooks = [...hookCategories].sort(() => Math.random() - 0.5).slice(0, 3);
+    const shuffledThemes = [...themeCategories].sort(() => Math.random() - 0.5).slice(0, 3);
+
+    // Format real-time insights untuk prompt
+    const realTimeInsightsText = freshInsights.realTimeInsights.length > 0
+      ? freshInsights.realTimeInsights.map((insight, i) => `${i + 1}. "${insight}"`).join("\n")
+      : "Tidak ada data web terbaru, gunakan kreativitas sendiri!";
 
     const userPrompt = `Generate 3 variasi script UGC ads untuk produk: ${product}
 
@@ -996,39 +1088,47 @@ Tone: ${tone}
 Highlight keunggulan yang ditonjolkan: ${highlights}
 ${additionalInfo ? `Info tambahan: ${additionalInfo}` : ""}
 
-=== 🔥 FRESH INSIGHTS DARI RISET WEB (SESSION #${randomSeed}-${timestamp}) ===
+=== 🔥🔥🔥 RISET WEB REAL-TIME (SESSION #${randomSeed}-${timestamp}) 🔥🔥🔥 ===
 
-**Konteks Waktu:** ${freshInsights.currentContext}
-**Trending Angle:** ${freshInsights.trendingAngle}
+**Konteks Waktu SEKARANG:** ${freshInsights.currentContext}
+**Trending Angle dari Web:** ${freshInsights.trendingAngle}
+**Fresh Hook Idea:** ${freshInsights.freshHookIdea}
 
-**3 TOPIK TRENDING YANG HARUS DIPAKAI:**
-1. "${topic1[0]}" — Angle: ${topic1[1]} — Hook idea: "${dynamicHook1}"
-2. "${topic2[0]}" — Angle: ${topic2[1]} — Hook idea: "${dynamicHook2}"
-3. "${topic3[0]}" — Angle: ${topic3[1]} — Hook idea: "${dynamicHook3}"
+**📡 DATA REAL-TIME DARI INTERNET (HARUS DIJADIKAN INSPIRASI!):**
+${realTimeInsightsText}
 
-**INSTRUKSI KREATIVITAS:**
-- Script 1 WAJIB relate dengan topik "${topic1[0]}" — gunakan angle ${topic1[1]}
-- Script 2 WAJIB relate dengan topik "${topic2[0]}" — gunakan angle ${topic2[1]}
-- Script 3 WAJIB relate dengan topik "${topic3[0]}" — gunakan angle ${topic3[1]}
-- JANGAN copy paste hook idea di atas, tapi JADIKAN INSPIRASI untuk buat yang lebih UNIK!
-- Kontekskan dengan situasi "${freshInsights.currentContext}"
+=== 🎯 CREATIVE FRAMEWORK UNTUK TIAP SCRIPT ===
 
-=== 🎲 KOMBINASI STRUKTUR ===
+**Script 1:** Framework "${framework1.name}"
+→ ${framework1.prompt}
+→ Hook style: "${shuffledHooks[0]}" + Tema: "${shuffledThemes[0]}"
 
-- Script 1: Hook style "${shuffledHooks[0]}" + Tema "${shuffledThemes[0]}" + Topik "${topic1[0]}"
-- Script 2: Hook style "${shuffledHooks[1]}" + Tema "${shuffledThemes[1]}" + Topik "${topic2[0]}"
-- Script 3: Hook style "${shuffledHooks[2]}" + Tema "${shuffledThemes[2]}" + Topik "${topic3[0]}"
+**Script 2:** Framework "${framework2.name}"
+→ ${framework2.prompt}
+→ Hook style: "${shuffledHooks[1]}" + Tema: "${shuffledThemes[1]}"
+
+**Script 3:** Framework "${framework3.name}"
+→ ${framework3.prompt}
+→ Hook style: "${shuffledHooks[2]}" + Tema: "${shuffledThemes[2]}"
+
+=== ⚡ INSTRUKSI KREATIVITAS MAKSIMAL ===
+
+JANGAN TEMPLATE! Setiap generate HARUS BEDA!
+- Gunakan data real-time di atas sebagai INSPIRASI, bukan copy paste
+- Relate dengan konteks waktu: "${freshInsights.currentContext}"
+- Buat cerita yang BELUM PERNAH ada sebelumnya
+- Hook HARUS bikin "WHAAAAT??" — shocking, unexpected, bikin penasaran
 
 === ⚠️ RULES KERAS — LANGGAR = GAGAL! ===
 
 **HOOK:**
 - MAKSIMAL 8 KATA! Target: bikin viewer bereaksi "WHAAAAT??!!"
-- HARUS relate dengan topik trending yang sudah ditentukan!
-- JANGAN generic! Hook harus UNIK dan FRESH setiap generate!
-- DILARANG hook formal/boring kayak: "Apakah Anda mencari..." atau "Ingin motor terdengar..."
+- HARUS relate dengan trending/konteks waktu sekarang!
+- JANGAN generic! Hook harus UNIK setiap generate!
+- DILARANG hook formal: "Apakah Anda...", "Ingin motor..."
 
 **BODY:**
-- WAJIB nyambung dengan topik trending yang dipilih!
+- WAJIB nyambung dengan framework yang dipilih!
 - WAJIB pakai slang: gacor, zonk, cempreng, ngebass, mantul, ribet, awet, solid
 - WAJIB pakai filler: sih, dong, aja, mah, tuh, kan, loh, deh, nih
 - WAJIB sebutkan istilah teknis: SS304, las argon, inlet 32mm, outlet 38mm, glasswool, leheran, sarfull
@@ -1048,9 +1148,9 @@ ${additionalInfo ? `Info tambahan: ${additionalInfo}` : ""}
 
 Target: Pria 30+, professional mapan, gaji 7jt+. Tulis kayak ngobrol sama temen biker, BUKAN narrator iklan TV!
 
-**REMINDER KREATIVITAS:**
-Setiap kali generate, hook dan angle HARUS BERBEDA! Jangan muter-muter di tema yang sama!
-Session ini unik: #${randomSeed}-${timestamp} — JANGAN duplikasi output sebelumnya!`;
+**🔥 REMINDER: INI SESSION UNIK #${randomSeed}**
+Setiap kali generate, hook dan angle WAJIB BERBEDA!
+Data real-time sudah disediakan — GUNAKAN untuk bikin konten yang FRESH dan TIDAK REPETITIF!`;
 
     console.log("🚀 Generating scripts with fresh insights for:", product, "| Topics:", topic1[0], topic2[0], topic3[0]);
 
