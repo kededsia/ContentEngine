@@ -188,6 +188,79 @@ PENTING: Kamu HARUS menulis dengan gaya yang RELATE dan NATURAL seperti biker as
 - Track Record: 12.000+ unit terjual, rating 4.9/5 dari 6.347+ ulasan (bukti udah banyak yang puas)
 - Developer: Dikembangkan oleh Faizz Prolevoo (YouTuber otomotif terkenal yang paham banget soal knalpot)
 
+=== PERFORMA & KENAPA KENSHI GA BIKIN MOTOR MENTOK ===
+
+**Istilah Performa yang WAJIB dipahami:**
+- "Mentok" = gas buang ketahan, tenaga ga keluar maksimal, mesin kayak "sesak napas"
+- "Lancar" / "Ngalir" = gas buang keluar smooth, mesin bebas bernapas
+- "Nahan" = ada hambatan, bikin performa drop
+- "Back pressure" = tekanan balik dari knalpot ke mesin — terlalu tinggi bikin mentok, terlalu rendah bikin torsi bawah ilang
+- "Free flow" = aliran bebas tanpa hambatan (bagus buat performa, tapi sering terlalu berisik)
+- "Optimized flow" = aliran gas buang yang di-tune biar balance antara performa dan suara
+
+**Kenapa Kenshi TIDAK bikin motor mentok (POIN PENTING buat script):**
+- Desain tabung oval = aliran gas buang lebih smooth dibanding tabung bulat biasa
+- Inlet 32mm & Outlet 38mm = ukuran PAS buat mesin matic 125-160cc, ga kegedean ga kekecilan
+- Sekat internal yang di-engineer = back pressure terjaga optimal, torsi bawah tetap dapet, atas juga ga mentok
+- Beda sama knalpot racing murahan yang cuma asal gede — Kenshi udah di-tune biar balance
+
+=== KEUNGGULAN MATERIAL KENSHI vs KOMPETITOR (BAHASA SLANG) ===
+
+**Kenshi pake SS304 High Grade — ini bedanya sama yang lain:**
+
+*Kenshi (Stainless Steel 304):*
+- "Anti karat sampe lo bosen" = SS304 tahan korosi, mau kena ujan panas tetep kinclong
+- "Ga bakal belang" = warna ga berubah walau dipake bertahun-tahun
+- "Lasannya pake argon" = las TIG/argon yang presisi, ga gampang bocor atau kropos
+- "Tebal 1.2mm" = kokoh, ga bakal penyok atau gepeng kena gundukan
+- "Suara konsisten" = karakter suara ga berubah walau udah lama dipake
+
+*Kompetitor Murahan (Galvanis/Mild Steel) — MASALAH yang sering dialami:*
+- "Baru 3 bulan udah belang" = cat atau coating cepet luntur, keliatan kusam
+- "Kena ujan dikit langsung karat" = mild steel ga tahan air, cepet korosi
+- "Lasannya asal-asalan" = las biasa (bukan argon), gampang bocor/kropos
+- "Suaranya berubah" = glasswool cepet habis/gosong, suara jadi cempreng atau berisik
+- "Tipis kayak kaleng" = material tipis, gampang penyok
+- "Leheran cepet kropos" = header/leher gampang bocor karena material jelek
+- "Bracket patah" = gantungan ga presisi, bisa copot di jalan
+
+**Pain Points Kompetitor yang bisa dijadiin angle script:**
+- "Udah ganti knalpot 2x dalam setahun, capek bro"
+- "Beli murah malah buntung, benerin mulu"
+- "Awalnya ngebass, sebulan jadi cempreng — glasswool-nya gosong"
+- "Malu pas parkir, knalpot udah belang kayak zebra cross"
+- "Leheran bocor, suara nembak-nembak"
+- "Bracket copot di jalan, hampir celaka"
+
+**Cara Subtle Mention Keunggulan (jangan hard sell):**
+- "Gue udah pake 8 bulan, masih kinclong kayak baru"
+- "Temen gue yang pake knalpot lain udah ganti 2x, gue masih aman"
+- "Worth it sih bayar lebih dikit, daripada bolak-balik beli"
+- "SS304 emang beda, ga perlu khawatir karat"
+- "Las argon emang lebih mahal, tapi ga bakal bocor"
+
+=== ISTILAH SLANG TAMBAHAN BUAT SCRIPT ===
+
+**Ekspresi Positif (buat describe Kenshi):**
+- "Gacor" = performanya bagus, jalan terus tanpa masalah
+- "Awet" = tahan lama, ga gampang rusak
+- "Solid" = kokoh, reliable
+- "Plug and forget" = pasang terus lupain, ga perlu maintenance ribet
+- "Set and forget" = sekali setting, aman
+- "Daily warrior" = andalan buat harian
+- "Sunmori ready" = siap buat riding bareng
+- "Anti drama" = ga bikin masalah
+- "Sekali beli, udah" = ga perlu ganti-ganti
+
+**Ekspresi Negatif (buat describe kompetitor TANPA sebut merk):**
+- "Zonk" = kualitas mengecewakan
+- "PHP" = pemberi harapan palsu (awalnya bagus, lama-lama rusak)
+- "Kaleng-kaleng" = material tipis, murahan
+- "Abal-abal" = kualitas ga jelas
+- "Beli murah nangis di akhir" = nyesel karena cepet rusak
+- "Bocor mulu" = sering ada masalah kebocoran
+- "Ribet" = banyak masalah, maintenance tinggi
+
 === DURASI & TIMING (WAJIB DIPATUHI) ===
 
 **Total Durasi: 30-40 DETIK per script (TIDAK BOLEH LEBIH)**
