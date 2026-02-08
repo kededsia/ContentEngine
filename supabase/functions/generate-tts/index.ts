@@ -7,30 +7,26 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-// ACTUAL INDONESIAN NATIVE VOICES from ElevenLabs Voice Library
-// These are native Indonesian speakers with authentic accent & intonation
-const INDONESIAN_NATIVE_VOICES = {
-  // Male Indonesian voices - native speakers
+// DEFAULT VOICES that work on FREE tier with Indonesian via multilingual model
+// These voices are expressive and work well with Indonesian text
+const DEFAULT_VOICES = {
+  // Male voices - expressive, works great with Indonesian
   male: {
-    // Suara_narasi - Warm Indonesian male, feels like home
-    suara_narasi: "4RK3Moe6TpBQ4otXBFtc",
-    // Tri Nugraha - Adult Indonesian male, great for narrative
-    tri_nugraha: "lFjzhZHq0NwTRiu2GQxy", 
-    // Zephlyn - Young Indonesian male for news/narration
-    zephlyn: "3mAVBNEqop5UbHtD8oxQ",
-    // Andra - Middle aged with Javanese accent, perfect for narration
-    andra: "gP7FRCgEZ8Lr3rnyGgpw",
-    // Bambang - Middle aged Javanese, great for conversation
-    bambang: "IMaRqUzeNVCT6ks9SI4Y",
+    // Daniel - warm, authoritative, great for narration
+    daniel: "onwK4e9ZLuTAKqWW03F9",
+    // Brian - deep, professional
+    brian: "nPczCjzI2devNBz1zQrb", 
+    // George - warm, friendly
+    george: "JBFqnCBsd6RMkjVDRZzb",
   },
-  // Female Indonesian voices - native speakers
+  // Female voices
   female: {
-    // Putri Maharani - Warm, expressive tone
-    putri_maharani: "I7sakys8pBZ1Z5f0UhT9",
-    // Nova - Warm yet authoritative
-    nova: "7ExgohZ4jKVjuJLwSEWl",
-    // Sikedewi - Young Indonesian woman, very clear
-    sikedewi: "yLyL4E4r0QfLyYpCwPir",
+    // Sarah - warm, expressive
+    sarah: "EXAVITQu4vr4xnSDxMaL",
+    // Jessica - clear, professional
+    jessica: "cgSgspJ2msm6clMCkdW9",
+    // Lily - warm, friendly
+    lily: "pFZP5JQG7iQjIQuC4Bku",
   },
 };
 
@@ -202,26 +198,26 @@ serve(async (req) => {
     const detectedSceneType = sceneType || detectSceneType(text);
     const voiceSettings = VOICE_SETTINGS[detectedSceneType] || VOICE_SETTINGS.default;
     
-    // Select NATIVE INDONESIAN voice based on gender
+    // Select voice based on gender - using DEFAULT voices (free tier compatible)
     let voiceId: string;
     if (voiceGender === "female") {
-      // Putri Maharani - warm, expressive Indonesian female
-      voiceId = INDONESIAN_NATIVE_VOICES.female.putri_maharani;
+      // Sarah - warm, expressive, works great with Indonesian
+      voiceId = DEFAULT_VOICES.female.sarah;
     } else {
-      // Suara_narasi - natural Indonesian male that feels like home
-      voiceId = INDONESIAN_NATIVE_VOICES.male.suara_narasi;
+      // Daniel - warm, authoritative, excellent for Indonesian narration
+      voiceId = DEFAULT_VOICES.male.daniel;
     }
 
     // Preprocess untuk Indonesian natural & expressive
     const processedText = preprocessIndonesianText(text);
 
-    console.log("Generating NATIVE Indonesian TTS:", {
+    console.log("Generating Indonesian TTS with DEFAULT voice:", {
       originalLength: text.length,
       processedLength: processedText.length,
       sceneType: detectedSceneType,
       voiceId,
       voiceGender,
-      voiceSettings,
+      settings: voiceSettings,
     });
 
     const response = await fetch(
