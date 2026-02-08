@@ -828,217 +828,171 @@ async function scrapeWebContent(url: string): Promise<string> {
   }
 }
 
-// Fungsi untuk riset trending dari situs berita motor Indonesia
-async function researchTrendingMotorTopics(): Promise<{
-  trendingNews: string[];
-  viralTopics: string[];
-  communityBuzz: string[];
+// Fungsi untuk riset SOCIAL MEDIA TRENDS real-time via Google Trends RSS
+async function researchSocialMediaTrends(): Promise<{
+  twitterTrends: string[];
+  tiktokTrends: string[];
+  googleTrends: string[];
+  rawTrendData: string;
 }> {
-  const apiKey = Deno.env.get("SCRAPINGBEE_API_KEY");
-  if (!apiKey) {
-    console.log("⚠️ No ScrapingBee API key, using fallback data");
-    return { trendingNews: [], viralTopics: [], communityBuzz: [] };
-  }
-
   const results = {
-    trendingNews: [] as string[],
-    viralTopics: [] as string[],
-    communityBuzz: [] as string[],
+    twitterTrends: [] as string[],
+    tiktokTrends: [] as string[],
+    googleTrends: [] as string[],
+    rawTrendData: "",
   };
 
-  // Sumber berita motor Indonesia yang RELIABLE (bukan Google yang sering block)
-  const sources = [
-    {
-      url: "https://www.otomotif.kompas.com/motor",
-      type: "news",
-      regex: /<h[23][^>]*class="[^"]*title[^"]*"[^>]*>([^<]+)</gi
-    },
-    {
-      url: "https://www.gridoto.com/tag/knalpot",
-      type: "viral",
-      regex: /<h[23][^>]*>([^<]{20,100})</gi
-    },
-    {
-      url: "https://www.motorplus-online.com/tag/knalpot-motor",
-      type: "community",
-      regex: /<h[23][^>]*>([^<]{20,100})</gi
-    },
-    {
-      url: "https://www.otosia.com/berita/motor",
-      type: "news",
-      regex: /<h[23][^>]*>([^<]{20,100})</gi
-    }
-  ];
-
-  // Pilih random source untuk efisiensi API calls
-  const randomSource = sources[Math.floor(Math.random() * sources.length)];
-  
   try {
-    // ScrapingBee dengan parameter yang lebih baik
-    const scrapingBeeUrl = `https://app.scrapingbee.com/api/v1/?api_key=${apiKey}&url=${encodeURIComponent(randomSource.url)}&render_js=false&premium_proxy=false&country_code=id`;
+    // Google Trends RSS Feed - PALING RELIABLE, tidak perlu ScrapingBee
+    const googleTrendsRSS = "https://trends.google.co.id/trending/rss?geo=ID";
     
-    console.log(`🔍 Scraping: ${randomSource.type} from ${randomSource.url}...`);
+    console.log(`🔥 Fetching Google Trends RSS Indonesia...`);
     
-    const response = await fetch(scrapingBeeUrl, {
-      method: "GET",
+    const response = await fetch(googleTrendsRSS, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; UGCBot/1.0)",
+        "Accept": "application/rss+xml, application/xml, text/xml"
+      }
     });
     
-    console.log(`📡 ScrapingBee response status: ${response.status}`);
+    console.log(`📡 Response status: ${response.status}`);
     
     if (response.ok) {
-      const html = await response.text();
-      console.log(`📄 HTML length: ${html.length} chars`);
+      const xml = await response.text();
+      console.log(`📄 RSS length: ${xml.length} chars`);
       
-      // Extract headlines/titles dari HTML
-      const headlineMatches = html.match(/<h[1-4][^>]*>([^<]{15,150})</gi) || [];
-      const articleMatches = html.match(/<a[^>]*title="([^"]{15,150})"/gi) || [];
-      const metaMatches = html.match(/<meta[^>]*content="([^"]{30,200})"/gi) || [];
+      // Extract <title> tags from RSS items (trending topics)
+      const titleMatches = xml.match(/<title><!\[CDATA\[([^\]]+)\]\]><\/title>/gi) || [];
+      const altTitleMatches = xml.match(/<title>([^<]+)<\/title>/gi) || [];
       
-      // Clean and combine
-      const allMatches = [...headlineMatches, ...articleMatches, ...metaMatches];
-      const cleanSnippets = allMatches
-        .map(s => {
-          // Extract text dari tag
-          const match = s.match(/[">]([^<"]+)/);
-          return match ? match[1].trim() : "";
+      const allTitles = [...titleMatches, ...altTitleMatches];
+      
+      const cleanTrends = allTitles
+        .map(t => {
+          // Extract text from CDATA or regular title
+          const cdataMatch = t.match(/<!\[CDATA\[([^\]]+)\]\]>/);
+          if (cdataMatch) return cdataMatch[1].trim();
+          const regularMatch = t.match(/<title>([^<]+)<\/title>/);
+          if (regularMatch) return regularMatch[1].trim();
+          return "";
         })
-        .filter(s => 
-          s.length > 15 && 
-          !s.includes("cookie") && 
-          !s.includes("privacy") &&
-          !s.includes("Copyright") &&
-          !s.includes("navigation") &&
-          (s.toLowerCase().includes("motor") || 
-           s.toLowerCase().includes("knalpot") || 
-           s.toLowerCase().includes("matic") ||
-           s.toLowerCase().includes("modifikasi") ||
-           s.toLowerCase().includes("harga") ||
-           s.toLowerCase().includes("review"))
+        .filter(t => 
+          t.length > 2 && 
+          t.length < 100 &&
+          t !== "Daily Search Trends" && // Filter out RSS feed title
+          !t.includes("Google") &&
+          !t.includes("Trends")
         )
-        .slice(0, 5);
+        .slice(0, 15);
       
-      console.log(`✅ Found ${cleanSnippets.length} relevant snippets:`, cleanSnippets.slice(0, 2));
+      console.log(`✅ Found ${cleanTrends.length} Google Trends:`, cleanTrends.slice(0, 5));
       
-      if (randomSource.type === "news") {
-        results.trendingNews = cleanSnippets;
-      } else if (randomSource.type === "viral") {
-        results.viralTopics = cleanSnippets;
-      } else {
-        results.communityBuzz = cleanSnippets;
-      }
+      results.googleTrends = cleanTrends;
+      results.rawTrendData = cleanTrends.join(", ");
     } else {
-      const errorText = await response.text();
-      console.log(`❌ ScrapingBee error: ${response.status} - ${errorText.substring(0, 200)}`);
+      console.log(`❌ Google Trends RSS failed: ${response.status}`);
     }
   } catch (error) {
-    console.log("❌ Research error:", error);
+    console.log("❌ Google Trends RSS error:", error);
+  }
+
+  // Fallback: Jika Google Trends gagal, gunakan trending topics Indonesia yang umum
+  if (results.googleTrends.length === 0) {
+    console.log("⚠️ Using fallback trending topics");
+    const fallbackTrends = [
+      "BBM naik harga bensin",
+      "Timnas Indonesia",
+      "Liga 1 Indonesia",
+      "PPKM dicabut",
+      "Motor listrik Indonesia",
+      "Sunmori viral",
+      "Mudik lebaran",
+      "MotoGP Mandalika",
+      "Honda PCX terbaru",
+      "Yamaha NMAX 2025",
+    ];
+    // Shuffle and pick random
+    const shuffled = fallbackTrends.sort(() => Math.random() - 0.5);
+    results.googleTrends = shuffled.slice(0, 5);
+    results.rawTrendData = results.googleTrends.join(", ");
   }
 
   return results;
 }
 
-// Fungsi untuk generate fresh angle dari riset REAL-TIME
+// Fungsi untuk generate CONTEXT dari social media trends
 async function generateFreshInsights(product: string): Promise<{
   trendingAngle: string;
   freshHookIdea: string;
   currentContext: string;
   realTimeInsights: string[];
+  socialMediaContext: string;
 }> {
-  // 1. RISET WEB REAL-TIME dengan ScrapingBee
-  console.log("🌐 Starting real-time web research...");
-  const webResearch = await researchTrendingMotorTopics();
+  // 1. RISET SOCIAL MEDIA TRENDS real-time
+  console.log("🌐 Starting SOCIAL MEDIA trend research...");
+  const socialTrends = await researchSocialMediaTrends();
   
-  // Combine all web insights
-  const allWebInsights = [
-    ...webResearch.trendingNews,
-    ...webResearch.viralTopics,
-    ...webResearch.communityBuzz,
-  ].filter(i => i.length > 20);
+  // Combine all trends
+  const allTrends = [
+    ...socialTrends.googleTrends,
+    ...socialTrends.twitterTrends,
+    ...socialTrends.tiktokTrends,
+  ].filter(t => t.length > 2);
   
-  console.log(`📊 Total web insights: ${allWebInsights.length}`);
+  console.log(`📊 Total social media trends: ${allTrends.length}`);
 
   // 2. Generate current context berdasarkan waktu WIB
   const now = new Date();
-  // Adjust to WIB (UTC+7)
   const wibOffset = 7 * 60 * 60 * 1000;
   const wibTime = new Date(now.getTime() + wibOffset);
   const hour = wibTime.getUTCHours();
   const dayOfWeek = wibTime.getUTCDay();
   const month = wibTime.getUTCMonth();
-  const date = wibTime.getUTCDate();
   
   let timeContext = "";
   if (hour >= 5 && hour < 10) {
-    timeContext = "pagi-pagi mau berangkat kerja, macet Jakarta";
+    timeContext = "pagi-pagi mau berangkat kerja, timeline Twitter rame";
   } else if (hour >= 10 && hour < 14) {
-    timeContext = "istirahat siang, scrolling HP sambil ngopi";
+    timeContext = "istirahat siang, scrolling TikTok FYP";
   } else if (hour >= 14 && hour < 17) {
-    timeContext = "sore-sore, bentar lagi pulang kantor";
+    timeContext = "sore-sore ngadem, buka Twitter/X";
   } else if (hour >= 17 && hour < 20) {
-    timeContext = "jam pulang kantor, macet dimana-mana";
+    timeContext = "jam pulang kantor, FYP TikTok lagi aktif";
   } else if (hour >= 20 && hour < 23) {
-    timeContext = "malam santai di rumah, browsing motor";
+    timeContext = "malam santai scrolling semua socmed";
   } else {
-    timeContext = "malam-malam gabut, insomnia scrolling TikTok";
+    timeContext = "malam-malam insomnia scrolling TikTok/Twitter";
   }
   
-  // Weekend override
+  // Weekend/special day context
   if (dayOfWeek === 0) {
-    if (hour >= 5 && hour < 10) {
-      timeContext = "Minggu pagi SUNMORI time! Motor-motor pada keluar";
-    } else {
-      timeContext = "Minggu santai, quality time sama motor";
-    }
+    timeContext = hour < 10 ? "Minggu pagi SUNMORI — Twitter rame posting motor" : "Minggu santai, TikTok motor viral";
   } else if (dayOfWeek === 6) {
-    timeContext = "Sabtu weekend, waktunya nongki & bahas motor";
+    timeContext = "Sabtu weekend, konten motor lagi banyak di FYP";
   }
   
-  // Special dates & seasonal context
+  // Seasonal
   let seasonalContext = "";
   if (month >= 10 || month <= 2) {
-    seasonalContext = "musim hujan, motor kena air terus, knalpot gampang karat";
-  } else if (month >= 5 && month <= 7) {
-    seasonalContext = "musim kemarau, perfect buat touring jauh";
-  }
-  
-  // Ramadan/Lebaran context (approximate)
-  if ((month === 2 && date >= 10) || (month === 3 && date <= 20)) {
-    seasonalContext = "bulan puasa, sunmori abis sahur hits banget";
-  } else if ((month === 3 && date >= 20) || (month === 4 && date <= 10)) {
-    seasonalContext = "momen mudik Lebaran, motor jadi andalan";
+    seasonalContext = "musim hujan — banyak curhatan motor kena air di Twitter";
   }
 
-  // 3. Generate dynamic trending angles dari web research
-  const dynamicAngles = [
-    "suara knalpot viral di TikTok",
-    "review jujur dari pengguna asli",
-    "perbandingan harga vs kualitas",
-    "tips anti tilang ETLE",
-    "motor matic makin rame di jalanan",
-    "komunitas sunmori growing",
-    "knalpot aftermarket booming",
-    "BBM naik, efisiensi penting",
-  ];
-  
-  // Mix web insights dengan static angles
-  const allAngles = allWebInsights.length > 0 
-    ? [...allWebInsights.slice(0, 3), ...dynamicAngles]
-    : dynamicAngles;
-  
-  const shuffledAngles = allAngles.sort(() => Math.random() - 0.5);
-  
-  // 4. Generate fresh hook ideas based on real-time data
-  const hookIdeas = [
-    `${timeContext} — relate banget`,
-    seasonalContext ? `${seasonalContext}, solusinya?` : "Motor lo udah siap belum?",
-    allWebInsights[0] ? `"${allWebInsights[0].substring(0, 50)}..."` : "Ini yang lagi viral",
-  ];
+  // 3. CREATE SOCIAL MEDIA CONTEXT untuk AI
+  const socialMediaContext = allTrends.length > 0 
+    ? `TRENDING DI GOOGLE/TWITTER SEKARANG: ${allTrends.slice(0, 8).join(", ")}. WAJIB koneksikan salah satu trending topic ini dengan konten knalpot! Buat angle yang UNEXPECTED dan VIRAL!`
+    : "Social media lagi rame berbagai topik — buat konten yang bisa nyantol ke trending apapun dengan angle motor/knalpot";
+
+  // 4. Generate dynamic hook ideas based on trends
+  const trendBasedHooks = allTrends.slice(0, 5).map(trend => {
+    return `"${trend}" → koneksikan dengan knalpot/motor`;
+  });
 
   return {
-    trendingAngle: shuffledAngles[0] || "knalpot aftermarket lagi trending",
-    freshHookIdea: hookIdeas[Math.floor(Math.random() * hookIdeas.length)],
+    trendingAngle: allTrends[0] || "trending Google/Twitter hari ini",
+    freshHookIdea: trendBasedHooks[0] || "connect ke trending topic",
     currentContext: `${timeContext}${seasonalContext ? ". " + seasonalContext : ""}`,
-    realTimeInsights: allWebInsights.slice(0, 5),
+    realTimeInsights: allTrends.slice(0, 10),
+    socialMediaContext,
   };
 }
 
@@ -1125,51 +1079,53 @@ Tone: ${tone}
 Highlight keunggulan yang ditonjolkan: ${highlights}
 ${additionalInfo ? `Info tambahan: ${additionalInfo}` : ""}
 
-=== 🔥🔥🔥 RISET WEB REAL-TIME (SESSION #${randomSeed}-${timestamp}) 🔥🔥🔥 ===
+=== 🔥🔥🔥 SOCIAL MEDIA TRENDS REAL-TIME (SESSION #${randomSeed}-${timestamp}) 🔥🔥🔥 ===
 
-**Konteks Waktu SEKARANG:** ${freshInsights.currentContext}
-**Trending Angle dari Web:** ${freshInsights.trendingAngle}
-**Fresh Hook Idea:** ${freshInsights.freshHookIdea}
+**⏰ Konteks Waktu SEKARANG:** ${freshInsights.currentContext}
 
-**📡 DATA REAL-TIME DARI INTERNET (HARUS DIJADIKAN INSPIRASI!):**
+**📱 ${freshInsights.socialMediaContext}**
+
+**🔥 TRENDING TOPICS DARI SOCIAL MEDIA:**
 ${realTimeInsightsText}
 
-=== 🎯 CREATIVE FRAMEWORK UNTUK TIAP SCRIPT ===
+=== 🎯 INSTRUKSI WAJIB: KONEKSIKAN TREND DENGAN KNALPOT! ===
+
+KAMU HARUS membuat KONEKSI KREATIF antara trending topic di atas dengan produk knalpot!
+
+**Contoh cara koneksi yang KREATIF:**
+- Kalau trending "#ValentinesDay" → "Kasih sayang buat motor lo? Knalpot baru dong!"
+- Kalau trending "BBM naik" → "BBM naik? Yang penting suara motor lo tetep ngebass!"
+- Kalau trending "Prabowo" / politik → "Presiden baru, knalpot juga upgrade dong!"
+- Kalau trending "Indonesia menang" → "Indonesia menang, motor lo juga harus menang di jalanan!"
+- Kalau trending artis/selebriti → Relate dengan lifestyle atau aspirasi
+
+**JANGAN abaikan trending topic!** Buat hook yang NYAMBUNG sama apa yang lagi rame di timeline!
+
+=== 🎬 CREATIVE FRAMEWORK ===
 
 **Script 1:** Framework "${framework1.name}"
 → ${framework1.prompt}
-→ Hook style: "${shuffledHooks[0]}" + Tema: "${shuffledThemes[0]}"
+→ WAJIB koneksikan dengan trending topic #1 di atas!
 
 **Script 2:** Framework "${framework2.name}"
 → ${framework2.prompt}
-→ Hook style: "${shuffledHooks[1]}" + Tema: "${shuffledThemes[1]}"
+→ WAJIB koneksikan dengan trending topic #2 di atas!
 
 **Script 3:** Framework "${framework3.name}"
 → ${framework3.prompt}
-→ Hook style: "${shuffledHooks[2]}" + Tema: "${shuffledThemes[2]}"
+→ WAJIB koneksikan dengan trending topic #3 di atas!
 
-=== ⚡ INSTRUKSI KREATIVITAS MAKSIMAL ===
+=== ⚠️ RULES KERAS ===
 
-JANGAN TEMPLATE! Setiap generate HARUS BEDA!
-- Gunakan data real-time di atas sebagai INSPIRASI, bukan copy paste
-- Relate dengan konteks waktu: "${freshInsights.currentContext}"
-- Buat cerita yang BELUM PERNAH ada sebelumnya
-- Hook HARUS bikin "WHAAAAT??" — shocking, unexpected, bikin penasaran
-
-=== ⚠️ RULES KERAS — LANGGAR = GAGAL! ===
-
-**HOOK:**
-- MAKSIMAL 8 KATA! Target: bikin viewer bereaksi "WHAAAAT??!!"
-- HARUS relate dengan trending/konteks waktu sekarang!
-- JANGAN generic! Hook harus UNIK setiap generate!
-- DILARANG hook formal: "Apakah Anda...", "Ingin motor..."
+**HOOK (MAKSIMAL 8 KATA!):**
+- HARUS ada unsur trending topic yang lagi viral!
+- Bikin viewer mikir "Loh, kok nyambung sama trending?!" → WHAAAAT effect!
+- JANGAN generic! Hook harus UNIK dan relate sama timeline hari ini!
 
 **BODY:**
-- WAJIB nyambung dengan framework yang dipilih!
 - WAJIB pakai slang: gacor, zonk, cempreng, ngebass, mantul, ribet, awet, solid
 - WAJIB pakai filler: sih, dong, aja, mah, tuh, kan, loh, deh, nih
 - WAJIB sebutkan istilah teknis: SS304, las argon, inlet 32mm, outlet 38mm, glasswool, leheran, sarfull
-- DILARANG kaku: "menggunakan material", "dilengkapi fitur", "memiliki karakter"
 
 **SCENE BREAKDOWN:**
 - WAJIB ADA section "### 🎬 SCENE BREAKDOWN" di SETIAP script!
@@ -1183,11 +1139,10 @@ JANGAN TEMPLATE! Setiap generate HARUS BEDA!
 - Cover HITAM plastik (bukan powder coat)
 - Logo LASER CUT di-LAS (bukan sticker)
 
-Target: Pria 30+, professional mapan, gaji 7jt+. Tulis kayak ngobrol sama temen biker, BUKAN narrator iklan TV!
+Target: Pria 30+, professional mapan. Tulis kayak ngobrol sama temen biker!
 
-**🔥 REMINDER: INI SESSION UNIK #${randomSeed}**
-Setiap kali generate, hook dan angle WAJIB BERBEDA!
-Data real-time sudah disediakan — GUNAKAN untuk bikin konten yang FRESH dan TIDAK REPETITIF!`;
+**🔥 REMINDER: INI KONTEN UNTUK HARI INI!**
+Social media trends berubah setiap jam — konten lo harus NYAMBUNG sama apa yang lagi rame SEKARANG!`;
 
     console.log("🚀 Generating scripts with fresh insights for:", product, "| Frameworks:", framework1.name, framework2.name, framework3.name);
 
