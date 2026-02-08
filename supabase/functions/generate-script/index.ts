@@ -188,6 +188,70 @@ PENTING: Kamu HARUS menulis dengan gaya yang RELATE dan NATURAL seperti biker as
 - Track Record: 12.000+ unit terjual, rating 4.9/5 dari 6.347+ ulasan (bukti udah banyak yang puas)
 - Developer: Dikembangkan oleh Faizz Prolevoo (YouTuber otomotif terkenal yang paham banget soal knalpot)
 
+=== SAINS DI BALIK SUARA & PERFORMA KNALPOT (WAJIB PAHAM) ===
+
+**KENAPA knalpot bisa NGEBASS? (Jelaskan ini ke viewers biar tertarik!)**
+
+Suara knalpot itu kayak speaker — tergantung "ruang resonansi" di dalamnya:
+- **Volume chamber gede = suara bass/dalam** (frekuensi rendah punya ruang buat "bergema")
+- **Volume chamber kecil = suara cempreng/tinggi** (ga ada ruang, suara langsung keluar)
+- **Kenshi pake tabung OVAL** = volume internal lebih gede dari tabung bulat dengan panjang yang sama → makanya suaranya NGEBASS natural tanpa harus brong
+
+*Cara jelasin di script:*
+- "Lo tau kenapa Kenshi suaranya ngebass padahal adem? Rahasia di bentuk tabung oval-nya, bro. Volume dalem lebih gede, frekuensi rendah dapet ruang buat bergema"
+- "Beda sama yang bulat biasa, tabung oval itu kayak subwoofer — bass-nya lebih terasa"
+
+**KENAPA ukuran pipa PENTING? (Jelaskan hubungan dimensi & performa)**
+
+*Inlet (lubang masuk ke knalpot):*
+- **Inlet keKECILan** (misal 26mm di motor 160cc) = gas buang "ketahan", mesin kayak sesak napas, tenaga atas mentok
+- **Inlet keGEDEan** (misal 40mm di motor 125cc) = torsi bawah ilang, tarikan awal lemot, "ngempos"
+- **Inlet PAS** (32mm buat matic 125-160cc) = gas buang lancar, tenaga optimal dari bawah sampe atas
+
+*Outlet (lubang keluar/moncong):*
+- **Outlet 38mm = NGEBASS** → lubang gede, gas buang keluar smooth, suara dalam & bervolume (mode racing Kenshi)
+- **Outlet 26mm = ADEM/SILENT** → lubang kecil, back pressure terjaga, suara halus (mode daily Kenshi)
+
+*Cara jelasin di script:*
+- "Banyak yang ga tau, ukuran outlet itu nentuin karakter suara. Yang gede 38mm = ngebass, yang kecil 26mm = adem. Kenshi kasih DUALNYA, tinggal ganti sesuai mood"
+- "Inlet 32mm itu sweet spot buat matic 160cc — ga kegedean sampe torsi ilang, ga kekecilan sampe mentok di RPM atas"
+
+**KENAPA motor bisa MENTOK karena knalpot?**
+
+"Mentok" = gas buang ketahan → tekanan balik (back pressure) terlalu tinggi → mesin ga bisa "buang napas" → tenaga atas ga keluar maksimal
+
+Penyebab mentok:
+1. **Inlet terlalu kecil** = gas buang "ngantri" mau keluar, kayak selang kecil buat alirin air deras
+2. **Desain sekat asal-asalan** = ada sudut tajam di dalem yang nahan aliran
+3. **Glasswool terlalu padat** = serat peredam jadi penghalang, bikin sesak
+4. **Leheran ga presisi** = diameter ga match sama port mesin, ada gap yang nahan flow
+
+*Kenshi ANTI MENTOK karena:*
+- Inlet 32mm = ukuran ideal, aliran lancar
+- Outlet 38mm = lubang keluar lega, gas bebas keluar
+- Tabung oval = volume gede, ga ada bottleneck
+- Sekat internal dihitung = back pressure optimal, torsi tetep dapet
+
+*Cara jelasin di script:*
+- "Knalpot racing abal suka bikin motor mentok — inlet kekecilan, gas buang ketahan. Kenshi pake inlet 32mm, pas buat matic lo, aliran gas lancar, tenaga ngalir dari bawah sampe atas"
+- "Rahasia anti mentok itu di desain sekat internal yang udah di-engineer. Back pressure terjaga, jadi torsi bawah dapet, tapi RPM atas juga bebas"
+
+**KENAPA material SS304 AWET & ga berubah suaranya?**
+
+Knalpot murah pake galvanis/mild steel:
+- **Karat = lubang kecil** di body → suara bocor, karakter berubah
+- **Glasswool gosong** = peredam habis → suara jadi berisik cempreng
+- **Las biasa kropos** = sambungan bocor → suara nembak-nembak
+
+Kenshi pake SS304 High Grade:
+- **Anti karat** = body tetep solid, ga ada lubang bocor
+- **Tahan panas** = glasswool awet, ga cepet gosong
+- **Las argon presisi** = sambungan kedap, suara konsisten bertahun-tahun
+
+*Cara jelasin di script:*
+- "Temen gue pake knalpot murah, 6 bulan suaranya udah berubah — cempreng, karatan. Kenshi gue 8 bulan masih sama kayak hari pertama pasang"
+- "SS304 itu ga cuma soal karat bro, tapi juga soal SUARA yang konsisten. Material jelek = glasswool cepet gosong = suara jadi berisik"
+
 === PERFORMA & KENAPA KENSHI GA BIKIN MOTOR MENTOK ===
 
 **Istilah Performa yang WAJIB dipahami:**
@@ -238,6 +302,29 @@ PENTING: Kamu HARUS menulis dengan gaya yang RELATE dan NATURAL seperti biker as
 - "Worth it sih bayar lebih dikit, daripada bolak-balik beli"
 - "SS304 emang beda, ga perlu khawatir karat"
 - "Las argon emang lebih mahal, tapi ga bakal bocor"
+
+=== TEKNIS EDUKATIF UNTUK HOOK CURIOSITY ===
+
+**Fakta Menarik yang bisa bikin viewers PENASARAN:**
+
+1. "Lo tau ga kenapa knalpot oval lebih ngebass dari bulat? Karena volume internal-nya lebih gede dengan panjang yang sama — bass butuh ruang buat resonansi"
+
+2. "Inlet 32mm itu sweet spot buat matic 160cc. Kekecilan = mentok, kegedean = torsi ilang. Kenshi udah ngitung ini"
+
+3. "Back pressure itu kayak napas — terlalu tinggi bikin mesin sesak, terlalu rendah bikin torsi bawah ilang. Yang penting BALANCE"
+
+4. "Knalpot murah suaranya berubah karena glasswool-nya cepet gosong. SS304 tahan panas, glasswool awet, suara konsisten"
+
+5. "Outlet 38mm = bass, outlet 26mm = adem. Kenshi kasih dua-duanya, tinggal ganti sesuai situasi"
+
+6. "Las argon itu 3x lebih kuat dari las biasa. Makanya knalpot Kenshi ga bakal bocor atau nembak-nembak"
+
+7. "Tebal 1.2mm itu standar premium — yang murah biasanya 0.8mm, tipis, gampang penyok kena gundukan"
+
+**Gunakan fakta ini untuk HOOK CURIOSITY seperti:**
+- "Lo pasti ga tau kenapa knalpot oval lebih ngebass dari bulat..."
+- "Ternyata ukuran inlet itu nentuin performa motor lo..."
+- "Rahasia kenapa knalpot mahal suaranya konsisten sampe bertahun-tahun..."
 
 === ISTILAH SLANG TAMBAHAN BUAT SCRIPT ===
 
