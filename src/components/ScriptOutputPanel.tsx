@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Copy, RefreshCw, Heart, Mic, Image, Download, Loader2 } from "lucide-react";
@@ -25,6 +25,14 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
   const [generatingImage, setGeneratingImage] = useState<string | null>(null);
   const [generatedAudios, setGeneratedAudios] = useState<Record<number, string>>({});
   const [generatedImages, setGeneratedImages] = useState<Record<string, string>>({});
+
+  // Reset generated audios and images when scripts change (new generation or regeneration)
+  useEffect(() => {
+    setGeneratedAudios({});
+    setGeneratedImages({});
+    setGeneratingTTS(null);
+    setGeneratingImage(null);
+  }, [scripts]);
 
   const copyScript = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
