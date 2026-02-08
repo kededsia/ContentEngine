@@ -151,11 +151,15 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
       </div>
 
       {scripts.map((script, i) => {
-        // Split script into main content and scene breakdown for better visual separation
-        const hasSceneBreakdown = script.includes("SCENE BREAKDOWN") || script.includes("Scene 1:");
-        const [mainScript, sceneBreakdown] = hasSceneBreakdown 
-          ? script.split(/(?=###?\s*🎬?\s*SCENE BREAKDOWN|(?=\*\*Scene 1:))/i)
-          : [script, ""];
+        // Split script into main content and scene breakdown - more flexible regex
+        const sceneBreakdownMatch = script.match(/(### 🎬 SCENE BREAKDOWN|🎬 SCENE BREAKDOWN|## SCENE BREAKDOWN|\*\*Scene 1:)/i);
+        let mainScript = script;
+        let sceneBreakdown = "";
+        
+        if (sceneBreakdownMatch && sceneBreakdownMatch.index !== undefined) {
+          mainScript = script.slice(0, sceneBreakdownMatch.index).trim();
+          sceneBreakdown = script.slice(sceneBreakdownMatch.index).trim();
+        }
         
         return (
           <Card key={i} className="bg-card border-border overflow-hidden">

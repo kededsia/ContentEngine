@@ -348,125 +348,91 @@ Kenshi pake SS304 High Grade:
 - "Bocor mulu" = sering ada masalah kebocoran
 - "Ribet" = banyak masalah, maintenance tinggi
 
-=== HOOK YANG BIKIN "WHAAATT??" (6-8 KATA, SHOCK VALUE!) ===
+=== HOOK SUPER PENDEK (3-5 KATA SAJA!) ===
 
-**PRINSIP HOOK NENDANG:**
-- SUPER PENDEK: 6-8 kata MAKSIMAL
-- BIKIN REAKSI "WHAAATT??" — shocking, unexpected
-- Statement yang bikin PENASARAN, bukan pertanyaan template
-- Bisa soal pengalaman, fakta mengejutkan, atau situasi relatable
-- BOLEH pakai slang, tapi GA WAJIB — yang penting NENDANG
+**ATURAN HOOK:**
+- MAKSIMAL 3-5 KATA
+- Bikin reaksi "WHAAATT??"
+- Langsung nendang, ga perlu basa-basi
+- Statement shocking, bukan pertanyaan
 
-**FORMULA HOOK SHOCK VALUE:**
-1. **Angka mengejutkan** — "Gue udah buang 3 juta"
-2. **Situasi extreme** — "Hampir celaka gara-gara knalpot"
-3. **Kontras tajam** — "Katanya stainless, 6 bulan karat"
-4. **Pengakuan jujur** — "Gue zonk 3x sebelum ini"
-5. **Fakta unexpected** — "12rb orang beli, cuma 47 komplain"
+=== 50 HOOK KILLER (3-5 KATA) ===
 
-=== 50 HOOK SHOCK VALUE (6-8 KATA) ===
+**ANGKA SHOCK:**
+1. "3 juta, zonk semua"
+2. "Ganti 4x setahun"
+3. "3 bulan udah belang"
+4. "8 bulan masih kinclong"
+5. "12rb unit terjual"
 
-**KATEGORI 1: ANGKA MENGEJUTKAN**
-1. "Gue udah buang 3 juta"
-2. "Ganti knalpot 4x setahun"
-3. "12rb unit, rating masih 4.9"
-4. "Baru 3 bulan udah belang"
-5. "8 bulan, masih kayak baru"
+**SITUASI EXTREME:**
+6. "Hampir celaka"
+7. "Bracket patah, bahaya"
+8. "Tilang 3x sebulan"
+9. "Knalpot copot di tol"
+10. "Motor mogok mendadak"
 
-**KATEGORI 2: SITUASI EXTREME**
-6. "Bracket patah, hampir celaka"
-7. "Knalpot copot di jalan tol"
-8. "Ditilang 3x sebulan"
-9. "Glasswool gosong, hampir kebakaran"
-10. "Motor mogok gara-gara knalpot"
+**KONTRAS TAJAM:**
+11. "Stainless tapi karat"
+12. "Mahal tapi kaleng"
+13. "Murah jadi mahal"
+14. "Racing tapi cempreng"
+15. "Minder jadi ditanya"
 
-**KATEGORI 3: KONTRAS TAJAM**
-11. "Katanya stainless, 6 bulan karat"
-12. "Harga mahal, kualitas kaleng"
-13. "Beli murah, benerin mahal"
-14. "Tampang racing, suara cempreng"
-15. "Dari minder jadi yang ditanya"
+**PENGAKUAN:**
+16. "Zonk 3x"
+17. "Nyesel telat tau"
+18. "Dulu ga percaya"
+19. "Skeptis, sekarang yakin"
+20. "Tadinya mau murah"
 
-**KATEGORI 4: PENGAKUAN JUJUR**
-16. "Gue zonk 3x sebelum ini"
-17. "Nyesel ga dari dulu"
-18. "Dulu gue juga ga percaya"
-19. "Skeptis, sampe gue buktiin"
-20. "Tadinya mau beli yang murah"
+**FAKTA NENDANG:**
+21. "Mahal lebih hemat"
+22. "SS304 beda jauh"
+23. "80dB cukup ngebass"
+24. "Oval lebih bass"
+25. "Las argon 3x kuat"
 
-**KATEGORI 5: FAKTA UNEXPECTED**
-21. "Yang mahal justru lebih hemat"
-22. "Ga semua SS304 itu sama"
-23. "80dB ternyata cukup ngebass"
-24. "Oval lebih bass dari bulat"
-25. "Las argon 3x lebih kuat"
+**REAKSI ORANG:**
+26. "Temen nanya terus"
+27. "Motor sebelah lirik"
+28. "Bini approve"
+29. "Satpam ga masalah"
+30. "Sunmori jadi bintang"
 
-**KATEGORI 6: REAKSI ORANG LAIN**
-26. "Temen sampe nanya 5x"
-27. "Motor sebelah langsung lirik"
-28. "Bini ga ngomel lagi"
-29. "Satpam sampe approve"
-30. "Sunmori jadi pusat perhatian"
+**PERBANDINGAN:**
+31. "Yang lain belang"
+32. "Temen ganti 3x"
+33. "Harga sama, beda umur"
+34. "Sekali beli, selesai"
+35. "Beli 3, mending 1"
 
-**KATEGORI 7: PERBANDINGAN TELAK**
-31. "Yang lain belang, ini kinclong"
-32. "Temen ganti 3x, gue masih 1"
-33. "Harga sama, umur beda jauh"
-34. "Suara sama, awet beda"
-35. "Beli sekali, pake bertahun"
+**CLIFFHANGER:**
+36. "Bengkel ga kasih tau"
+37. "Ini bedanya"
+38. "Rahasia awet"
+39. "Cuma ini beda"
+40. "Yang bikin switch"
 
-**KATEGORI 8: TEASER CLIFFHANGER**
-36. "Bengkel ga pernah kasih tau ini"
-37. "Ternyata bedanya di sini"
-38. "Ini yang bikin gue switch"
-39. "Rahasia knalpot awet"
-40. "Cuma ini yang beda"
+**DAILY LIFE:**
+41. "Anti tilang"
+42. "Daily approved"
+43. "Weekend ready"
+44. "Sunmori aman"
+45. "Kantor-rumah gacor"
 
-**KATEGORI 9: DAILY LIFE RELATE**
-41. "Berangkat kantor, ga takut tilang"
-42. "Weekend warrior approved"
-43. "Daily ke kantor, ngebass"
-44. "Sunmori ready, tilang-free"
-45. "Aman buat harian"
-
-**KATEGORI 10: PROVOCATIVE SINGKAT**
-46. "Knalpot lo beneran stainless?"
-47. "Yakin itu las argon?"
-48. "Cek dulu sebelum nyesel"
+**PROVOCATIVE:**
+46. "Beneran stainless?"
+47. "Yakin las argon?"
+48. "Cek dulu"
 49. "Murah sekarang, mahal nanti"
-50. "Sekali beli, atau berkali-kali?"
+50. "Sekali atau berkali-kali?"
 
-=== CARA BIKIN HOOK SENDIRI ===
-
-**Template bikin hook SHOCK VALUE:**
-- [Angka] + [Situasi negatif]: "Ganti 4x setahun"
-- [Ekspektasi] + [Realita beda]: "Katanya premium, ternyata kaleng"
-- [Aksi] + [Hasil unexpected]: "Pasang ini, langsung beda"
-- [Statement pendek] + [Cliffhanger]: "Ini yang gue cari"
-- [Waktu] + [Kondisi]: "8 bulan, masih kinclong"
-
-**PENTING:**
-- Hook CUMA 6-8 kata, GA LEBIH
-- Harus bikin orang PENASARAN atau KAGET
-- Boleh pakai slang, boleh engga — yang penting NENDANG
-- Jangan terlalu teknis di hook, simpan buat body
-
-=== KAMUS SLANG UNTUK BODY & NARASI ===
-
-*Tetap pakai slang ini di BODY script (bukan di hook):*
-
-**Istilah Daleman:**
-- Sarteng/sarfull, leheran, inlet, outlet, DB killer
-- Las argon, SS304, galvanis, glasswool
-
-**Istilah Kondisi:**
-- Belang, kropos, nembak, mentok, ngempos
-
-**Istilah Performa:**
-- Ngebass, cempreng, gerung, adem, gahar
-
-**Istilah Komunitas:**
-- Sunmori, kopdar, tikum, rolling, ngabers
+**CARA PAKAI:**
+- Hook di script WAJIB 3-5 kata saja
+- Ga perlu kalimat lengkap
+- Yang penting NENDANG dan bikin penasaran
+- Slang boleh di body, hook fokus shock value
 
 === KONSEP SCENE KREATIF & DINAMIS ===
 
