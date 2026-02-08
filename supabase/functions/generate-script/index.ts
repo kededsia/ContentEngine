@@ -348,135 +348,125 @@ Kenshi pake SS304 High Grade:
 - "Bocor mulu" = sering ada masalah kebocoran
 - "Ribet" = banyak masalah, maintenance tinggi
 
-=== HOOK PENDEK TAPI NENDANG (WAJIB PAKAI SLANG KOMUNITAS!) ===
+=== HOOK YANG BIKIN "WHAAATT??" (6-8 KATA, SHOCK VALUE!) ===
 
-**PRINSIP HOOK KILLER:**
-- PENDEK! Maksimal 5-8 kata
-- PAKAI ISTILAH INSIDER komunitas motor
-- Langsung trigger curiosity atau debat
-- Terasa kayak omongan sesama biker, bukan iklan
+**PRINSIP HOOK NENDANG:**
+- SUPER PENDEK: 6-8 kata MAKSIMAL
+- BIKIN REAKSI "WHAAATT??" — shocking, unexpected
+- Statement yang bikin PENASARAN, bukan pertanyaan template
+- Bisa soal pengalaman, fakta mengejutkan, atau situasi relatable
+- BOLEH pakai slang, tapi GA WAJIB — yang penting NENDANG
 
-**KAMUS SLANG SPESIFIKASI & DALEMAN MOTOR (WAJIB PAKAI!):**
+**FORMULA HOOK SHOCK VALUE:**
+1. **Angka mengejutkan** — "Gue udah buang 3 juta"
+2. **Situasi extreme** — "Hampir celaka gara-gara knalpot"
+3. **Kontras tajam** — "Katanya stainless, 6 bulan karat"
+4. **Pengakuan jujur** — "Gue zonk 3x sebelum ini"
+5. **Fakta unexpected** — "12rb orang beli, cuma 47 komplain"
 
-*Aliran & Preferensi:*
-- "Aliran sarteng" = prefer suara medium (saringan tengah)
-- "Aliran sarfull" = prefer suara adem total (saringan full)
-- "Aliran brong" = suka suara keras tanpa peredam (ilegal)
-- "Aliran adem" = suka suara halus buat daily
-- "Aliran gahar" = suka suara kencang & bertenaga
+=== 50 HOOK SHOCK VALUE (6-8 KATA) ===
 
-*Istilah Ukuran & Spek:*
-- "Leheran 26" / "Leheran 28" = ukuran diameter header
-- "Outlet 38" = lubang keluar gede (ngebass)
-- "Outlet 26" = lubang keluar kecil (adem)
-- "Inlet 32" = lubang masuk ke tabung
-- "Tabung oval" vs "Tabung bulat" = bentuk silencer
-- "DB killer" = peredam yang bisa dilepas
+**KATEGORI 1: ANGKA MENGEJUTKAN**
+1. "Gue udah buang 3 juta"
+2. "Ganti knalpot 4x setahun"
+3. "12rb unit, rating masih 4.9"
+4. "Baru 3 bulan udah belang"
+5. "8 bulan, masih kayak baru"
 
-*Istilah Material & Kualitas:*
-- "Full SS" / "SS304" = full stainless steel 304
-- "Galvanis" = baja lapis zinc (lebih murah, bisa karat)
-- "Las argon" = pengelasan premium TIG
-- "Las biasa" = pengelasan standar (gampang bocor)
-- "Tebal 1.2" = ketebalan material 1.2mm
+**KATEGORI 2: SITUASI EXTREME**
+6. "Bracket patah, hampir celaka"
+7. "Knalpot copot di jalan tol"
+8. "Ditilang 3x sebulan"
+9. "Glasswool gosong, hampir kebakaran"
+10. "Motor mogok gara-gara knalpot"
 
-*Istilah Masalah & Kondisi:*
-- "Mentok" = tenaga ga keluar, gas buang ketahan
-- "Ngempos" = tarikan lemot
-- "Belang" = warna ga rata, kusam
-- "Kropos" = korosi, bocor-bocor kecil
-- "Nembak" = suara ledakan kecil dari kebocoran
-- "Glasswool gosong" = peredam dalam udah rusak
+**KATEGORI 3: KONTRAS TAJAM**
+11. "Katanya stainless, 6 bulan karat"
+12. "Harga mahal, kualitas kaleng"
+13. "Beli murah, benerin mahal"
+14. "Tampang racing, suara cempreng"
+15. "Dari minder jadi yang ditanya"
 
-*Istilah Performa:*
-- "Ngebass" = suara dalam, low frequency
-- "Cempreng" = suara tinggi annoying
-- "Gerung" = suara dalam bergema
-- "Karakter" = jenis suara khas knalpot
+**KATEGORI 4: PENGAKUAN JUJUR**
+16. "Gue zonk 3x sebelum ini"
+17. "Nyesel ga dari dulu"
+18. "Dulu gue juga ga percaya"
+19. "Skeptis, sampe gue buktiin"
+20. "Tadinya mau beli yang murah"
 
-=== 50 HOOK PENDEK PAKAI SLANG (PILIH YANG COCOK!) ===
+**KATEGORI 5: FAKTA UNEXPECTED**
+21. "Yang mahal justru lebih hemat"
+22. "Ga semua SS304 itu sama"
+23. "80dB ternyata cukup ngebass"
+24. "Oval lebih bass dari bulat"
+25. "Las argon 3x lebih kuat"
 
-**KATEGORI 1: HOOK PERTANYAAN ALIRAN (trigger debat)**
-1. "Lu aliran sarteng apa sarfull?"
-2. "Outlet 38 atau 26?"
-3. "Tim SS304 atau tim galvanis?"
-4. "Ngebass atau adem?"
-5. "Brong atau legal?"
+**KATEGORI 6: REAKSI ORANG LAIN**
+26. "Temen sampe nanya 5x"
+27. "Motor sebelah langsung lirik"
+28. "Bini ga ngomel lagi"
+29. "Satpam sampe approve"
+30. "Sunmori jadi pusat perhatian"
 
-**KATEGORI 2: HOOK INSIDER KNOWLEDGE**
-6. "Tau bedanya inlet 32 sama 26?"
-7. "Leheran lo berapa mm?"
-8. "Pernah cek tebal tabung lo?"
-9. "Las argon vs las biasa, tau bedanya?"
-10. "Paham kenapa oval lebih bass?"
+**KATEGORI 7: PERBANDINGAN TELAK**
+31. "Yang lain belang, ini kinclong"
+32. "Temen ganti 3x, gue masih 1"
+33. "Harga sama, umur beda jauh"
+34. "Suara sama, awet beda"
+35. "Beli sekali, pake bertahun"
 
-**KATEGORI 3: HOOK PAIN POINT SINGKAT**
-11. "Knalpot lo udah belang?"
-12. "Baru 3 bulan udah kropos?"
-13. "Suara berubah? Glasswool gosong tuh"
-14. "Kena tilang mulu?"
-15. "Capek ganti knalpot tiap tahun?"
+**KATEGORI 8: TEASER CLIFFHANGER**
+36. "Bengkel ga pernah kasih tau ini"
+37. "Ternyata bedanya di sini"
+38. "Ini yang bikin gue switch"
+39. "Rahasia knalpot awet"
+40. "Cuma ini yang beda"
 
-**KATEGORI 4: HOOK FLEXING SUBTLE**
-16. "8 bulan, masih kinclong"
-17. "Ga pernah ganti glasswool"
-18. "Sunmori ga pernah minder lagi"
-19. "Anti drama, anti tilang"
-20. "Sekali pasang, udah"
+**KATEGORI 9: DAILY LIFE RELATE**
+41. "Berangkat kantor, ga takut tilang"
+42. "Weekend warrior approved"
+43. "Daily ke kantor, ngebass"
+44. "Sunmori ready, tilang-free"
+45. "Aman buat harian"
 
-**KATEGORI 5: HOOK PERBANDINGAN**
-21. "SS304 vs galvanis, bedanya..."
-22. "Sarteng vs sarfull, mana yang lu?"
-23. "Inlet 32 vs 26, efeknya beda jauh"
-24. "Las argon vs biasa, liat hasilnya"
-25. "Oval vs bulat, suaranya beda"
+**KATEGORI 10: PROVOCATIVE SINGKAT**
+46. "Knalpot lo beneran stainless?"
+47. "Yakin itu las argon?"
+48. "Cek dulu sebelum nyesel"
+49. "Murah sekarang, mahal nanti"
+50. "Sekali beli, atau berkali-kali?"
 
-**KATEGORI 6: HOOK PROVOCATIVE SINGKAT**
-26. "Knalpot 'stainless' lo beneran SS304?"
-27. "Yang murah, murah di mana?"
-28. "3x beli = 1x beli yang bener"
-29. "Tebal 0.8mm? Siap-siap penyok"
-30. "Las biasa? Setahun bocor"
+=== CARA BIKIN HOOK SENDIRI ===
 
-**KATEGORI 7: HOOK STORYTELLING SINGKAT**
-31. "Dulu gue juga skeptis..."
-32. "Zonk 3x, akhirnya nemu"
-33. "6 bulan pake, hasilnya..."
-34. "Bracket patah di jalan, hampir celaka"
-35. "Dari cempreng ke ngebass"
+**Template bikin hook SHOCK VALUE:**
+- [Angka] + [Situasi negatif]: "Ganti 4x setahun"
+- [Ekspektasi] + [Realita beda]: "Katanya premium, ternyata kaleng"
+- [Aksi] + [Hasil unexpected]: "Pasang ini, langsung beda"
+- [Statement pendek] + [Cliffhanger]: "Ini yang gue cari"
+- [Waktu] + [Kondisi]: "8 bulan, masih kinclong"
 
-**KATEGORI 8: HOOK REVEAL/TEASER**
-36. "Ini yang bengkel ga kasih tau"
-37. "Rahasia outlet 38mm"
-38. "Kenapa 12rb orang pilih ini"
-39. "Bedanya harga, bedanya umur"
-40. "Cek daleman dulu sebelum beli"
+**PENTING:**
+- Hook CUMA 6-8 kata, GA LEBIH
+- Harus bikin orang PENASARAN atau KAGET
+- Boleh pakai slang, boleh engga — yang penting NENDANG
+- Jangan terlalu teknis di hook, simpan buat body
 
-**KATEGORI 9: HOOK SITUASIONAL**
-41. "Sunmori besok, siap belum?"
-42. "Motor sebelah nanya terus"
-43. "Lampu merah, pada lirik"
-44. "Tikum, yang paling ditanya"
-45. "Bini diem, ga ngomel lagi"
+=== KAMUS SLANG UNTUK BODY & NARASI ===
 
-**KATEGORI 10: HOOK SPEK SPESIFIK**
-46. "Inlet 32, outlet 38, ngebass"
-47. "SS304 1.2mm, ga bakal penyok"
-48. "Leheran 28, tabung oval"
-49. "Las argon, anti bocor"
-50. "Sarfull 80dB, aman daily"
+*Tetap pakai slang ini di BODY script (bukan di hook):*
 
-**CARA PAKAI HOOK:**
-- Script 1: Pilih hook PALING PENDEK & NENDANG
-- Script 2 & 3: Boleh lebih panjang tapi tetap pakai SLANG
-- SEMUA hook WAJIB pakai minimal 1 istilah insider komunitas
+**Istilah Daleman:**
+- Sarteng/sarfull, leheran, inlet, outlet, DB killer
+- Las argon, SS304, galvanis, glasswool
 
-**CONTOH NARASI PAKAI SLANG (WAJIB DIIKUTI):**
-- "Gue pilih outlet 38 biar ngebass, tapi ada DB killer buat mode daily"
-- "SS304 tebal 1.2mm, las argon — ga bakal kropos kayak yang galvanis"
-- "Inlet 32mm itu sweet spot, ga bikin mentok tapi torsi tetep dapet"
-- "Sarteng buat yang mau karakter, sarfull buat yang pure adem"
-- "Leheran 28mm PNP, ga perlu modif, langsung gacor"
+**Istilah Kondisi:**
+- Belang, kropos, nembak, mentok, ngempos
+
+**Istilah Performa:**
+- Ngebass, cempreng, gerung, adem, gahar
+
+**Istilah Komunitas:**
+- Sunmori, kopdar, tikum, rolling, ngabers
 
 === KONSEP SCENE KREATIF & DINAMIS ===
 
