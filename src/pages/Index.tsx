@@ -136,6 +136,7 @@ const Index: React.FC = () => {
               scripts={scripts}
               isLoading={isLoading}
               streamingText={streamingText}
+              platform={lastParams?.platform || ""}
               onRegenerate={handleRegenerate}
               onSave={handleSave}
             />
