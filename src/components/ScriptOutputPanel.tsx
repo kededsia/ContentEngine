@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy, RefreshCw, Heart, Mic, Image, Download, Loader2 } from "lucide-react";
+import { Copy, RefreshCw, Heart, Mic, Download, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface ScriptOutputPanelProps {
@@ -17,21 +17,16 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
   scripts,
   isLoading,
   streamingText,
-  platform,
   onRegenerate,
   onSave,
 }) => {
   const [generatingTTS, setGeneratingTTS] = useState<number | null>(null);
-  const [generatingImage, setGeneratingImage] = useState<string | null>(null);
   const [generatedAudios, setGeneratedAudios] = useState<Record<number, string>>({});
-  const [generatedImages, setGeneratedImages] = useState<Record<string, string>>({});
 
-  // Reset generated audios and images when scripts change (new generation or regeneration)
+  // Reset generated audios when scripts change (new generation or regeneration)
   useEffect(() => {
     setGeneratedAudios({});
-    setGeneratedImages({});
     setGeneratingTTS(null);
-    setGeneratingImage(null);
   }, [scripts]);
 
   const copyScript = (text: string, index: number) => {
@@ -49,7 +44,7 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
       if (line.includes("### 📝 SCRIPT") || line.includes("**[HOOK")) {
         inScript = true;
       }
-      if (line.includes("### 🎬 SCENE BREAKDOWN")) {
+      if (line.includes("### 🎬 SCENE BREAKDOWN") || line.includes("🎬 SCENE BREAKDOWN")) {
         inScript = false;
       }
       if (inScript && !line.startsWith("**[") && !line.startsWith("###") && line.trim()) {
@@ -57,16 +52,6 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
       }
     }
     return textParts.join(" ").substring(0, 2500); // Limit for TTS
-  };
-
-  const extractImagePrompts = (script: string): { scene: string; prompt: string }[] => {
-    const prompts: { scene: string; prompt: string }[] = [];
-    const regex = /\*\*Scene (\d+):[^*]*\*\*[\s\S]*?📸 IMAGE PROMPT:\s*([^\n🎥]+)/g;
-    let match;
-    while ((match = regex.exec(script)) !== null) {
-      prompts.push({ scene: `Scene ${match[1]}`, prompt: match[2].trim() });
-    }
-    return prompts;
   };
 
   const generateTTS = async (scriptIndex: number) => {
@@ -106,50 +91,10 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
     }
   };
 
-  const generateImage = async (scriptIndex: number, sceneIndex: number, prompt: string) => {
-    const key = `${scriptIndex}-${sceneIndex}`;
-    const aspectRatio = platform.includes("TikTok") || platform.includes("Reels") ? "9:16" : "1:1";
-
-    setGeneratingImage(key);
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-image`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ prompt, aspectRatio }),
-        }
-      );
-
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(err.error || "Gagal generate gambar");
-      }
-
-      const data = await response.json();
-      setGeneratedImages((prev) => ({ ...prev, [key]: data.imageUrl }));
-      toast({ title: "Gambar berhasil di-generate! 🖼️" });
-    } catch (e: any) {
-      toast({ title: "Error", description: e.message, variant: "destructive" });
-    } finally {
-      setGeneratingImage(null);
-    }
-  };
-
   const downloadAudio = (audioUrl: string, index: number) => {
     const link = document.createElement("a");
     link.href = audioUrl;
     link.download = `kenshi-vo-script-${index + 1}.mp3`;
-    link.click();
-  };
-
-  const downloadImage = (imageUrl: string, scriptIndex: number, sceneIndex: number) => {
-    const link = document.createElement("a");
-    link.href = imageUrl;
-    link.download = `kenshi-scene-${scriptIndex + 1}-${sceneIndex + 1}.png`;
     link.click();
   };
 
@@ -206,8 +151,6 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
       </div>
 
       {scripts.map((script, i) => {
-        const imagePrompts = extractImagePrompts(script);
-        
         // Split script into main content and scene breakdown for better visual separation
         const hasSceneBreakdown = script.includes("SCENE BREAKDOWN") || script.includes("Scene 1:");
         const [mainScript, sceneBreakdown] = hasSceneBreakdown 
@@ -290,66 +233,6 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
                   </Button>
                 )}
               </div>
-
-              {/* Image Generation Section */}
-              {imagePrompts.length > 0 && (
-                <div className="border-t border-border p-5">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Image className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-semibold">Scene Images</span>
-                    <span className="text-xs text-muted-foreground">
-                      ({platform.includes("TikTok") || platform.includes("Reels") ? "9:16" : "1:1"})
-                    </span>
-                  </div>
-                  <div className="grid gap-3">
-                    {imagePrompts.map((item, j) => {
-                      const key = `${i}-${j}`;
-                      return (
-                        <div key={j} className="bg-secondary/30 rounded-lg p-3">
-                          <div className="text-xs font-medium text-primary mb-1">{item.scene}</div>
-                          <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{item.prompt}</p>
-                          {generatedImages[key] ? (
-                            <div className="relative">
-                              <img
-                                src={generatedImages[key]}
-                                alt={item.scene}
-                                className="rounded-lg max-h-48 object-contain"
-                              />
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                className="absolute top-2 right-2"
-                                onClick={() => downloadImage(generatedImages[key], i, j)}
-                              >
-                                <Download className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          ) : (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => generateImage(i, j, item.prompt)}
-                              disabled={generatingImage === key}
-                            >
-                              {generatingImage === key ? (
-                                <>
-                                  <Loader2 className="h-3 w-3 animate-spin" />
-                                  Generating...
-                                </>
-                              ) : (
-                                <>
-                                  <Image className="h-3 w-3" />
-                                  Generate Image
-                                </>
-                              )}
-                            </Button>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
             </CardContent>
           </Card>
         );

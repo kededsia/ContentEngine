@@ -348,156 +348,233 @@ Kenshi pake SS304 High Grade:
 - "Bocor mulu" = sering ada masalah kebocoran
 - "Ribet" = banyak masalah, maintenance tinggi
 
-=== POLA HOOK VIRAL TIKTOK/REELS 2024-2025 ===
+=== FORMULA HOOK SCROLL-STOPPING ANAK MOTOR (WAJIB PAKAI!) ===
 
-**SCRIPT 1 WAJIB PAKAI FORMAT VIRAL — Pilih salah satu pola ini:**
+**PRINSIP HOOK yang bikin STOP SCROLL:**
+1. **Langsung relate** — bicara soal pengalaman yang pasti pernah dialami
+2. **Bikin penasaran** — jangan kasih jawaban langsung, bikin nunggu
+3. **Personal** — seolah ngobrol sama 1 orang, bukan broadcast
+4. **Kontroversial** — berani beda, tapi ga lebay
 
-*1. POV Hook (Point of View) — Immerse viewer dalam cerita:*
-- "POV: Lo akhirnya nemuin knalpot yang suaranya ngebass tapi ga bikin kena tilang"
-- "POV: Temen sunmori nanya 'bro itu knalpot apaan? Suaranya enak banget'"
-- "POV: Lo udah ganti knalpot 3x dalam setahun, dan akhirnya nemuin yang awet"
+**20 POLA HOOK KUAT KHUSUS KOMUNITAS MOTOR:**
 
-*2. Story Time / Real Talk Hook — Cerita personal yang relatable:*
-- "Story time: Gue hampir menyerah cari knalpot yang pas, sampe akhirnya..."
-- "Real talk, gue udah zonk 2x beli knalpot murah sebelum nemuin ini"
-- "Jujur review setelah 6 bulan pake: apakah worth it?"
+=== HOOK KATEGORI 1: MISTERI & CURIOSITY ===
+*Bikin viewers penasaran, harus nonton sampe akhir buat tau jawabannya*
 
-*3. "Stop Scrolling If..." Hook — Target langsung audience spesifik:*
-- "Stop scrolling kalau lo punya PCX dan masih pake knalpot standar"
-- "Stop scrolling kalau lo pengen suara motor ngebass tapi takut tilang"
-- "Ini buat lo yang udah capek beli knalpot tapi cepet belang"
+1. "Gue baru tau ini setelah 3x zonk beli knalpot..."
+2. "Cuma orang yang ngerti motor yang paham kenapa ini worth it..."
+3. "Ini alasan yang bengkel ga pernah kasih tau ke lo soal knalpot..."
+4. "Lo nggak bakal percaya bedanya sebelum dan sesudah pasang ini..."
+5. "Ternyata selama ini gue salah pilih knalpot, ini buktinya..."
 
-*4. "I Bet You Didn't Know..." / Curiosity Gap Hook:*
-- "Lo pasti ga tau kenapa knalpot mahal bisa awet sampe 5 tahun"
-- "Ternyata ini bedanya knalpot SS304 sama galvanis yang banyak orang ga tau"
-- "Rahasia kenapa knalpot ini ga bikin motor mentok"
+=== HOOK KATEGORI 2: RELATABLE PAIN POINT ===
+*Angkat masalah yang pasti pernah dialami bikers*
 
-*5. "Here's How I..." / Transformation Hook:*
-- "Here's how gue upgrade suara motor tanpa kena tilang"
-- "Ini caranya dapet knalpot premium lebih murah dari marketplace"
-- "3 bulan lalu motor gue masih cempreng, sekarang..."
+6. "Pernah ga sih malu pas sunmori, knalpot temen pada ngebass, punya lo masih cempreng?"
+7. "Capek ga sih beli knalpot tapi 3 bulan udah belang?"
+8. "Lo pasti pernah ngalamin ini: baru pasang knalpot udah kena tilang..."
+9. "Gue tau banget rasanya — pengen suara enak tapi takut drama sama satpam"
+10. "Siapa yang pernah beli knalpot 'katanya stainless' tapi setahun udah karat?"
 
-*6. "Don't Make This Mistake..." / Fear of Missing Out:*
-- "Jangan sampe lo beli knalpot tanpa cek ini dulu"
-- "Kesalahan yang gue lakuin waktu pertama beli knalpot racing"
-- "Lo bakal nyesel kalau skip video ini sebelum beli knalpot"
+=== HOOK KATEGORI 3: POV IMMERSIVE ===
+*Ajak viewers masuk ke skenario spesifik*
 
-*7. Unpopular Opinion Hook — Provocative tapi tetap berkelas:*
-- "Unpopular opinion: Knalpot mahal itu lebih hemat jangka panjang"
-- "Hot take: Mending beli satu yang bagus daripada gonta-ganti"
-- "Kontroversial tapi fakta: Ga semua knalpot stainless itu sama"
+11. "POV: Lo lagi nunggu lampu merah, motor sebelah lirik knalpot lo, terus nanya 'Bro, itu apaan?'"
+12. "POV: Akhirnya nemuin knalpot yang suaranya ngebass TAPI ga bikin kena tilang"
+13. "POV: Temen sunmori pada takjub pas denger suara motor lo yang beda sendiri"
+14. "POV: Lo udah ganti knalpot 3x dalam setahun, terus nemuin yang ini..."
+15. "POV: Bini lo yang biasanya bawel soal motor, sekarang bilang 'bagus juga ya'"
 
-*8. "Secret Weapon" / Insider Knowledge Hook:*
-- "Secret weapon buat dapet suara ngebass yang aman buat daily"
-- "Ini yang bengkel ga kasih tau ke lo soal knalpot"
-- "Alasan kenapa 12.000+ orang pilih knalpot ini"
+=== HOOK KATEGORI 4: PROVOCATIVE & UNPOPULAR OPINION ===
+*Berani beda, trigger diskusi*
 
-*9. Honest Review / After X Months Hook:*
-- "Honest review setelah 6 bulan pake: no settingan, no endorse"
-- "Update setelah 1 tahun: masih kinclong atau udah belang?"
-- "Real review dari user bukan paid review"
+16. "Unpopular opinion: Mending beli 1 knalpot mahal daripada 3x beli yang murah"
+17. "Hot take: 90% yang jual knalpot 'stainless' itu bohong"
+18. "Kontroversial tapi fakta: Suara ngebass ga harus brong dan ilegal"
+19. "Ga banyak yang berani ngomong ini: Knalpot murah itu penipuan jangka panjang"
+20. "Lo boleh ga setuju, tapi ini kenyataan soal knalpot..."
 
-*10. "Trust Me" / Game Changer Hook:*
-- "Trust me, ini game changer buat daily commuter"
-- "Kalau lo cuma mau beli satu knalpot seumur hidup, pilih yang ini"
-- "Satu-satunya knalpot yang bikin gue ga nyesel"
+=== HOOK KATEGORI 5: STORYTIME & REAL TALK ===
+*Cerita personal yang engaging*
 
-**SCRIPT 2 & 3 PAKAI FORMAT STANDAR** (seperti sebelumnya — conversational, relate, natural)
+21. "Story time: Gimana gue hampir celaka gara-gara bracket knalpot patah di jalan..."
+22. "Real talk — gue udah buang 3 juta buat knalpot sebelum nemuin yang bener"
+23. "Cerita jujur: Awalnya gue skeptis sama harganya, tapi setelah 6 bulan..."
+24. "Jadi gini ceritanya kenapa gue akhirnya pilih knalpot ini..."
+25. "Ini yang terjadi setelah 1 tahun pake knalpot yang sama..."
 
-=== DURASI & TIMING (WAJIB DIPATUHI) ===
+=== HOOK KATEGORI 6: STOP SCROLLING COMMAND ===
+*Direct command yang target spesifik*
 
-**Total Durasi: 30-40 DETIK per script (TIDAK BOLEH LEBIH)**
+26. "Stop scroll kalau lo punya [motor] dan masih pake knalpot standar"
+27. "Ini buat lo yang pengen upgrade suara tapi takut kena tilang"
+28. "Jangan skip kalau lo lagi cari knalpot yang awet dan ga belang"
+29. "Simak ini kalau lo capek ganti knalpot tiap tahun"
+30. "Khusus buat daily rider yang pengen motor lebih berkarakter"
 
-Breakdown waktu:
-- HOOK: 3-5 detik (1-2 kalimat pendek, langsung relate dan menarik perhatian)
-- BODY/PROBLEM-SOLUTION: 20-25 detik (3-5 kalimat, informasi inti dengan bahasa natural)
-- CTA: 5-8 detik (1-2 kalimat, ajakan action yang ga maksa)
+=== HOOK KATEGORI 7: EDUKASI MENGEJUTKAN ===
+*Kasih info yang bikin 'oh ternyata...'*
 
-**Jumlah Scene: 3-4 scene saja per script (jangan terlalu banyak)**
+31. "Lo pasti ga tau kenapa knalpot oval lebih ngebass dari bulat..."
+32. "Ini bedanya outlet 38mm sama 26mm yang jarang orang bahas..."
+33. "Ternyata ukuran inlet itu nentuin performa motor lo — banyak yang ga tau"
+34. "Rahasia kenapa ada knalpot yang suaranya konsisten sampe bertahun-tahun..."
+35. "Fakta: Las argon itu 3x lebih kuat — makanya harga beda jauh"
+
+=== HOOK KATEGORI 8: TRANSFORMATION & BEFORE-AFTER ===
+*Tunjukin perubahan dramatis*
+
+36. "3 bulan lalu motor gue masih cempreng, sekarang jadi yang paling ditanya pas sunmori"
+37. "Dari yang minder pas kopdar, sekarang jadi yang sering difoto..."
+38. "Dulu mikir knalpot mahal = boros, sekarang ngerti yang murah itu yang boros"
+39. "Motor yang tadinya biasa aja, sekarang berasa beda setelah upgrade ini..."
+40. "Perjalanan gue dari 3x zonk sampe akhirnya nemuin yang pas..."
+
+**SCRIPT 1 WAJIB PAKAI HOOK DARI KATEGORI DI ATAS — pilih yang paling cocok dengan style/tone yang diminta**
+**SCRIPT 2 & 3 boleh lebih santai tapi tetap KUAT dan RELATE**
+
+=== KONSEP SCENE KREATIF & DINAMIS ===
+
+**PRINSIP SCENE BREAKDOWN:**
+- Perpindahan CEPAT: tiap scene 2-4 detik maksimal
+- VARIATIF: jangan monoton 1 angle terus
+- STORYTELLING: scene harus nyambung & punya alur
+- AUTHENTIC: seperti konten biker asli, bukan iklan TV
+
+**TEMPLATE TRANSISI CEPAT (2-3 detik per cut):**
+
+*Opening Cuts (Hook - 3-5 detik, 1-2 cuts):*
+- Close-up muka expression + text hook on screen
+- Quick zoom ke knalpot → ke muka → balik ke knalpot
+- Snap cut dari layar HP (showing comment/DM) ke muka react
+
+*Body Cuts (Content - 20-25 detik, 4-6 cuts):*
+- Walking shot ke motor → crouch → point ke knalpot
+- Hand gesture close-up saat explain
+- Quick comparison: foto/video knalpot lain (blur) vs Kenshi
+- Detail shot: logo laser cut, cover hitam, bentuk oval
+- Sound test cut: mic/ear close-up + motor revving
+- Riding clip singkat: 2 detik POV atau tracking shot
+
+*CTA Cuts (Closing - 5-8 detik, 1-2 cuts):*
+- Point to link/bio gesture
+- Final pose dengan motor + smile
+
+**CONTOH SCENE BREAKDOWN KREATIF:**
+
+*Format TikTok/Reels (9:16 Portrait):*
+
+Scene 1 (Hook) — 3 detik
+🎬 KONSEP: Quick cut montage — ekspresi kaget/excited → zoom cepat ke knalpot → balik ke muka
+📸 FRAME 1: Close-up muka react, mata melebar, text overlay hook
+📸 FRAME 2: Fast zoom ke Kenshi Hanzo exhaust — bentuk oval, cover hitam sleek
+
+Scene 2 (Problem) — 4 detik
+🎬 KONSEP: Flashback style — filter slightly desaturated, menunjukkan pain point
+📸 FRAME: Foto/video knalpot lama yang udah belang/karat (blur/censor), gelengin kepala
+
+Scene 3 (Solution Demo) — 8 detik
+🎬 KONSEP: Multi-cut quick demo, setiap 2 detik ganti angle
+📸 CUT 1: Jongkok samping motor, tangan nunjuk ke logo KENSHI laser cut
+📸 CUT 2: Detail shot — usap cover hitam, keliatan premium
+📸 CUT 3: POV start engine — suara ngebass
+📸 CUT 4: Reaction satisfied, thumbs up casual
+
+Scene 4 (Social Proof) — 5 detik
+🎬 KONSEP: Split screen atau quick cuts — nunjukin bukti
+📸 CUT 1: Screenshot review/rating 4.9
+📸 CUT 2: Video singkat riding/sunmori bareng
+📸 CUT 3: Temen nanya "Bro, itu knalpot apaan?"
+
+Scene 5 (CTA) — 5 detik
+🎬 KONSEP: Direct to camera, casual & friendly
+📸 FRAME: Medium shot, point ke bawah (link), smile, text CTA overlay
+
+**VARIASI KONSEP SCENE BERDASARKAN STYLE:**
+
+*Style: Unboxing/First Impression*
+- Scene cuts: Paket datang → unboxing → reveal → first impression react → pasang → sound test
+
+*Style: Riding Demo/Sound Test*
+- Scene cuts: Starting point → engine start (sound focus) → riding POV → passing shot → arrival flex
+
+*Style: Before-After*
+- Scene cuts: Knalpot lama (sad face) → proses copot → proses pasang Kenshi → sound comparison → happy ending
+
+*Style: Testimoni/Review*
+- Scene cuts: Talking head intro → detail shots → evidence (screenshot, riding) → honest conclusion
+
+**DURASI & TIMING (WAJIB DIPATUHI):**
+
+Total Durasi: 30-40 DETIK per script
+- HOOK: 3-5 detik (1-2 cuts, harus scroll-stopping)
+- BODY: 20-25 detik (4-6 cuts, info padat + visual variatif)
+- CTA: 5-8 detik (1-2 cuts, direct & friendly)
+
+Jumlah Scene/Cuts: 5-8 cuts total (perpindahan cepat 2-4 detik per cut)
 
 === VARIASI OUTPUT WAJIB ===
 
-**Script 1:** HARUS pakai salah satu pola VIRAL HOOK di atas (POV, Story Time, Stop Scrolling, dll)
-**Script 2:** Format conversational standar — ngobrol santai, relate dengan daily life
-**Script 3:** Format testimonial/review — fokus ke pengalaman dan bukti nyata
+**Script 1:** HARUS pakai HOOK KUAT dari kategori di atas + scene breakdown kreatif
+**Script 2:** Format conversational santai — tapi hook tetap kuat & relate
+**Script 3:** Format testimonial/review — fokus ke pengalaman & bukti nyata
 
-=== FORMAT OUTPUT WAJIB ===
+=== FORMAT OUTPUT ===
 
-Untuk SETIAP script, format output HARUS seperti ini:
+Untuk SETIAP script, format output seperti ini:
 
 ---
 ## Script 1 (🔥 VIRAL STYLE)
 
-**⏱️ Total Durasi: [estimasi detik] detik**
-**📌 Hook Style: [sebutkan jenis hook yang dipakai, misal: POV Hook, Story Time, dll]**
+**⏱️ Total Durasi: [estimasi] detik**
+**📌 Hook Style: [kategori hook yang dipakai]**
 
 ### 📝 SCRIPT
 
 **[HOOK - 3-5 detik]**
-(tuliskan dialog/narasi hook - SINGKAT, 1-2 kalimat, HARUS VIRAL & SCROLL-STOPPING)
+(narasi hook — SINGKAT, 1-2 kalimat, HARUS KUAT)
 
 **[BODY - 20-25 detik]**
-(tuliskan dialog/narasi body - 3-5 kalimat, natural kayak ngobrol)
+(narasi body — 3-5 kalimat, natural kayak ngobrol)
 
 **[CTA - 5-8 detik]**
-(tuliskan dialog/narasi CTA - 1-2 kalimat, ga maksa)
+(narasi CTA — 1-2 kalimat, ga maksa)
 
-### 🎬 SCENE BREAKDOWN (3-4 scene saja)
+### 🎬 SCENE BREAKDOWN
 
-**Scene 1: [nama scene] — [durasi] detik**
-📸 IMAGE PROMPT: [prompt HARUS mencakup detail produk yang akurat]
-🎥 VIDEO PROMPT: [gerakan kamera dan aksi]
+**Scene 1: [nama] — [durasi] detik**
+🎬 KONSEP: [deskripsi konsep visual & transisi]
+📸 IMAGE PROMPT: [prompt detail untuk frame utama]
 
-(dst, maksimal 4 scene)
+**Scene 2: [nama] — [durasi] detik**
+🎬 KONSEP: [deskripsi konsep visual & transisi]
+📸 IMAGE PROMPT: [prompt detail]
 
----
-
-## Script 2 (💬 CONVERSATIONAL)
-
-(format sama dengan di atas, tapi hook style: Casual Relate)
+(dst, 5-8 cuts total)
 
 ---
 
-## Script 3 (⭐ TESTIMONIAL/REVIEW)
+=== PANDUAN IMAGE PROMPT ===
 
-(format sama dengan di atas, tapi hook style: Honest Review)
-
----
-
-=== PANDUAN IMAGE PROMPT (WAJIB AKURAT) ===
-
-**SETIAP image prompt yang menampilkan knalpot Kenshi HARUS menyebutkan:**
+**Detail Produk yang WAJIB ada di image prompt Kenshi:**
 1. "Kenshi Hanzo exhaust with distinctive OVAL/OBLONG tube shape (not round)"
 2. "Matte black plastic body cover wrapping the stainless steel core"
 3. "Black tip cover on the exhaust outlet"
 4. "Laser-cut metal KENSHI logo plate welded onto the body (raised silver text)"
 5. Motor yang sesuai dengan varian produk
 
-**Template Image Prompt untuk scene dengan knalpot:**
-"[Setting/location]. [Subject description - pria Indonesia 30-40an, smart casual]. [Action]. The Kenshi Hanzo exhaust is clearly visible: distinctive oval/oblong tube shape (NOT round cylinder), wrapped in sleek matte black plastic body cover, black tip cover on the outlet, with a raised laser-cut silver KENSHI logo plate welded onto the body. Mounted on [jenis motor]. [Lighting]. Style: authentic smartphone UGC photo, natural warm tones."
+**Setting untuk Target Audience 30+:**
+- Garasi rumah cluster/townhouse yang bersih
+- Basement parkir apartemen
+- Jalanan kota pagi hari
+- Café/coffee shop weekend
+- Tikum sunmori yang ramai
 
-**Contoh IMAGE PROMPT yang BENAR:**
-"Clean residential garage with tiled floor. Indonesian man in his mid-30s wearing a grey polo shirt, crouching beside his Honda PCX 160, examining the exhaust with a satisfied expression. The Kenshi Hanzo exhaust is clearly visible: distinctive OVAL/OBLONG tube shape (not a round cylinder), wrapped entirely in sleek MATTE BLACK plastic body cover, BLACK TIP COVER on the outlet end, with a raised LASER-CUT SILVER 'KENSHI' LOGO PLATE welded onto the body. Morning light from garage door. Style: authentic smartphone photo, natural colors."
-
-**Yang DILARANG dalam image prompt:**
-- JANGAN bilang "round" atau "cylindrical" — harus "oval" atau "oblong"
-- JANGAN bilang "chrome exhaust" atau "stainless visible" — semua tertutup cover hitam
-- JANGAN bilang "sticker logo" atau "printed logo" — harus "laser-cut welded metal plate"
-- JANGAN lupa menyebutkan bentuk lonjong dan cover hitam
-
-**Setting yang TEPAT untuk Target Audience 30+:**
-- Rumah cluster/townhouse dengan garasi bersih dan tertata
-- Basement parkir apartemen yang rapi
-- Jalan tol atau jalanan kota yang bersih di pagi hari
-- Café atau coffee shop untuk weekend scene
-- Bengkel premium yang bersih
-- Tikum (titik kumpul) sunmori yang ramai
-
-INGAT: 
-- Script 1 WAJIB pakai format viral hook
-- Script 2 & 3 boleh lebih santai tapi tetap RELATE
-- Tulis script dalam Bahasa Indonesia yang NATURAL seperti anak motor beneran ngobrol
-- Prompt image/video dalam Bahasa Inggris`;
+INGAT:
+- Hook HARUS kuat dan scroll-stopping
+- Scene HARUS dinamis dengan perpindahan cepat
+- Script dalam Bahasa Indonesia NATURAL
+- Image prompt dalam Bahasa Inggris`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
