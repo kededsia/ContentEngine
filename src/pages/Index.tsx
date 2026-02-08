@@ -29,11 +29,15 @@ const Index: React.FC = () => {
     style: string;
     tone: string;
     additionalInfo: string;
-  }) => {
+  }, isRegenerate = false) => {
     setIsLoading(true);
-    setScripts([]);
-    setStreamingText("");
     setLastParams(params);
+    
+    // Only clear scripts on NEW generation, keep old scripts visible during regenerate
+    if (!isRegenerate) {
+      setScripts([]);
+    }
+    setStreamingText("");
 
     try {
       const resp = await fetch(CHAT_URL, {
@@ -57,6 +61,9 @@ const Index: React.FC = () => {
       let buffer = "";
       let fullText = "";
 
+      // Clear old scripts once streaming starts (for regenerate)
+      let hasStartedStreaming = false;
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -75,6 +82,11 @@ const Index: React.FC = () => {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content;
             if (content) {
+              // Clear old scripts once we start receiving new content
+              if (!hasStartedStreaming && isRegenerate) {
+                hasStartedStreaming = true;
+                setScripts([]);
+              }
               fullText += content;
               setStreamingText(fullText);
             }
@@ -86,6 +98,7 @@ const Index: React.FC = () => {
       }
 
       const parsed = parseScripts(fullText);
+      // Use functional update to ensure latest state
       setScripts(parsed);
       setStreamingText("");
     } catch (e: any) {
@@ -96,7 +109,7 @@ const Index: React.FC = () => {
   };
 
   const handleRegenerate = () => {
-    if (lastParams) generate(lastParams);
+    if (lastParams) generate(lastParams, true);
   };
 
   const handleSave = () => {
