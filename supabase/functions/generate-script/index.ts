@@ -797,31 +797,105 @@ SEBELUM OUTPUT, AI HARUS SELF-CHECK:
 
 INGAT: Kamu BUKAN AI formal. Kamu adalah BIKER yang jago copywriting. Tulis kayak ngobrol sama temen, BUKAN kayak baca brosur.`;
 
-// === FUNGSI RISET WEB GRATIS ===
+// === FUNGSI RISET WEB GRATIS + ANTI-REPETISI ===
 
-// Database trending topics yang di-update manual + auto-refresh dari web
+// Session memory untuk track topik yang baru dipakai (reset setelah 10 menit)
+// In-memory cache yang akan reset saat function cold start, tapi efektif untuk regenerate berturut-turut
+const USED_TOPICS_CACHE: Map<string, number> = new Map();
+const CACHE_TTL_MS = 10 * 60 * 1000; // 10 menit
+
+function cleanExpiredCache() {
+  const now = Date.now();
+  for (const [key, timestamp] of USED_TOPICS_CACHE.entries()) {
+    if (now - timestamp > CACHE_TTL_MS) {
+      USED_TOPICS_CACHE.delete(key);
+    }
+  }
+}
+
+function markTopicsAsUsed(topics: string[]) {
+  const now = Date.now();
+  for (const topic of topics) {
+    USED_TOPICS_CACHE.set(topic, now);
+  }
+}
+
+function getUnusedTopics(allTopics: string[][]): string[][] {
+  cleanExpiredCache();
+  return allTopics.filter(t => !USED_TOPICS_CACHE.has(t[0]));
+}
+
+// Database trending topics EXPANDED - 40+ topik untuk variasi maksimal
 const TRENDING_TOPICS_DB = [
   // Format: [topic, angle, hook_inspiration]
+  // === Ekonomi & Hemat ===
   ["harga BBM naik", "hemat bensin", "BBM naik, irit makin penting"],
+  ["gaji UMR", "value for money", "Gaji pas-pasan, modif harus worth"],
+  ["inflasi 2024", "investasi part", "Barang naik semua, knalpot awet = hemat"],
+  ["promo akhir tahun", "diskon", "Promo gede-gedean, jangan sampe kelewat"],
+  
+  // === Komunitas & Sosial ===
   ["sunmori viral", "komunitas motor", "Sunmori kemarin viral"],
+  ["grup WA motor", "komunitas", "Grup WA motor rame"],
+  ["kopdar nasional", "event motor", "Kopdar terbesar tahun ini"],
+  ["rolling thunder", "konvoi epic", "1000 motor satu jalur"],
+  
+  // === Regulasi & Keamanan ===
   ["tilang elektronik", "anti tilang", "ETLE makin ketat"],
+  ["polisi operasi zebra", "aman di jalan", "Operasi zebra, siap-siap"],
+  ["UU lalu lintas baru", "aturan baru", "Aturan baru, knalpot brong kena"],
+  ["razia knalpot", "legal vs ilegal", "Razia dadakan, knalpot lo aman?"],
+  
+  // === Teknologi & Trend ===
   ["motor listrik vs bensin", "suara motor", "Motor listrik senyap, boring"],
+  ["AI otomotif", "teknologi motor", "AI di motor, masa depan?"],
+  ["keyless motor", "fitur canggih", "Keyless everywhere"],
+  ["motor hybrid", "teknologi baru", "Hybrid, worth it ga?"],
+  
+  // === Cuaca & Musim ===
   ["musim hujan", "anti karat", "Musim hujan, knalpot karatan"],
+  ["panas terik", "material tahan panas", "Panas ekstrem, knalpot tetep oke"],
+  ["banjir Jakarta", "motor terendam", "Banjir lagi, knalpot aman?"],
+  
+  // === Event & Momen ===
   ["mudik lebaran", "touring", "Mudik pake motor, siap?"],
+  ["tahun baru", "resolusi modif", "Tahun baru, motor baru"],
+  ["HUT RI", "diskon merdeka", "Promo 17an, saatnya upgrade"],
+  ["harbolnas", "flash sale", "12.12, gas checkout"],
+  
+  // === Lifestyle & Trend ===
   ["cafe racer trend", "style motor", "Cafe racer makin rame"],
   ["vlog motovlog", "content creator", "Motovlog makin banyak"],
   ["motor matic 160cc", "performa matic", "Matic 160cc makin gahar"],
-  ["review jujur", "testimoni", "Review jujur, tanpa endorse"],
-  ["part aftermarket", "modifikasi", "Aftermarket vs OEM"],
-  ["bengkel nakal", "trust issue", "Bengkel suka bohongin"],
-  ["motor second", "kondisi knalpot", "Beli motor second, cek knalpot"],
-  ["sound system motor", "audio", "Suara motor = identitas"],
-  ["racing illegal", "legal vs ilegal", "Racing jalanan, bahaya"],
-  ["motor harian", "daily commute", "Tiap hari macet Jakarta"],
   ["modif minimalis", "clean look", "Modif simple tapi beda"],
-  ["grup WA motor", "komunitas", "Grup WA motor rame"],
+  
+  // === Trust & Review ===
+  ["review jujur", "testimoni", "Review jujur, tanpa endorse"],
+  ["bengkel nakal", "trust issue", "Bengkel suka bohongin"],
+  ["part KW viral", "quality check", "KW makin mirip ori, bahaya"],
+  ["scam marketplace", "waspada tipu", "Hati-hati seller bodong"],
+  
+  // === Kondisi & Maintenance ===
+  ["motor second", "kondisi knalpot", "Beli motor second, cek knalpot"],
+  ["part aftermarket", "modifikasi", "Aftermarket vs OEM"],
+  ["service rutin", "maintenance", "Service tiap berapa km?"],
+  ["ganti oli", "perawatan dasar", "Oli telat ganti, mesin jebol"],
+  
+  // === Sound & Audio ===
+  ["sound system motor", "audio", "Suara motor = identitas"],
+  ["ASMR knalpot", "sound viral", "ASMR suara motor viral"],
+  ["bass boosted", "karakter suara", "Bass yang bikin merinding"],
+  
+  // === Performa & Racing ===
+  ["racing illegal", "legal vs ilegal", "Racing jalanan, bahaya"],
+  ["dyno test viral", "tenaga mesin", "Dyno test, HP naik berapa?"],
+  ["drag race", "kompetisi", "Drag matic, siapa juara?"],
+  
+  // === Content & Viral ===
   ["unboxing viral", "first impression", "Unboxing yang ditunggu"],
   ["before after", "transformasi", "Sebelum vs sesudah"],
+  ["prank motor", "konten lucu", "Prank suara knalpot viral"],
+  ["reaction video", "testimoni real", "Reaksi pertama pasang knalpot"],
 ];
 
 // Fungsi untuk search DuckDuckGo (gratis, no API key)
@@ -926,24 +1000,70 @@ async function generateFreshInsights(product: string): Promise<{
   };
 }
 
-// 30 Hook templates yang bisa di-mix dengan trending topics
+// 50+ Hook templates yang bisa di-mix dengan trending topics
 const DYNAMIC_HOOK_TEMPLATES = [
-  // Template dengan placeholder {topic}
+  // === Curiosity & Question ===
   "{topic}, siapa relate?",
   "{topic}? Ini solusinya",
+  "{topic}? Cek dulu ini",
+  "{topic}? Lo harus tau ini",
+  "{topic}, beneran worth?",
+  "{topic}, serius nih?",
+  "Kenapa {topic}?",
+  
+  // === Story & Experience ===
   "Gara-gara {topic}",
-  "{topic} tapi tetep kece",
   "Dulu {topic}, sekarang beda",
+  "{topic}, pengalaman gue",
+  "Cerita soal {topic}",
+  "3 bulan {topic}, ini hasilnya",
+  "Nyesel ga tau {topic} dari dulu",
+  
+  // === Value & Decision ===
   "{topic}, worth it ga?",
   "3 alasan {topic}",
-  "{topic}? Cek dulu ini",
   "Rahasia {topic}",
   "{topic}, jangan sampai zonk",
-  "Baru tau soal {topic}",
-  "{topic}, pengalaman gue",
-  "Review jujur: {topic}",
-  "{topic}? Lo harus tau ini",
   "Fakta {topic} yang jarang dibahas",
+  "{topic} = game changer",
+  
+  // === Social Proof ===
+  "Review jujur: {topic}",
+  "Baru tau soal {topic}",
+  "{topic} tapi tetep kece",
+  "Semua orang ngomongin {topic}",
+  "Viral karena {topic}",
+  
+  // === Shock & Controversy ===
+  "{topic}? Gila sih",
+  "Anjir, {topic}!",
+  "{topic} parah bro",
+  "Serius {topic}?!",
+  "Gue kaget soal {topic}",
+  
+  // === FOMO & Urgency ===
+  "Jangan sampe telat {topic}",
+  "{topic} sebelum nyesel",
+  "Terakhir soal {topic}",
+  "Deadline {topic}",
+  
+  // === Comparison & Contrast ===
+  "{topic} vs ekspektasi",
+  "Dulu skeptis {topic}",
+  "Anti mainstream: {topic}",
+  "{topic}, beda banget!",
+  
+  // === Numbers & Facts ===
+  "1 hal soal {topic}",
+  "5 fakta {topic}",
+  "90% orang salah soal {topic}",
+  "Angka dibalik {topic}",
+  
+  // === Challenge & Provocative ===
+  "Berani coba {topic}?",
+  "Lo ga akan percaya {topic}",
+  "Siap {topic}?",
+  "Buktiin {topic}",
 ];
 
 serve(async (req) => {
@@ -962,31 +1082,62 @@ serve(async (req) => {
     const freshInsights = await generateFreshInsights(product);
     console.log("📊 Fresh insights:", freshInsights);
 
-    // Generate random seed untuk variasi tambahan
+    // Generate STRONG random entropy untuk variasi maksimal
     const randomSeed = Math.floor(Math.random() * 1000000);
     const timestamp = Date.now();
+    const microEntropy = Math.random().toString(36).substring(2, 8); // Extra randomness
     
-    // Pilih random trending topics untuk di-inject ke prompt
-    const shuffledTopics = [...TRENDING_TOPICS_DB].sort(() => Math.random() - 0.5);
-    const topic1 = shuffledTopics[0];
-    const topic2 = shuffledTopics[1];
-    const topic3 = shuffledTopics[2];
+    // === ANTI-REPETISI: Pilih topik yang BELUM dipakai dalam 10 menit terakhir ===
+    let availableTopics = getUnusedTopics(TRENDING_TOPICS_DB);
     
-    // Generate dynamic hooks dari templates
-    const hookTemplate1 = DYNAMIC_HOOK_TEMPLATES[Math.floor(Math.random() * DYNAMIC_HOOK_TEMPLATES.length)];
-    const hookTemplate2 = DYNAMIC_HOOK_TEMPLATES[Math.floor(Math.random() * DYNAMIC_HOOK_TEMPLATES.length)];
-    const hookTemplate3 = DYNAMIC_HOOK_TEMPLATES[Math.floor(Math.random() * DYNAMIC_HOOK_TEMPLATES.length)];
+    // Jika semua topik sudah dipakai, reset dan pakai semua
+    if (availableTopics.length < 3) {
+      console.log("♻️ All topics used recently, resetting cache...");
+      USED_TOPICS_CACHE.clear();
+      availableTopics = [...TRENDING_TOPICS_DB];
+    }
+    
+    // Fisher-Yates shuffle untuk randomisasi yang lebih baik
+    for (let i = availableTopics.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [availableTopics[i], availableTopics[j]] = [availableTopics[j], availableTopics[i]];
+    }
+    
+    const topic1 = availableTopics[0];
+    const topic2 = availableTopics[1];
+    const topic3 = availableTopics[2];
+    
+    // Mark these topics as used
+    markTopicsAsUsed([topic1[0], topic2[0], topic3[0]]);
+    console.log("🎯 Selected unique topics:", topic1[0], topic2[0], topic3[0]);
+    console.log("📦 Topics in cache:", USED_TOPICS_CACHE.size);
+    
+    // Generate UNIQUE dynamic hooks - pastikan template juga beda
+    const shuffledTemplates = [...DYNAMIC_HOOK_TEMPLATES].sort(() => Math.random() - 0.5);
+    const hookTemplate1 = shuffledTemplates[0];
+    const hookTemplate2 = shuffledTemplates[1];
+    const hookTemplate3 = shuffledTemplates[2];
     
     const dynamicHook1 = hookTemplate1.replace("{topic}", topic1[0]);
     const dynamicHook2 = hookTemplate2.replace("{topic}", topic2[0]);
     const dynamicHook3 = hookTemplate3.replace("{topic}", topic3[0]);
 
-    // Kategori hook & tema (tetap ada untuk struktur)
-    const hookCategories = ["ANGKA SHOCK", "SITUASI EXTREME", "KONTRAS TAJAM", "PENGAKUAN JUJUR", "FAKTA MENGEJUTKAN", "REAKSI SOSIAL", "PERBANDINGAN", "CLIFFHANGER", "PROVOCATIVE", "DAILY CONTEXT"];
-    const themeCategories = ["CERITA KEGAGALAN", "DISCOVERY", "SOCIAL PROOF", "TECHNICAL DEEP DIVE", "DAILY USE", "COMPARISON", "MONEY TALK", "FEAR AVOIDANCE", "ASPIRATION", "HONEST REVIEW"];
+    // Kategori hook & tema - juga di-shuffle dengan Fisher-Yates
+    const hookCategories = ["ANGKA SHOCK", "SITUASI EXTREME", "KONTRAS TAJAM", "PENGAKUAN JUJUR", "FAKTA MENGEJUTKAN", "REAKSI SOSIAL", "PERBANDINGAN", "CLIFFHANGER", "PROVOCATIVE", "DAILY CONTEXT", "CURIOSITY GAP", "PATTERN INTERRUPT", "BOLD CLAIM", "CONFESSION", "INSIDER SECRET"];
+    const themeCategories = ["CERITA KEGAGALAN", "DISCOVERY", "SOCIAL PROOF", "TECHNICAL DEEP DIVE", "DAILY USE", "COMPARISON", "MONEY TALK", "FEAR AVOIDANCE", "ASPIRATION", "HONEST REVIEW", "TRANSFORMATION", "BEHIND THE SCENES", "MYTH BUSTING", "EXCLUSIVE ACCESS", "REAL TALK"];
     
-    const shuffledHooks = hookCategories.sort(() => Math.random() - 0.5).slice(0, 3);
-    const shuffledThemes = themeCategories.sort(() => Math.random() - 0.5).slice(0, 3);
+    // Fisher-Yates for categories too
+    for (let i = hookCategories.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [hookCategories[i], hookCategories[j]] = [hookCategories[j], hookCategories[i]];
+    }
+    for (let i = themeCategories.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [themeCategories[i], themeCategories[j]] = [themeCategories[j], themeCategories[i]];
+    }
+    
+    const shuffledHooks = hookCategories.slice(0, 3);
+    const shuffledThemes = themeCategories.slice(0, 3);
 
     const userPrompt = `Generate 3 variasi script UGC ads untuk produk: ${product}
 
@@ -1048,9 +1199,12 @@ ${additionalInfo ? `Info tambahan: ${additionalInfo}` : ""}
 
 Target: Pria 30+, professional mapan, gaji 7jt+. Tulis kayak ngobrol sama temen biker, BUKAN narrator iklan TV!
 
-**REMINDER KREATIVITAS:**
-Setiap kali generate, hook dan angle HARUS BERBEDA! Jangan muter-muter di tema yang sama!
-Session ini unik: #${randomSeed}-${timestamp} — JANGAN duplikasi output sebelumnya!`;
+**REMINDER KREATIVITAS — ANTI REPETISI KETAT:**
+🚨 INI SESSION UNIK: #${randomSeed}-${timestamp}-${microEntropy}
+🚨 TOPIK SUDAH DI-LOCK: "${topic1[0]}", "${topic2[0]}", "${topic3[0]}"
+🚨 DILARANG KERAS pakai topik/angle/hook yang MIRIP dengan output sebelumnya!
+🚨 Setiap kata dalam hook HARUS BERBEDA dari generate sebelumnya!
+🚨 Kalau output terasa familiar = GAGAL! Buat yang BENAR-BENAR BARU!`;
 
     console.log("🚀 Generating scripts with fresh insights for:", product, "| Topics:", topic1[0], topic2[0], topic3[0]);
 
