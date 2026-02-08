@@ -828,7 +828,7 @@ async function scrapeWebContent(url: string): Promise<string> {
   }
 }
 
-// Fungsi untuk riset Google trends & berita motor Indonesia
+// Fungsi untuk riset trending dari situs berita motor Indonesia
 async function researchTrendingMotorTopics(): Promise<{
   trendingNews: string[];
   viralTopics: string[];
@@ -846,19 +846,27 @@ async function researchTrendingMotorTopics(): Promise<{
     communityBuzz: [] as string[],
   };
 
-  // Scrape multiple sources for fresh content
+  // Sumber berita motor Indonesia yang RELIABLE (bukan Google yang sering block)
   const sources = [
     {
-      url: "https://www.google.com/search?q=knalpot+motor+matic+viral+tiktok+2025&tbm=nws",
-      type: "news"
+      url: "https://www.otomotif.kompas.com/motor",
+      type: "news",
+      regex: /<h[23][^>]*class="[^"]*title[^"]*"[^>]*>([^<]+)</gi
     },
     {
-      url: "https://www.google.com/search?q=komunitas+motor+matic+indonesia+trend+2025",
-      type: "community"
+      url: "https://www.gridoto.com/tag/knalpot",
+      type: "viral",
+      regex: /<h[23][^>]*>([^<]{20,100})</gi
     },
     {
-      url: "https://www.google.com/search?q=review+knalpot+aftermarket+motor+matic",
-      type: "viral"
+      url: "https://www.motorplus-online.com/tag/knalpot-motor",
+      type: "community",
+      regex: /<h[23][^>]*>([^<]{20,100})</gi
+    },
+    {
+      url: "https://www.otosia.com/berita/motor",
+      type: "news",
+      regex: /<h[23][^>]*>([^<]{20,100})</gi
     }
   ];
 
@@ -866,22 +874,50 @@ async function researchTrendingMotorTopics(): Promise<{
   const randomSource = sources[Math.floor(Math.random() * sources.length)];
   
   try {
-    const scrapingBeeUrl = `https://app.scrapingbee.com/api/v1/?api_key=${apiKey}&url=${encodeURIComponent(randomSource.url)}&render_js=false`;
+    // ScrapingBee dengan parameter yang lebih baik
+    const scrapingBeeUrl = `https://app.scrapingbee.com/api/v1/?api_key=${apiKey}&url=${encodeURIComponent(randomSource.url)}&render_js=false&premium_proxy=false&country_code=id`;
     
-    console.log(`🔍 Scraping: ${randomSource.type} trends...`);
+    console.log(`🔍 Scraping: ${randomSource.type} from ${randomSource.url}...`);
     
     const response = await fetch(scrapingBeeUrl, {
       method: "GET",
     });
     
+    console.log(`📡 ScrapingBee response status: ${response.status}`);
+    
     if (response.ok) {
       const html = await response.text();
-      // Extract relevant snippets from search results
-      const snippets = html.match(/(?:<span[^>]*>|<div[^>]*>)([^<]{30,200})(?:<\/span>|<\/div>)/gi) || [];
-      const cleanSnippets = snippets
-        .map(s => s.replace(/<[^>]*>/g, "").trim())
-        .filter(s => s.length > 30 && !s.includes("cookie") && !s.includes("privacy"))
+      console.log(`📄 HTML length: ${html.length} chars`);
+      
+      // Extract headlines/titles dari HTML
+      const headlineMatches = html.match(/<h[1-4][^>]*>([^<]{15,150})</gi) || [];
+      const articleMatches = html.match(/<a[^>]*title="([^"]{15,150})"/gi) || [];
+      const metaMatches = html.match(/<meta[^>]*content="([^"]{30,200})"/gi) || [];
+      
+      // Clean and combine
+      const allMatches = [...headlineMatches, ...articleMatches, ...metaMatches];
+      const cleanSnippets = allMatches
+        .map(s => {
+          // Extract text dari tag
+          const match = s.match(/[">]([^<"]+)/);
+          return match ? match[1].trim() : "";
+        })
+        .filter(s => 
+          s.length > 15 && 
+          !s.includes("cookie") && 
+          !s.includes("privacy") &&
+          !s.includes("Copyright") &&
+          !s.includes("navigation") &&
+          (s.toLowerCase().includes("motor") || 
+           s.toLowerCase().includes("knalpot") || 
+           s.toLowerCase().includes("matic") ||
+           s.toLowerCase().includes("modifikasi") ||
+           s.toLowerCase().includes("harga") ||
+           s.toLowerCase().includes("review"))
+        )
         .slice(0, 5);
+      
+      console.log(`✅ Found ${cleanSnippets.length} relevant snippets:`, cleanSnippets.slice(0, 2));
       
       if (randomSource.type === "news") {
         results.trendingNews = cleanSnippets;
@@ -890,11 +926,12 @@ async function researchTrendingMotorTopics(): Promise<{
       } else {
         results.communityBuzz = cleanSnippets;
       }
-      
-      console.log(`✅ Found ${cleanSnippets.length} ${randomSource.type} insights`);
+    } else {
+      const errorText = await response.text();
+      console.log(`❌ ScrapingBee error: ${response.status} - ${errorText.substring(0, 200)}`);
     }
   } catch (error) {
-    console.log("Research error:", error);
+    console.log("❌ Research error:", error);
   }
 
   return results;
