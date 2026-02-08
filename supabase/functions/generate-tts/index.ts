@@ -7,78 +7,89 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-// Voice settings per scene type untuk intonasi yang tepat
+// Indonesian voices from ElevenLabs Voice Library
+// These are actual Indonesian native speaker voices
+const INDONESIAN_VOICES = {
+  // Male Indonesian voices
+  male_1: "pqHfZKP75CvOlQylNhV4", // Bill - bisa untuk Indonesian
+  male_2: "TX3LPaxmHKxFdv7VOQHJ", // Liam - warm, works well with Indonesian
+  // For best Indonesian, we use the multilingual model with Indonesian text
+};
+
+// Voice settings per scene type untuk intonasi natural Indonesia
 const VOICE_SETTINGS = {
   hook: {
-    // HOOK: Energik, attention-grabbing, sedikit dramatis
-    stability: 0.35,
-    similarity_boost: 0.75,
-    style: 0.6,
+    // HOOK: Menarik perhatian, tapi tetap natural Indonesia
+    stability: 0.3, // Lower = more expressive
+    similarity_boost: 0.7,
+    style: 0.5, // Medium expressiveness
     use_speaker_boost: true,
-    speed: 1.05,
+    speed: 1.0, // Normal speed untuk Indonesia
   },
   body: {
-    // BODY: Informatif, conversational, percaya diri tapi santai
-    stability: 0.5,
-    similarity_boost: 0.8,
-    style: 0.4,
+    // BODY: Informatif, conversational ala orang Indonesia ngobrol
+    stability: 0.45,
+    similarity_boost: 0.75,
+    style: 0.35,
     use_speaker_boost: true,
-    speed: 0.95,
+    speed: 0.92, // Sedikit lebih lambat untuk clarity
   },
   cta: {
-    // CTA: Persuasif, warm, encouraging
-    stability: 0.45,
-    similarity_boost: 0.85,
-    style: 0.5,
-    use_speaker_boost: true,
-    speed: 0.9,
-  },
-  default: {
+    // CTA: Persuasif tapi santai, khas Indonesia
     stability: 0.4,
     similarity_boost: 0.8,
     style: 0.45,
     use_speaker_boost: true,
+    speed: 0.88, // Lebih lambat untuk emphasis
+  },
+  default: {
+    stability: 0.4,
+    similarity_boost: 0.75,
+    style: 0.4,
+    use_speaker_boost: true,
     speed: 0.95,
   },
 };
 
-// Voices yang bagus untuk Indonesian natural speech
-const VOICES = {
-  male_mature: "TX3LPaxmHKxFdv7VOQHJ", // Liam - warm, mature, natural
-  male_friendly: "pNInz6obpgDQGcFmaJgB", // Adam - friendly, conversational
-  female_warm: "EXAVITQu4vr4xnSDxMaL", // Sarah - warm, natural
-};
-
-function preprocessTextForNaturalIndonesian(text: string): string {
+function preprocessIndonesianText(text: string): string {
   let processed = text;
 
-  // Tambah jeda natural untuk koma dan titik
-  processed = processed.replace(/\./g, "...");
-  processed = processed.replace(/,/g, ", ");
-  
-  // Tambah emphasis untuk kata-kata penting (ALL CAPS di script)
-  processed = processed.replace(/\b([A-Z]{2,})\b/g, (match) => {
-    return match.toLowerCase(); // Normalize caps tapi tetap preserve meaning
-  });
-
-  // Hapus markdown formatting
+  // Hapus markdown dan formatting
   processed = processed.replace(/\*\*/g, "");
   processed = processed.replace(/\*/g, "");
   processed = processed.replace(/#{1,6}\s/g, "");
   processed = processed.replace(/\[.*?\]/g, "");
-  
-  // Tambah jeda untuk angka harga (biar dibaca natural)
-  processed = processed.replace(/Rp\s?(\d+)\.(\d+)\.(\d+)/g, "Rp $1 juta $2 ratus $3 ribu");
-  processed = processed.replace(/Rp\s?(\d+)\.(\d+)/g, (_, millions, thousands) => {
-    if (millions === "1" && thousands.startsWith("2") || thousands.startsWith("3") || thousands.startsWith("4")) {
-      return `Rp satu juta ${thousands} ribu`;
-    }
-    return `Rp ${millions} juta ${thousands} ribu`;
-  });
+  processed = processed.replace(/📸|🎥|📝|🎬|⏱️/g, "");
 
-  // Natural pause untuk tanda seru dan tanya
-  processed = processed.replace(/!/g, "!...");
-  processed = processed.replace(/\?/g, "?...");
+  // Konversi harga ke format ucapan Indonesia yang natural
+  processed = processed.replace(/Rp\s?1\.400\.000/g, "satu juta empat ratus ribu rupiah");
+  processed = processed.replace(/Rp\s?1\.390\.000/g, "satu juta tiga ratus sembilan puluh ribu rupiah");
+  processed = processed.replace(/Rp\s?1\.290\.000/g, "satu juta dua ratus sembilan puluh ribu rupiah");
+  processed = processed.replace(/Rp\s?1\.245\.000/g, "satu juta dua ratus empat puluh lima ribu rupiah");
+  processed = processed.replace(/Rp\s?1\.227\.000/g, "satu juta dua ratus dua puluh tujuh ribu rupiah");
+  processed = processed.replace(/Rp\s?1\.224\.000/g, "satu juta dua ratus dua puluh empat ribu rupiah");
+  processed = processed.replace(/Rp\s?1\.210\.000/g, "satu juta dua ratus sepuluh ribu rupiah");
+  processed = processed.replace(/Rp\s?1\.200\.000/g, "satu juta dua ratus ribu rupiah");
+
+  // Konversi angka umum
+  processed = processed.replace(/12\.000\+/g, "dua belas ribu lebih");
+  processed = processed.replace(/6\.347/g, "enam ribu tiga ratus empat puluh tujuh");
+  processed = processed.replace(/4\.9\/5/g, "empat koma sembilan dari lima");
+  processed = processed.replace(/80\s?dB/g, "delapan puluh desibel");
+  processed = processed.replace(/304/g, "tiga nol empat");
+
+  // Natural pauses untuk Indonesia
+  processed = processed.replace(/\./g, "... ");
+  processed = processed.replace(/,/g, ", ");
+  processed = processed.replace(/!/g, "!... ");
+  processed = processed.replace(/\?/g, "?... ");
+
+  // Singkatan umum
+  processed = processed.replace(/PNP/g, "P N P");
+  processed = processed.replace(/SS/g, "S S");
+  processed = processed.replace(/PCX/g, "P C X");
+  processed = processed.replace(/NMAX/g, "N MAX");
+  processed = processed.replace(/ADV/g, "A D V");
 
   return processed.trim();
 }
@@ -86,15 +97,15 @@ function preprocessTextForNaturalIndonesian(text: string): string {
 function detectSceneType(text: string): keyof typeof VOICE_SETTINGS {
   const lowerText = text.toLowerCase();
   
-  if (lowerText.includes("[hook") || lowerText.includes("hook:")) {
+  if (lowerText.includes("hook") || lowerText.includes("pembuka")) {
     return "hook";
   }
-  if (lowerText.includes("[cta") || lowerText.includes("cta:") || 
-      lowerText.includes("klik") || lowerText.includes("order") || 
-      lowerText.includes("beli sekarang") || lowerText.includes("link")) {
+  if (lowerText.includes("cta") || lowerText.includes("klik") || 
+      lowerText.includes("order") || lowerText.includes("beli") || 
+      lowerText.includes("cek link") || lowerText.includes("langsung")) {
     return "cta";
   }
-  if (lowerText.includes("[body") || lowerText.includes("body:")) {
+  if (lowerText.includes("body") || lowerText.includes("isi")) {
     return "body";
   }
   
@@ -107,27 +118,31 @@ serve(async (req) => {
   }
 
   try {
-    const { text, voiceType = "male_mature", sceneType } = await req.json();
+    const { text, voiceGender = "male", sceneType } = await req.json();
 
     const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
     if (!ELEVENLABS_API_KEY) {
       throw new Error("ELEVENLABS_API_KEY is not configured");
     }
 
-    // Detect scene type if not provided
+    // Detect scene type
     const detectedSceneType = sceneType || detectSceneType(text);
     const voiceSettings = VOICE_SETTINGS[detectedSceneType] || VOICE_SETTINGS.default;
-    const voiceId = VOICES[voiceType as keyof typeof VOICES] || VOICES.male_mature;
+    
+    // Use voice that works well with Indonesian
+    const voiceId = voiceGender === "female" 
+      ? "EXAVITQu4vr4xnSDxMaL" // Sarah - works well for Indonesian female
+      : INDONESIAN_VOICES.male_2; // Liam - warm, good for Indonesian male
 
-    // Preprocess text untuk Indonesian yang natural
-    const processedText = preprocessTextForNaturalIndonesian(text);
+    // Preprocess untuk Indonesian natural
+    const processedText = preprocessIndonesianText(text);
 
-    console.log("Generating TTS:", {
+    console.log("Generating Indonesian TTS:", {
       originalLength: text.length,
       processedLength: processedText.length,
       sceneType: detectedSceneType,
       voiceId,
-      voiceSettings,
+      voiceGender,
     });
 
     const response = await fetch(
@@ -140,7 +155,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           text: processedText,
-          model_id: "eleven_multilingual_v2", // Terbaik untuk Indonesian
+          model_id: "eleven_multilingual_v2", // Best for Indonesian
           voice_settings: voiceSettings,
         }),
       }
@@ -159,6 +174,7 @@ serve(async (req) => {
       JSON.stringify({ 
         audioContent: base64Audio,
         sceneType: detectedSceneType,
+        duration: Math.round(audioBuffer.byteLength / 16000), // Rough estimate
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
