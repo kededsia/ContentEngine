@@ -444,15 +444,16 @@ Kenshi pake SS304 High Grade:
 - "Bocor mulu" = sering ada masalah kebocoran
 - "Ribet" = banyak masalah, maintenance tinggi
 
-=== HOOK SUPER PENDEK (3-5 KATA SAJA!) ===
+=== HOOK EFEK "WHAAAAT??!!" (MAKSIMAL 8 KATA!) ===
 
 **ATURAN HOOK:**
-- MAKSIMAL 3-5 KATA
-- Bikin reaksi "WHAAATT??"
+- MAKSIMAL 8 KATA (lebih dari itu = GAGAL!)
+- Tujuan utama: bikin viewer bereaksi "WHAAAAT??!!" dalam 2 detik
 - Langsung nendang, ga perlu basa-basi
-- Statement shocking, bukan pertanyaan
+- Statement shocking yang trigger curiosity
+- Boleh statement atau pertanyaan pendek yang provokatif
 
-=== 50 HOOK KILLER (3-5 KATA) ===
+=== 50+ HOOK KILLER (MAKS 8 KATA, EFEK WHAAAAT!) ===
 
 **ANGKA SHOCK:**
 1. "3 juta, zonk semua"
@@ -525,10 +526,11 @@ Kenshi pake SS304 High Grade:
 50. "Sekali atau berkali-kali?"
 
 **CARA PAKAI:**
-- Hook di script WAJIB 3-5 kata saja
-- Ga perlu kalimat lengkap
-- Yang penting NENDANG dan bikin penasaran
-- Slang boleh di body, hook fokus shock value
+- Hook di script WAJIB maksimal 8 kata
+- Tujuan: efek "WHAAAAT??!!" — shock, penasaran, ga nyangka
+- Ga perlu kalimat panjang, yang penting NENDANG
+- Format bebas: statement shocking, fakta mengejutkan, atau pertanyaan provokatif pendek
+- Slang boleh di body, hook fokus trigger rasa penasaran
 
 === KONSEP SCENE KREATIF & DINAMIS ===
 
@@ -716,18 +718,19 @@ Untuk SETIAP script, format output seperti ini:
 === ⚠️ ANTI-PATTERN DETECTOR ===
 
 **HOOK YANG SALAH (JANGAN GENERATE!):**
-❌ "Lu aliran sarteng apa sarfull?" — terlalu panjang, pertanyaan teknis
-❌ "Knalpot lo udah belang?" — terlalu panjang
-❌ "Apakah Anda mencari knalpot berkualitas?" — formal, boring
-❌ "Pengen suara ngebass tapi anti tilang?" — terlalu panjang
-❌ "Ingin motor terdengar lebih baik?" — formal, lemah
+❌ "Apakah Anda mencari knalpot berkualitas?" — formal, boring, ga bikin WHAAAAT
+❌ "Pengen motor terdengar lebih baik dan lebih bertenaga?" — terlalu panjang (>8 kata)
+❌ "Ingin motor terdengar lebih baik?" — formal, lemah, ga ada shock
+❌ "Halo guys, kali ini gue mau review knalpot" — bukan hook, ini intro boring
 
-**HOOK YANG BENAR (CONTOH):**
-✅ "3 juta, zonk semua" — 4 kata, shock
-✅ "Hampir celaka" — 2 kata, dramatic
-✅ "Stainless tapi karat" — 3 kata, kontras
-✅ "Ganti 4x setahun" — 3 kata, relatable
-✅ "Bracket patah, bahaya" — 3 kata, fear
+**HOOK YANG BENAR (EFEK WHAAAAT!):**
+✅ "3 juta, zonk semua" — 4 kata, shock value tinggi
+✅ "Hampir celaka gara-gara bracket" — 5 kata, dramatic
+✅ "Stainless tapi karat, gimana?" — 4 kata, kontras bikin penasaran
+✅ "Ganti 4x setahun, capek anjir" — 5 kata, relatable frustration
+✅ "Bracket patah di tol" — 4 kata, fear-inducing
+✅ "Lo pasti ga tau ini" — 5 kata, curiosity trigger
+✅ "Ternyata gue salah pilih" — 5 kata, confession style
 
 **BODY YANG SALAH:**
 ❌ "Produk ini menggunakan material stainless steel 304 berkualitas tinggi"
@@ -742,8 +745,8 @@ Untuk SETIAP script, format output seperti ini:
 === FINAL REMINDER ===
 
 SEBELUM OUTPUT, AI HARUS SELF-CHECK:
-1. Apakah hook SUDAH 3-5 kata? Kalau lebih → POTONG!
-2. Apakah body SUDAH pakai slang & filler? Kalau kaku → REWRITE!
+1. Apakah hook SUDAH maksimal 8 kata DAN bikin efek WHAAAAT? Kalau lebih atau boring → REWRITE!
+2. Apakah body SUDAH pakai slang & filler natural? Kalau kaku → REWRITE!
 3. Apakah scene breakdown SUDAH ada? Kalau tidak → TAMBAHKAN!
 4. Apakah istilah teknis SUDAH relate? Kalau formal → UBAH ke bahasa biker!
 
@@ -771,9 +774,10 @@ ${additionalInfo ? `Info tambahan: ${additionalInfo}` : ""}
 === ⚠️ RULES KERAS — LANGGAR = GAGAL! ===
 
 **HOOK:**
-- MAKSIMAL 3-5 KATA! Contoh benar: "3 juta zonk semua", "Hampir celaka", "Bracket patah"
-- DILARANG hook panjang kayak: "Lu aliran sarteng apa sarfull?" atau "Pengen suara ngebass?"
-- Hook = STATEMENT SHOCK, bukan pertanyaan teknis!
+- MAKSIMAL 8 KATA! Target: bikin viewer bereaksi "WHAAAAT??!!"
+- Contoh benar: "3 juta zonk semua", "Hampir celaka gara-gara bracket", "Ternyata gue salah pilih"
+- DILARANG hook formal/boring kayak: "Apakah Anda mencari..." atau "Ingin motor terdengar..."
+- Hook = STATEMENT SHOCK atau CURIOSITY TRIGGER yang bikin penasaran!
 
 **BODY:**
 - WAJIB pakai slang: gacor, zonk, cempreng, ngebass, mantul, ribet, awet, solid
