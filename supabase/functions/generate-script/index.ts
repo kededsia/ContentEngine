@@ -1152,7 +1152,7 @@ Target: Pria 30+, professional mapan, gaji 7jt+. Tulis kayak ngobrol sama temen 
 Setiap kali generate, hook dan angle WAJIB BERBEDA!
 Data real-time sudah disediakan — GUNAKAN untuk bikin konten yang FRESH dan TIDAK REPETITIF!`;
 
-    console.log("🚀 Generating scripts with fresh insights for:", product, "| Topics:", topic1[0], topic2[0], topic3[0]);
+    console.log("🚀 Generating scripts with fresh insights for:", product, "| Frameworks:", framework1.name, framework2.name, framework3.name);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
