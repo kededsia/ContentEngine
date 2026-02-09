@@ -1425,14 +1425,20 @@ Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten 
 
     console.log("🚀 Generating scripts with fresh insights for:", product, "| Frameworks:", framework1.name, framework2.name, framework3.name);
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    // Menggunakan API dari apifree.ai
+    const APIFREE_API_KEY = Deno.env.get("APIFREE_API_KEY");
+    if (!APIFREE_API_KEY) {
+      throw new Error("APIFREE_API_KEY is not configured");
+    }
+
+    const response = await fetch("https://api.apifree.ai/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${APIFREE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gpt-4o-mini", // Model dari apifree.ai
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userPrompt },
@@ -1449,15 +1455,15 @@ Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten 
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Lovable AI usage limit tercapai. Coba lagi nanti atau upgrade plan di lovable.dev/pricing." }), {
-          status: 402,
+      if (response.status === 401 || response.status === 403) {
+        return new Response(JSON.stringify({ error: "API key invalid atau expired. Cek APIFREE_API_KEY." }), {
+          status: response.status,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       const text = await response.text();
-      console.error("AI gateway error:", response.status, text);
-      return new Response(JSON.stringify({ error: "AI gateway error" }), {
+      console.error("API Free error:", response.status, text);
+      return new Response(JSON.stringify({ error: `API error: ${response.status}` }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
