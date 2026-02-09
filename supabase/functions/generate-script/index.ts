@@ -1,10 +1,104 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
+
+// === DATABASE: Fetch slang dan creative themes ===
+interface MotorSlang {
+  term: string;
+  meaning: string;
+  example_usage: string;
+  category: string;
+}
+
+interface CreativeTheme {
+  title: string;
+  content: string;
+  theme_type: string;
+  keywords: string[];
+}
+
+async function fetchSlangAndThemes(): Promise<{
+  slangTerms: MotorSlang[];
+  creativeThemes: CreativeTheme[];
+  slangText: string;
+  themesText: string;
+}> {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+  const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
+  
+  if (!supabaseUrl || !supabaseKey) {
+    console.log("⚠️ Supabase credentials not configured, using fallback");
+    return {
+      slangTerms: [],
+      creativeThemes: [],
+      slangText: "",
+      themesText: "",
+    };
+  }
+  
+  const supabase = createClient(supabaseUrl, supabaseKey);
+  
+  // Fetch random slang terms (10 random)
+  const { data: slangData, error: slangError } = await supabase
+    .from("motor_slang")
+    .select("term, meaning, example_usage, category")
+    .limit(100);
+  
+  if (slangError) {
+    console.log("❌ Error fetching slang:", slangError.message);
+  }
+  
+  // Shuffle and pick random 10
+  const shuffledSlang = (slangData || []).sort(() => Math.random() - 0.5).slice(0, 10);
+  
+  // Fetch random creative themes (4 random, one from each type)
+  const { data: themesData, error: themesError } = await supabase
+    .from("creative_themes")
+    .select("title, content, theme_type, keywords")
+    .limit(100);
+  
+  if (themesError) {
+    console.log("❌ Error fetching themes:", themesError.message);
+  }
+  
+  // Group by type and pick 1 random from each
+  const themesByType: Record<string, CreativeTheme[]> = {};
+  (themesData || []).forEach((theme: CreativeTheme) => {
+    if (!themesByType[theme.theme_type]) themesByType[theme.theme_type] = [];
+    themesByType[theme.theme_type].push(theme);
+  });
+  
+  const selectedThemes: CreativeTheme[] = [];
+  Object.values(themesByType).forEach((themes) => {
+    if (themes.length > 0) {
+      const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+      selectedThemes.push(randomTheme);
+    }
+  });
+  
+  // Format for prompt
+  const slangText = shuffledSlang.map((s: MotorSlang) => 
+    `- "${s.term}" = ${s.meaning} (contoh: "${s.example_usage}")`
+  ).join("\n");
+  
+  const themesText = selectedThemes.map((t: CreativeTheme, i: number) => 
+    `${i + 1}. [${t.theme_type.toUpperCase()}] "${t.title}"\n   ${t.content}`
+  ).join("\n\n");
+  
+  console.log(`✅ Loaded ${shuffledSlang.length} slang terms, ${selectedThemes.length} creative themes`);
+  
+  return {
+    slangTerms: shuffledSlang,
+    creativeThemes: selectedThemes,
+    slangText,
+    themesText,
+  };
+}
 
 const SYSTEM_PROMPT = `Kamu adalah seorang copywriter UGC ads profesional yang JAGO BANGET soal motor dan SANGAT menguasai produk knalpot KENSHI HANZO. Kamu BUKAN robot kaku — kamu adalah biker sejati yang paham banget dunia otomotif Indonesia, komunitas motor, dan cara ngobrol anak motor.
 
@@ -1043,6 +1137,10 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
+    // === FASE 0: FETCH DATABASE SLANG & THEMES ===
+    console.log("📚 Fetching slang & themes from database...");
+    const dbContent = await fetchSlangAndThemes();
+
     // === FASE 1: RISET WEB REAL-TIME DENGAN SCRAPINGBEE ===
     console.log("🔍 Starting REAL-TIME web research with ScrapingBee...");
     const freshInsights = await generateFreshInsights(product);
@@ -1115,10 +1213,20 @@ KAMU HARUS membuat KONEKSI KREATIF antara trending topic di atas dengan produk k
 → ${framework3.prompt}
 → WAJIB koneksikan dengan trending topic #3 di atas!
 
+=== 📚 ISTILAH SLANG KOMUNITAS MOTOR (DARI DATABASE) ===
+
+${dbContent.slangText || "Gunakan slang standar: gacor, zonk, ngebass, cempreng, mantul, ribet, dll"}
+
+=== 🎓 TEMA KREATIF: SEJARAH, TIPS & FAKTA UNIK (DARI DATABASE) ===
+
+${dbContent.themesText || "Gunakan kreativitas sendiri untuk tema edukatif"}
+
 === ⚠️ RULES KERAS ===
 
 **HOOK (MAKSIMAL 8 KATA!):**
 - HARUS ada unsur trending topic yang lagi viral!
+- Bikin viewer mikir "Loh, kok nyambung sama trending?!" → WHAAAAT effect!
+- JANGAN generic! Hook harus UNIK dan relate sama timeline hari ini!
 - Bikin viewer mikir "Loh, kok nyambung sama trending?!" → WHAAAAT effect!
 - JANGAN generic! Hook harus UNIK dan relate sama timeline hari ini!
 
@@ -1126,6 +1234,8 @@ KAMU HARUS membuat KONEKSI KREATIF antara trending topic di atas dengan produk k
 - WAJIB pakai slang: gacor, zonk, cempreng, ngebass, mantul, ribet, awet, solid
 - WAJIB pakai filler: sih, dong, aja, mah, tuh, kan, loh, deh, nih
 - WAJIB sebutkan istilah teknis: SS304, las argon, inlet 32mm, outlet 38mm, glasswool, leheran, sarfull
+- WAJIB integrasikan SLANG dari database di atas!
+- WAJIB sisipkan FAKTA/SEJARAH/TIPS dari creative themes di atas!
 
 **SCENE BREAKDOWN:**
 - WAJIB ADA section "### 🎬 SCENE BREAKDOWN" di SETIAP script!
@@ -1142,7 +1252,8 @@ KAMU HARUS membuat KONEKSI KREATIF antara trending topic di atas dengan produk k
 Target: Pria 30+, professional mapan. Tulis kayak ngobrol sama temen biker!
 
 **🔥 REMINDER: INI KONTEN UNTUK HARI INI!**
-Social media trends berubah setiap jam — konten lo harus NYAMBUNG sama apa yang lagi rame SEKARANG!`;
+Social media trends berubah setiap jam — konten lo harus NYAMBUNG sama apa yang lagi rame SEKARANG!
+Gunakan SLANG, SEJARAH, TIPS, dan FAKTA UNIK dari database untuk bikin konten lebih VARIATIF dan BERWAWASAN!`;
 
     console.log("🚀 Generating scripts with fresh insights for:", product, "| Frameworks:", framework1.name, framework2.name, framework3.name);
 
