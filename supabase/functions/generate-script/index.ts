@@ -1431,7 +1431,7 @@ Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten 
       throw new Error("APIFREE_API_KEY is not configured");
     }
 
-    console.log("📡 Calling apifree.ai API with gpt-3.5-turbo...");
+    console.log("📡 Calling apifree.ai API...");
 
     const response = await fetch("https://api.apifree.ai/v1/chat/completions", {
       method: "POST",
@@ -1440,7 +1440,7 @@ Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten 
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo", // Model yang umum tersedia
+        model: "openai/gpt-5.2", // Coba format dengan prefix provider
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userPrompt },
