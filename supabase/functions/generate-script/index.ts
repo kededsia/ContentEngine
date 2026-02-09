@@ -1431,6 +1431,8 @@ Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten 
       throw new Error("APIFREE_API_KEY is not configured");
     }
 
+    console.log("📡 Calling apifree.ai API with gpt-3.5-turbo...");
+
     const response = await fetch("https://api.apifree.ai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -1438,17 +1440,22 @@ Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten 
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini", // Model dari apifree.ai
+        model: "gpt-3.5-turbo", // Model yang umum tersedia
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userPrompt },
         ],
         stream: true,
-        temperature: 0.9, // Higher temperature untuk lebih kreatif
+        temperature: 0.9,
       }),
     });
 
+    console.log("📡 API response status:", response.status);
+
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ API Free error:", response.status, errorText);
+      
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded, coba lagi nanti." }), {
           status: 429,
@@ -1461,13 +1468,18 @@ Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten 
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const text = await response.text();
-      console.error("API Free error:", response.status, text);
-      return new Response(JSON.stringify({ error: `API error: ${response.status}` }), {
+      
+      // Return detailed error for debugging
+      return new Response(JSON.stringify({ 
+        error: `API error: ${response.status}`, 
+        details: errorText 
+      }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    
+    console.log("✅ API response OK, streaming...");
 
     return new Response(response.body, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
