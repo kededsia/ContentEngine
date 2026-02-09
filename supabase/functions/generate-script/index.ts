@@ -1440,7 +1440,7 @@ Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten 
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-5.2", // Coba format dengan prefix provider
+        model: "deepseek-ai/deepseek-v3.2/thinking", // DeepSeek V3.2 Thinking - output lebih berkualitas
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userPrompt },
