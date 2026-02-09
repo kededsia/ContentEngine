@@ -1450,7 +1450,7 @@ Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten 
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Credit habis, silakan top up." }), {
+        return new Response(JSON.stringify({ error: "Lovable AI usage limit tercapai. Coba lagi nanti atau upgrade plan di lovable.dev/pricing." }), {
           status: 402,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
