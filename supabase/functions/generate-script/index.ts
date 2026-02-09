@@ -100,6 +100,80 @@ async function fetchSlangAndThemes(): Promise<{
   };
 }
 
+// === RISET TREND SOCIAL MEDIA ===
+async function researchTrends(motorName: string, motorBrand: string): Promise<string> {
+  const APIFREE_API_KEY = Deno.env.get("APIFREE_API_KEY");
+  
+  if (!APIFREE_API_KEY) {
+    console.log("⚠️ APIFREE_API_KEY not configured, skipping trend research");
+    return "";
+  }
+
+  console.log(`🔍 Researching trends for: ${motorName} (${motorBrand})`);
+
+  const trendPrompt = `Kamu adalah riset analyst social media Indonesia yang expert di komunitas motor matic.
+
+TUGAS: Riset dan berikan insight tentang TREND TERKINI di social media (TikTok, Instagram, YouTube) untuk komunitas motor ${motorName}.
+
+FOKUS RISET:
+1. Apa yang sedang VIRAL di kalangan user ${motorName}?
+2. Hashtag trending apa yang sering dipakai?
+3. Tema konten apa yang paling banyak engagement?
+4. Issue/keluhan apa yang sering dibahas user ${motorName}?
+5. Modifikasi/aksesoris apa yang lagi trend?
+6. Event atau moment apa yang bisa jadi hook (sunmori spot viral, cafe spot, dll)?
+7. Slang atau istilah baru apa yang sering muncul?
+8. Konten kreator ${motorName} apa yang sedang naik?
+
+BRAND CONTEXT: ${motorBrand} ${motorName}
+
+FORMAT OUTPUT (plain text, tanpa markdown):
+- Berikan 5-7 insight trend yang KONKRET dan SPESIFIK
+- Setiap insight harus bisa langsung dipakai sebagai angle konten
+- Fokus pada hal-hal yang RELATABLE untuk user ${motorName} Indonesia
+- Jangan generic, harus spesifik untuk komunitas ${motorName}
+
+PENTING: 
+- Tulis dalam bahasa Indonesia casual
+- Jangan pakai format markdown (tanpa **, ##, dll)
+- Langsung kasih insight tanpa basa-basi`;
+
+  try {
+    const response = await fetch("https://api.apifree.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${APIFREE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "deepseek-ai/deepseek-v3.2/thinking",
+        messages: [
+          { role: "user", content: trendPrompt },
+        ],
+        stream: false,
+        temperature: 0.8,
+        max_tokens: 1000,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log("⚠️ Trend research API error:", response.status, errorText);
+      return "";
+    }
+
+    const data = await response.json();
+    const trendInsights = data.choices?.[0]?.message?.content || "";
+    
+    console.log(`✅ Trend research completed. Length: ${trendInsights.length} chars`);
+    
+    return trendInsights;
+  } catch (error) {
+    console.log("⚠️ Error during trend research:", error);
+    return "";
+  }
+}
+
 const SYSTEM_PROMPT = `Kamu adalah seorang copywriter UGC ads profesional yang JAGO BANGET soal motor dan SANGAT menguasai produk knalpot KENSHI HANZO. Kamu BUKAN robot kaku — kamu adalah biker sejati yang paham banget dunia otomotif Indonesia, komunitas motor, dan cara ngobrol anak motor.
 
 PENTING: Kamu HARUS menulis dengan gaya yang RELATE dan NATURAL seperti biker asli Indonesia. JANGAN kaku atau formal seperti iklan TV. Gunakan bahasa dan istilah yang biasa dipakai anak motor.
@@ -1288,6 +1362,18 @@ serve(async (req) => {
     console.log("📚 Fetching slang & themes from database...");
     const dbContent = await fetchSlangAndThemes();
 
+    // Extract motor name for context (diperlukan untuk trend research)
+    const motorName = product.replace(/KENSHI HANZO\s*[—-]\s*/gi, "").trim();
+    const motorBrand = motorName.includes("Honda") ? "Honda" 
+      : motorName.includes("Yamaha") ? "Yamaha"
+      : motorName.includes("Suzuki") ? "Suzuki"
+      : motorName.split(" ")[0];
+
+    // === FASE 0.5: RISET TREND SOCIAL MEDIA DENGAN DEEPSEEK ===
+    console.log("🔎 Starting social media trend research with DeepSeek...");
+    const trendInsights = await researchTrends(motorName, motorBrand);
+    console.log("📱 Trend insights length:", trendInsights.length);
+
     // === FASE 1: RISET WEB REAL-TIME DENGAN SCRAPINGBEE ===
     console.log("🔍 Starting REAL-TIME web research with ScrapingBee...");
     const freshInsights = await generateFreshInsights(product);
@@ -1316,9 +1402,6 @@ serve(async (req) => {
       ? freshInsights.realTimeInsights.map((insight, i) => `${i + 1}. "${insight}"`).join("\n")
       : "Tidak ada data web terbaru, gunakan kreativitas sendiri!";
 
-    // Extract motor name for context
-    const motorName = product.replace(/KENSHI HANZO\s*[—-]\s*/gi, "").trim();
-
     const userPrompt = `Generate 3 variasi script UGC ads untuk produk: ${product}
 Motor Target: ${motorName}
 
@@ -1327,6 +1410,10 @@ Template Style: ${style}
 Tone: ${tone}
 Highlight keunggulan yang ditonjolkan: ${highlights}
 ${additionalInfo ? `Info tambahan: ${additionalInfo}` : ""}
+
+=== 📱 TREND SOCIAL MEDIA ${motorName.toUpperCase()} (RISET DEEPSEEK) ===
+
+${trendInsights || `Tidak ada data trend terbaru, gunakan insight general untuk komunitas ${motorName}`}
 
 === 🏍️ TRENDING KHUSUS ${motorName.toUpperCase()} (SESSION #${randomSeed}-${timestamp}) ===
 
@@ -1421,7 +1508,15 @@ Target: Pria 30+, professional mapan, user ${motorName}. Tulis kayak ngobrol sam
 
 **🔥 REMINDER: KONTEN INI UNTUK USER ${motorName.toUpperCase()}!**
 Jangan generic! Konten harus SANGAT SPESIFIK untuk komunitas ${motorName}!
-Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten VARIATIF dan BERWAWASAN!`;
+Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten VARIATIF dan BERWAWASAN!
+
+**⚠️ FORMAT OUTPUT (SANGAT PENTING!):**
+- JANGAN pakai markdown formatting seperti ** atau ## atau *** dalam script narasi!
+- Header section boleh pakai emoji tapi body narasi harus plain text natural
+- Tulis kayak ngobrol biasa, bukan artikel blog
+- Output harus langsung bisa dibaca/diucapkan tanpa perlu edit formatting
+- Integrasikan TREND INSIGHTS dari riset DeepSeek di atas secara NATURAL ke dalam cerita
+- Jangan sebutkan "menurut riset" atau "trending" secara eksplisit — weave it naturally!`;
 
     console.log("🚀 Generating scripts with fresh insights for:", product, "| Frameworks:", framework1.name, framework2.name, framework3.name);
 
