@@ -922,24 +922,29 @@ async function scrapeWebContent(url: string): Promise<string> {
   }
 }
 
-// Fungsi untuk riset SOCIAL MEDIA TRENDS real-time via Google Trends RSS
-async function researchSocialMediaTrends(): Promise<{
-  twitterTrends: string[];
-  tiktokTrends: string[];
-  googleTrends: string[];
+// Fungsi untuk riset SOCIAL MEDIA TRENDS PRODUCT-SPECIFIC via Google Trends
+async function researchProductTrends(productName: string, motorKeywords: string[]): Promise<{
+  productTrends: string[];
+  generalTrends: string[];
   rawTrendData: string;
 }> {
   const results = {
-    twitterTrends: [] as string[],
-    tiktokTrends: [] as string[],
-    googleTrends: [] as string[],
+    productTrends: [] as string[],
+    generalTrends: [] as string[],
     rawTrendData: "",
   };
 
+  // Extract motor name from product for search
+  // e.g., "KENSHI HANZO — Honda Stylo 160" → ["Honda", "Stylo", "160"]
+  const motorName = productName.replace(/KENSHI HANZO\s*[—-]\s*/gi, "").trim();
+  const searchTerms = motorKeywords.length > 0 ? motorKeywords : motorName.split(/[\s,]+/).filter(w => w.length > 2);
+  
+  console.log(`🔍 Product-specific search for: "${motorName}"`);
+  console.log(`🔍 Search terms: ${searchTerms.join(", ")}`);
+
+  // 1. GOOGLE TRENDS RSS - General trending
   try {
-    // Google Trends RSS Feed - PALING RELIABLE, tidak perlu ScrapingBee
     const googleTrendsRSS = "https://trends.google.co.id/trending/rss?geo=ID";
-    
     console.log(`🔥 Fetching Google Trends RSS Indonesia...`);
     
     const response = await fetch(googleTrendsRSS, {
@@ -949,13 +954,9 @@ async function researchSocialMediaTrends(): Promise<{
       }
     });
     
-    console.log(`📡 Response status: ${response.status}`);
-    
     if (response.ok) {
       const xml = await response.text();
-      console.log(`📄 RSS length: ${xml.length} chars`);
       
-      // Extract <title> tags from RSS items (trending topics)
       const titleMatches = xml.match(/<title><!\[CDATA\[([^\]]+)\]\]><\/title>/gi) || [];
       const altTitleMatches = xml.match(/<title>([^<]+)<\/title>/gi) || [];
       
@@ -963,7 +964,6 @@ async function researchSocialMediaTrends(): Promise<{
       
       const cleanTrends = allTitles
         .map(t => {
-          // Extract text from CDATA or regular title
           const cdataMatch = t.match(/<!\[CDATA\[([^\]]+)\]\]>/);
           if (cdataMatch) return cdataMatch[1].trim();
           const regularMatch = t.match(/<title>([^<]+)<\/title>/);
@@ -973,69 +973,205 @@ async function researchSocialMediaTrends(): Promise<{
         .filter(t => 
           t.length > 2 && 
           t.length < 100 &&
-          t !== "Daily Search Trends" && // Filter out RSS feed title
+          t !== "Daily Search Trends" &&
           !t.includes("Google") &&
           !t.includes("Trends")
         )
-        .slice(0, 15);
+        .slice(0, 10);
       
-      console.log(`✅ Found ${cleanTrends.length} Google Trends:`, cleanTrends.slice(0, 5));
-      
-      results.googleTrends = cleanTrends;
-      results.rawTrendData = cleanTrends.join(", ");
-    } else {
-      console.log(`❌ Google Trends RSS failed: ${response.status}`);
+      console.log(`✅ Found ${cleanTrends.length} general trends`);
+      results.generalTrends = cleanTrends;
     }
   } catch (error) {
     console.log("❌ Google Trends RSS error:", error);
   }
 
-  // Fallback: Jika Google Trends gagal, gunakan trending topics Indonesia yang umum
-  if (results.googleTrends.length === 0) {
-    console.log("⚠️ Using fallback trending topics");
-    const fallbackTrends = [
-      "BBM naik harga bensin",
-      "Timnas Indonesia",
-      "Liga 1 Indonesia",
-      "PPKM dicabut",
-      "Motor listrik Indonesia",
-      "Sunmori viral",
-      "Mudik lebaran",
-      "MotoGP Mandalika",
-      "Honda PCX terbaru",
-      "Yamaha NMAX 2025",
-    ];
-    // Shuffle and pick random
-    const shuffled = fallbackTrends.sort(() => Math.random() - 0.5);
-    results.googleTrends = shuffled.slice(0, 5);
-    results.rawTrendData = results.googleTrends.join(", ");
+  // 2. PRODUCT-SPECIFIC SEARCH via ScrapingBee (search motor-specific topics)
+  const scrapingBeeKey = Deno.env.get("SCRAPINGBEE_API_KEY");
+  if (scrapingBeeKey && searchTerms.length > 0) {
+    try {
+      // Search for product-specific trends on Google
+      const searchQuery = `${motorName} terbaru ${new Date().getFullYear()} site:twitter.com OR site:x.com OR site:tiktok.com`;
+      const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}&num=10&hl=id`;
+      
+      console.log(`🔍 ScrapingBee search: "${searchQuery}"`);
+      
+      const scrapingBeeUrl = `https://app.scrapingbee.com/api/v1/?api_key=${scrapingBeeKey}&url=${encodeURIComponent(googleSearchUrl)}&render_js=false&extract_rules={"titles":"h3"}`;
+      
+      const response = await fetch(scrapingBeeUrl);
+      
+      if (response.ok) {
+        const data = await response.json();
+        const titles = data.titles || [];
+        
+        // Extract relevant product discussions
+        const productTopics = titles
+          .filter((t: string) => 
+            searchTerms.some(term => t.toLowerCase().includes(term.toLowerCase())) ||
+            t.toLowerCase().includes("motor") ||
+            t.toLowerCase().includes("matic")
+          )
+          .slice(0, 5);
+        
+        console.log(`✅ Found ${productTopics.length} product-specific topics`);
+        results.productTrends = productTopics;
+      }
+    } catch (error) {
+      console.log("❌ Product search error:", error);
+    }
   }
 
+  // 3. FALLBACK: Motor-specific common topics
+  if (results.productTrends.length === 0) {
+    console.log("⚠️ Using motor-specific fallback topics");
+    
+    // Generate contextual fallbacks based on motor type
+    const fallbacksByMotor: Record<string, string[]> = {
+      "stylo": ["Honda Stylo 160 review terbaru", "Stylo vs Fazzio perbandingan", "Modifikasi Stylo retro modern", "Aksesori Stylo populer"],
+      "pcx": ["PCX 160 2025 update", "PCX touring experience", "PCX vs NMAX debate", "PCX modifikasi elegan"],
+      "vario": ["Vario 160 top speed test", "Vario harian irit BBM", "Vario komunitas Indonesia", "Vario vs Beat perbandingan"],
+      "nmax": ["NMAX 2025 rumor update", "NMAX touring jarak jauh", "NMAX vs PCX mana lebih oke", "NMAX modifikasi racing"],
+      "aerox": ["Aerox 155 racing setup", "Aerox bore up aman", "Aerox vs NMAX tenaga", "Aerox modifikasi gahar"],
+      "adv": ["ADV 160 adventure riding", "ADV offroad capability", "ADV touring setup", "ADV vs PCX ground clearance"],
+      "fazzio": ["Fazzio hybrid review", "Fazzio retro aesthetic", "Fazzio vs Filano", "Fazzio aksesoris populer"],
+      "filano": ["Filano klasik review", "Filano modifikasi vintage", "Filano vs Scoopy", "Filano daily rider experience"],
+      "burgman": ["Burgman 125 touring review", "Burgman kenyamanan premium", "Burgman vs Fazzio", "Burgman aksesori upgrade"],
+      "default": ["Motor matic 2025 terbaru", "Knalpot racing aman daily", "Tips modifikasi matic", "Sunmori komunitas motor"]
+    };
+    
+    // Find matching motor fallback
+    const motorLower = motorName.toLowerCase();
+    let selectedFallbacks = fallbacksByMotor.default;
+    
+    for (const [key, fallbacks] of Object.entries(fallbacksByMotor)) {
+      if (motorLower.includes(key)) {
+        selectedFallbacks = fallbacks;
+        break;
+      }
+    }
+    
+    results.productTrends = selectedFallbacks.sort(() => Math.random() - 0.5).slice(0, 4);
+  }
+
+  results.rawTrendData = [...results.productTrends, ...results.generalTrends].join(", ");
   return results;
 }
 
-// Fungsi untuk generate CONTEXT dari social media trends
-async function generateFreshInsights(product: string): Promise<{
+// Fungsi untuk riset PROBLEM-SOLVER berdasarkan produk
+async function researchProductProblems(productName: string, motorKeywords: string[]): Promise<{
+  commonProblems: { problem: string; solution: string }[];
+  rawProblemsData: string;
+}> {
+  const motorName = productName.replace(/KENSHI HANZO\s*[—-]\s*/gi, "").trim();
+  
+  console.log(`🔧 Researching problems for: "${motorName}"`);
+
+  // Common problems by motor type (based on real community discussions)
+  const problemsByMotor: Record<string, { problem: string; solution: string }[]> = {
+    "stylo": [
+      { problem: "Suara knalpot standar Stylo terlalu pelan, kurang karakter", solution: "Ganti knalpot aftermarket dengan karakter ngebass tapi tetap daily-friendly seperti Kenshi yang outlet 38mm" },
+      { problem: "Akselerasi Stylo 160 agak lemot di RPM bawah", solution: "Knalpot dengan inlet pas 32mm bikin torsi bawah lebih responsif" },
+      { problem: "Pengen tampilan Stylo makin retro tapi suara tetap modern", solution: "Pilih knalpot dengan cover hitam sleek yang match sama estetika Stylo" },
+    ],
+    "pcx": [
+      { problem: "PCX 160 knalpot standar suaranya boring, ga ada karakter", solution: "Upgrade ke knalpot oval yang kasih suara ngebass natural tanpa brong" },
+      { problem: "Takut pasang knalpot racing kena tilang", solution: "Pilih yang ada mode dual: 80dB buat daily, ngebass buat weekend" },
+      { problem: "Knalpot aftermarket biasanya bikin PCX ngempos di RPM atas", solution: "Pastikan inlet 32mm outlet 38mm, ukuran sweet spot buat matic 160cc" },
+    ],
+    "vario": [
+      { problem: "Vario 160 identik sama Beat, pengen suara beda", solution: "Knalpot dengan desain tabung oval bikin karakter suara lebih unik" },
+      { problem: "Knalpot murah di Vario cepat karat", solution: "Pilih SS304 yang proven anti karat, garansi 1 tahun" },
+      { problem: "Takut tenaga Vario drop kalau ganti knalpot", solution: "Kenshi didesain anti mentok — back pressure optimal buat matic Honda" },
+    ],
+    "nmax": [
+      { problem: "NMAX 155 suara standar terlalu halus, mau lebih gahar", solution: "Knalpot dengan outlet 38mm kasih suara ngebass tanpa kehilangan torsi" },
+      { problem: "Banyak knalpot NMAX yang suaranya cempreng setelah beberapa bulan", solution: "SS304 + las argon bikin suara konsisten bertahun-tahun" },
+      { problem: "Pengen tampil beda di komunitas NMAX tapi ga alay", solution: "Cover hitam matte dengan logo laser cut = racing tapi berkelas" },
+    ],
+    "aerox": [
+      { problem: "Aerox 155 udah kencang, pengen suara racing tapi aman", solution: "Mode dual outlet: 38mm buat sound test, 26mm buat daily" },
+      { problem: "Knalpot racing Aerox bikin torsi bawah ilang", solution: "Desain inlet 32mm jaga torsi tetap gacor dari RPM rendah" },
+      { problem: "Aerox sering touring, butuh knalpot awet", solution: "SS304 high grade tahan kondisi ekstrem touring jarak jauh" },
+    ],
+    "adv": [
+      { problem: "ADV 160 adventure look tapi suara standar kurang gahar", solution: "Knalpot ngebass yang match sama karakter adventure ADV" },
+      { problem: "ADV sering offroad, knalpot biasa gampang rusak", solution: "Material SS304 tebal 1.2mm + bracket laser cutting anti copot di medan berat" },
+      { problem: "Pengen suara enak tapi ga ganggu pas camping", solution: "Mode silent 80dB buat area camping, ngebass buat di jalan" },
+    ],
+    "fazzio": [
+      { problem: "Fazzio hybrid pengen suara lebih berkarakter", solution: "Tabung oval bikin resonansi bass yang pas buat matic Yamaha" },
+      { problem: "Tampilan retro Fazzio butuh knalpot yang match", solution: "Cover hitam matte sleek yang enhance tampilan vintage modern" },
+      { problem: "Fazzio daily rider, takut kena tilang terus", solution: "80dB certified, aman buat harian ke kantor" },
+    ],
+    "filano": [
+      { problem: "Filano klasik mau suara vintage tapi modern", solution: "Karakter ngebass Kenshi cocok sama vibe klasik Filano" },
+      { problem: "Komunitas Filano banyak yang pake standar, mau beda", solution: "Jadi yang pertama upgrade, dijamin ditanya pas kopdar" },
+      { problem: "Filano cc kecil, takut tenaga drop", solution: "Inlet-outlet dioptimasi buat mesin 125cc, anti ngempos" },
+    ],
+    "burgman": [
+      { problem: "Burgman premium look tapi suara biasa aja", solution: "Upgrade ke knalpot yang setara sama premium feel Burgman" },
+      { problem: "Jarang aftermarket berkualitas buat Burgman", solution: "Kenshi ada varian khusus Burgman dengan fitting presisi" },
+      { problem: "Touring pake Burgman butuh suara enak tapi ga capein", solution: "Karakter ngebass dalam ga bikin telinga penat di perjalanan jauh" },
+    ],
+    "default": [
+      { problem: "Knalpot murah cepat karat dan suara berubah", solution: "Investasi sekali ke SS304 — awet bertahun-tahun, suara konsisten" },
+      { problem: "Takut kena tilang gara-gara knalpot racing", solution: "Mode 80dB certified buat daily, ngebass buat weekend" },
+      { problem: "Pasang knalpot ribet harus ke bengkel", solution: "PNP (Plug & Play) 10 menit pasang sendiri" },
+      { problem: "Knalpot aftermarket bikin motor ngempos/mentok", solution: "Desain inlet-outlet yang dioptimasi buat matic Indonesia" },
+      { problem: "Bingung pilih knalpot yang beneran bagus", solution: "12.000+ terjual dengan rating 4.9 — udah terbukti di komunitas" },
+    ],
+  };
+
+  // Find matching motor problems
+  const motorLower = motorName.toLowerCase();
+  let selectedProblems = problemsByMotor.default;
+  
+  for (const [key, problems] of Object.entries(problemsByMotor)) {
+    if (motorLower.includes(key)) {
+      selectedProblems = [...problems, ...problemsByMotor.default.slice(0, 2)];
+      break;
+    }
+  }
+
+  // Shuffle and pick random problems for variety
+  const shuffledProblems = selectedProblems.sort(() => Math.random() - 0.5).slice(0, 4);
+  
+  console.log(`✅ Found ${shuffledProblems.length} problems for ${motorName}`);
+
+  return {
+    commonProblems: shuffledProblems,
+    rawProblemsData: shuffledProblems.map(p => `Problem: ${p.problem} → Solusi: ${p.solution}`).join("\n"),
+  };
+}
+
+// Fungsi untuk generate CONTEXT PRODUCT-SPECIFIC dari social media trends
+async function generateFreshInsights(product: string, motorKeywords: string[] = []): Promise<{
   trendingAngle: string;
   freshHookIdea: string;
   currentContext: string;
   realTimeInsights: string[];
   socialMediaContext: string;
+  productTrends: string[];
+  commonProblems: { problem: string; solution: string }[];
+  problemSolverContext: string;
 }> {
-  // 1. RISET SOCIAL MEDIA TRENDS real-time
-  console.log("🌐 Starting SOCIAL MEDIA trend research...");
-  const socialTrends = await researchSocialMediaTrends();
+  // 1. RISET PRODUCT-SPECIFIC TRENDS
+  console.log(`🌐 Starting PRODUCT-SPECIFIC trend research for: ${product}`);
+  const productTrendData = await researchProductTrends(product, motorKeywords);
   
-  // Combine all trends
+  // 2. RISET PROBLEM-SOLVER
+  console.log(`🔧 Starting PROBLEM-SOLVER research for: ${product}`);
+  const problemData = await researchProductProblems(product, motorKeywords);
+  
+  // Combine all trends (product-specific first, then general)
   const allTrends = [
-    ...socialTrends.googleTrends,
-    ...socialTrends.twitterTrends,
-    ...socialTrends.tiktokTrends,
+    ...productTrendData.productTrends,
+    ...productTrendData.generalTrends,
   ].filter(t => t.length > 2);
   
-  console.log(`📊 Total social media trends: ${allTrends.length}`);
+  console.log(`📊 Total trends: ${allTrends.length} (${productTrendData.productTrends.length} product-specific, ${productTrendData.generalTrends.length} general)`);
 
-  // 2. Generate current context berdasarkan waktu WIB
+  // 3. Generate current context berdasarkan waktu WIB
   const now = new Date();
   const wibOffset = 7 * 60 * 60 * 1000;
   const wibTime = new Date(now.getTime() + wibOffset);
@@ -1071,22 +1207,33 @@ async function generateFreshInsights(product: string): Promise<{
     seasonalContext = "musim hujan — banyak curhatan motor kena air di Twitter";
   }
 
-  // 3. CREATE SOCIAL MEDIA CONTEXT untuk AI
-  const socialMediaContext = allTrends.length > 0 
-    ? `TRENDING DI GOOGLE/TWITTER SEKARANG: ${allTrends.slice(0, 8).join(", ")}. WAJIB koneksikan salah satu trending topic ini dengan konten knalpot! Buat angle yang UNEXPECTED dan VIRAL!`
-    : "Social media lagi rame berbagai topik — buat konten yang bisa nyantol ke trending apapun dengan angle motor/knalpot";
+  // 4. CREATE SOCIAL MEDIA CONTEXT untuk AI (PRODUCT-SPECIFIC!)
+  const motorName = product.replace(/KENSHI HANZO\s*[—-]\s*/gi, "").trim();
+  const socialMediaContext = productTrendData.productTrends.length > 0
+    ? `TRENDING TENTANG ${motorName.toUpperCase()}: ${productTrendData.productTrends.join(", ")}. WAJIB angkat topik ini dalam konten!${productTrendData.generalTrends.length > 0 ? ` TRENDING UMUM: ${productTrendData.generalTrends.slice(0, 3).join(", ")}` : ""}`
+    : productTrendData.generalTrends.length > 0
+      ? `TRENDING UMUM DI INDONESIA: ${productTrendData.generalTrends.slice(0, 5).join(", ")}. Koneksikan dengan ${motorName}!`
+      : `Buat konten yang relate dengan komunitas ${motorName}`;
 
-  // 4. Generate dynamic hook ideas based on trends
+  // 5. CREATE PROBLEM-SOLVER CONTEXT
+  const problemSolverContext = problemData.commonProblems.length > 0
+    ? `PROBLEM UMUM USER ${motorName.toUpperCase()}:\n${problemData.commonProblems.map((p, i) => `${i + 1}. ❌ "${p.problem}" → ✅ Solusi: ${p.solution}`).join("\n")}`
+    : "";
+
+  // 6. Generate dynamic hook ideas based on trends
   const trendBasedHooks = allTrends.slice(0, 5).map(trend => {
-    return `"${trend}" → koneksikan dengan knalpot/motor`;
+    return `"${trend}" → koneksikan dengan knalpot ${motorName}`;
   });
 
   return {
-    trendingAngle: allTrends[0] || "trending Google/Twitter hari ini",
-    freshHookIdea: trendBasedHooks[0] || "connect ke trending topic",
+    trendingAngle: productTrendData.productTrends[0] || allTrends[0] || `trending ${motorName} hari ini`,
+    freshHookIdea: trendBasedHooks[0] || `connect ke komunitas ${motorName}`,
     currentContext: `${timeContext}${seasonalContext ? ". " + seasonalContext : ""}`,
     realTimeInsights: allTrends.slice(0, 10),
     socialMediaContext,
+    productTrends: productTrendData.productTrends,
+    commonProblems: problemData.commonProblems,
+    problemSolverContext,
   };
 }
 
@@ -1169,7 +1316,11 @@ serve(async (req) => {
       ? freshInsights.realTimeInsights.map((insight, i) => `${i + 1}. "${insight}"`).join("\n")
       : "Tidak ada data web terbaru, gunakan kreativitas sendiri!";
 
+    // Extract motor name for context
+    const motorName = product.replace(/KENSHI HANZO\s*[—-]\s*/gi, "").trim();
+
     const userPrompt = `Generate 3 variasi script UGC ads untuk produk: ${product}
+Motor Target: ${motorName}
 
 Platform: ${platform}
 Template Style: ${style}
@@ -1177,41 +1328,57 @@ Tone: ${tone}
 Highlight keunggulan yang ditonjolkan: ${highlights}
 ${additionalInfo ? `Info tambahan: ${additionalInfo}` : ""}
 
-=== 🔥🔥🔥 SOCIAL MEDIA TRENDS REAL-TIME (SESSION #${randomSeed}-${timestamp}) 🔥🔥🔥 ===
+=== 🏍️ TRENDING KHUSUS ${motorName.toUpperCase()} (SESSION #${randomSeed}-${timestamp}) ===
 
 **⏰ Konteks Waktu SEKARANG:** ${freshInsights.currentContext}
 
+**🎯 TRENDING SPESIFIK ${motorName.toUpperCase()}:**
+${freshInsights.productTrends.length > 0 
+  ? freshInsights.productTrends.map((t, i) => `${i + 1}. "${t}"`).join("\n")
+  : `Gunakan insight umum komunitas ${motorName}`}
+
 **📱 ${freshInsights.socialMediaContext}**
 
-**🔥 TRENDING TOPICS DARI SOCIAL MEDIA:**
+**🔥 TRENDING UMUM DI INDONESIA:**
 ${realTimeInsightsText}
 
-=== 🎯 INSTRUKSI WAJIB: KONEKSIKAN TREND DENGAN KNALPOT! ===
+=== 🔧 PROBLEM-SOLVER: MASALAH NYATA USER ${motorName.toUpperCase()} ===
 
-KAMU HARUS membuat KONEKSI KREATIF antara trending topic di atas dengan produk knalpot!
+${freshInsights.problemSolverContext || `Angkat masalah umum user ${motorName} dan berikan solusi via fitur Kenshi`}
 
-**Contoh cara koneksi yang KREATIF:**
-- Kalau trending "#ValentinesDay" → "Kasih sayang buat motor lo? Knalpot baru dong!"
-- Kalau trending "BBM naik" → "BBM naik? Yang penting suara motor lo tetep ngebass!"
-- Kalau trending "Prabowo" / politik → "Presiden baru, knalpot juga upgrade dong!"
-- Kalau trending "Indonesia menang" → "Indonesia menang, motor lo juga harus menang di jalanan!"
-- Kalau trending artis/selebriti → Relate dengan lifestyle atau aspirasi
+**INSTRUKSI PROBLEM-SOLVER:**
+- WAJIB angkat MINIMAL 1 problem nyata user ${motorName} di setiap script!
+- Tunjukkan bahwa LO PAHAM masalah mereka SEBELUM kasih solusi
+- Problem → Empati → Solusi Kenshi (bukan hard sell!)
+- Buat viewer mikir "Wah, ini gue banget!" sebelum mikir "Oh, ternyata Kenshi bisa solve"
 
-**JANGAN abaikan trending topic!** Buat hook yang NYAMBUNG sama apa yang lagi rame di timeline!
+=== 🎯 INSTRUKSI WAJIB: KONTEN PRODUCT-SPECIFIC! ===
+
+KAMU HARUS bikin konten yang SPESIFIK untuk user ${motorName}:
+
+1. **Sebutkan nama motor ${motorName}** di script (bukan generic "motor matic")
+2. **Angkat problem SPESIFIK** yang dialami user ${motorName}
+3. **Koneksikan dengan trending** tentang ${motorName} atau motor sejenis
+4. **Gunakan terminologi** yang familiar di komunitas ${motorName}
+
+**Contoh hook PRODUCT-SPECIFIC:**
+- "${motorName} lo suaranya masih standar? 😬"
+- "User ${motorName.split(' ')[0]} pasti tau masalah ini..."
+- "Upgrade ${motorName} paling worth menurut gue..."
 
 === 🎬 CREATIVE FRAMEWORK ===
 
-**Script 1:** Framework "${framework1.name}"
+**Script 1:** Framework "${framework1.name}" + PROBLEM-SOLVER
 → ${framework1.prompt}
-→ WAJIB koneksikan dengan trending topic #1 di atas!
+→ WAJIB angkat 1 problem ${motorName} + trending topic!
 
-**Script 2:** Framework "${framework2.name}"
+**Script 2:** Framework "${framework2.name}" + EDUCATIONAL
 → ${framework2.prompt}
-→ WAJIB koneksikan dengan trending topic #2 di atas!
+→ WAJIB kasih tips/fakta unik tentang knalpot untuk ${motorName}!
 
-**Script 3:** Framework "${framework3.name}"
+**Script 3:** Framework "${framework3.name}" + SOCIAL PROOF
 → ${framework3.prompt}
-→ WAJIB koneksikan dengan trending topic #3 di atas!
+→ WAJIB relate dengan pengalaman komunitas ${motorName}!
 
 === 📚 ISTILAH SLANG KOMUNITAS MOTOR (DARI DATABASE) ===
 
@@ -1224,23 +1391,24 @@ ${dbContent.themesText || "Gunakan kreativitas sendiri untuk tema edukatif"}
 === ⚠️ RULES KERAS ===
 
 **HOOK (MAKSIMAL 8 KATA!):**
-- HARUS ada unsur trending topic yang lagi viral!
-- Bikin viewer mikir "Loh, kok nyambung sama trending?!" → WHAAAAT effect!
-- JANGAN generic! Hook harus UNIK dan relate sama timeline hari ini!
-- Bikin viewer mikir "Loh, kok nyambung sama trending?!" → WHAAAAT effect!
-- JANGAN generic! Hook harus UNIK dan relate sama timeline hari ini!
+- HARUS mention ${motorName.split(' ')[0]} atau relate dengan motornya!
+- ATAU angkat problem spesifik yang user ${motorName} PASTI relate!
+- Bikin viewer mikir "Ini gue banget!" dalam 2 detik!
 
 **BODY:**
+- WAJIB mention motor ${motorName} minimal sekali
 - WAJIB pakai slang: gacor, zonk, cempreng, ngebass, mantul, ribet, awet, solid
 - WAJIB pakai filler: sih, dong, aja, mah, tuh, kan, loh, deh, nih
 - WAJIB sebutkan istilah teknis: SS304, las argon, inlet 32mm, outlet 38mm, glasswool, leheran, sarfull
 - WAJIB integrasikan SLANG dari database di atas!
 - WAJIB sisipkan FAKTA/SEJARAH/TIPS dari creative themes di atas!
+- WAJIB angkat problem + solusi yang SPESIFIK untuk ${motorName}!
 
 **SCENE BREAKDOWN:**
 - WAJIB ADA section "### 🎬 SCENE BREAKDOWN" di SETIAP script!
 - 5-8 cuts per script, tiap cut 2-4 detik
 - Image prompt WAJIB mention: OVAL shape, BLACK MATTE cover, LASER CUT welded logo
+- Image prompt WAJIB include motor ${motorName}!
 
 **DURASI:** 30-40 detik total (Hook 3-5s, Body 20-25s, CTA 5-8s)
 
@@ -1249,11 +1417,11 @@ ${dbContent.themesText || "Gunakan kreativitas sendiri untuk tema edukatif"}
 - Cover HITAM plastik (bukan powder coat)
 - Logo LASER CUT di-LAS (bukan sticker)
 
-Target: Pria 30+, professional mapan. Tulis kayak ngobrol sama temen biker!
+Target: Pria 30+, professional mapan, user ${motorName}. Tulis kayak ngobrol sama temen biker!
 
-**🔥 REMINDER: INI KONTEN UNTUK HARI INI!**
-Social media trends berubah setiap jam — konten lo harus NYAMBUNG sama apa yang lagi rame SEKARANG!
-Gunakan SLANG, SEJARAH, TIPS, dan FAKTA UNIK dari database untuk bikin konten lebih VARIATIF dan BERWAWASAN!`;
+**🔥 REMINDER: KONTEN INI UNTUK USER ${motorName.toUpperCase()}!**
+Jangan generic! Konten harus SANGAT SPESIFIK untuk komunitas ${motorName}!
+Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten VARIATIF dan BERWAWASAN!`;
 
     console.log("🚀 Generating scripts with fresh insights for:", product, "| Frameworks:", framework1.name, framework2.name, framework3.name);
 
