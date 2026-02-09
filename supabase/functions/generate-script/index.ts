@@ -1433,22 +1433,33 @@ Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten 
 
     console.log("📡 Calling apifree.ai API...");
 
-    const response = await fetch("https://api.apifree.ai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${APIFREE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "openai/gpt-5.2", // Coba format dengan prefix provider
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userPrompt },
-        ],
-        stream: true,
-        temperature: 0.9,
-      }),
-    });
+    // AbortController untuk timeout 60 detik
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      console.log("⏱️ API call timeout after 60s");
+      controller.abort();
+    }, 60000);
+
+    try {
+      const response = await fetch("https://api.apifree.ai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${APIFREE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-5.2",
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: userPrompt },
+          ],
+          stream: true,
+          temperature: 0.9,
+        }),
+        signal: controller.signal,
+      });
+      
+      clearTimeout(timeoutId);
 
     console.log("📡 API response status:", response.status);
 
@@ -1484,6 +1495,19 @@ Gunakan SLANG, SEJARAH, TIPS, FAKTA UNIK, dan PROBLEM-SOLVER untuk bikin konten 
     return new Response(response.body, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+        console.error("❌ API call timed out");
+        return new Response(JSON.stringify({ 
+          error: "Request timeout - API apifree.ai tidak merespons dalam 60 detik. Coba lagi." 
+        }), {
+          status: 504,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      throw fetchError;
+    }
   } catch (e) {
     console.error("generate-script error:", e);
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {

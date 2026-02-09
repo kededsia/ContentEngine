@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -29,6 +29,41 @@ interface ScriptInputPanelProps {
   }) => void;
   isLoading: boolean;
 }
+
+// Timer component untuk menampilkan durasi loading
+const LoadingTimer: React.FC<{ isActive: boolean }> = ({ isActive }) => {
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    if (!isActive) {
+      setSeconds(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setSeconds((s) => s + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isActive]);
+
+  if (!isActive) return null;
+
+  const getStatusMessage = () => {
+    if (seconds < 5) return "Menyiapkan data...";
+    if (seconds < 15) return "Menganalisis trend...";
+    if (seconds < 30) return "Generating scripts...";
+    if (seconds < 45) return "Hampir selesai...";
+    return "Menunggu response AI...";
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-1 w-full">
+      <span className="text-xs text-muted-foreground">{getStatusMessage()}</span>
+      <span className="text-xs font-mono text-primary">{seconds}s</span>
+    </div>
+  );
+};
 
 const ScriptInputPanel: React.FC<ScriptInputPanelProps> = ({ onGenerate, isLoading }) => {
   const [product, setProduct] = useState("");
@@ -181,19 +216,22 @@ const ScriptInputPanel: React.FC<ScriptInputPanelProps> = ({ onGenerate, isLoadi
       <Button
         onClick={handleSubmit}
         disabled={!isValid || isLoading}
-        className="w-full h-12 text-base font-semibold"
+        className="w-full h-auto min-h-12 text-base font-semibold flex-col py-3"
         size="lg"
       >
         {isLoading ? (
-          <>
-            <Loader2 className="animate-spin" />
-            Generating...
-          </>
+          <div className="flex flex-col items-center gap-2 w-full">
+            <div className="flex items-center gap-2">
+              <Loader2 className="animate-spin h-5 w-5" />
+              <span>Generating...</span>
+            </div>
+            <LoadingTimer isActive={isLoading} />
+          </div>
         ) : (
-          <>
-            <Sparkles />
-            Generate Script
-          </>
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-5 w-5" />
+            <span>Generate Script</span>
+          </div>
         )}
       </Button>
     </div>
