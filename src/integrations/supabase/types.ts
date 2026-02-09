@@ -14,7 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      creative_themes: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          keywords: string[] | null
+          theme_type: string
+          title: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          keywords?: string[] | null
+          theme_type: string
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          keywords?: string[] | null
+          theme_type?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      motor_slang: {
+        Row: {
+          category: string | null
+          created_at: string
+          example_usage: string | null
+          id: string
+          meaning: string
+          term: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          example_usage?: string | null
+          id?: string
+          meaning: string
+          term: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          example_usage?: string | null
+          id?: string
+          meaning?: string
+          term?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
