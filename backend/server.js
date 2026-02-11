@@ -157,19 +157,20 @@ TARGET AUDIENCE: Indonesian bikers (slang, casual, brotherhood vibes).
 MANDATORY RULES for EACH VARIATION:
 1. QUANTITY: Generate 3 DIFFERENT VARIATIONS.
 2. HOOK: "SHOCK HOOK" (Max 5-6 words). High impact. EXPLOSIVE.
-   - Example: "STOP!! JANGAN BELI KNALPOT INI!!"
-3. CONTENT: 
+3. WORD COUNT: MAX 80 WORDS per variation (Strict for 30-35s duration).
+4. CONTENT: 
    - Compare ${product} vs Competitors.
    - USE THE SPECS: Mention "${specs.material}" or "${specs.sound_character}".
-4. FORMAT:
+5. FORMAT:
    - START with "## Script [Number]"
    - THEN "### 📝 NARRATIVE (GTTS)" (Just the spoken text, minimal punctuation for natural flow).
    - **IMPORTANT**: The Narrative MUST START with the Hook phrase.
+   - **STRICT DURATION**: Total text must NOT exceed 80 words.
    - INSIDE NARRATIVE: Use [tag expresi: mood] tags FREQUENTLY (e.g. at the start of every sentence/phrase).
    - START NARRATIVE with Style Instruction: "di baca dengan nada [STYLE] ala video short dengan dialek [DIALECT] yang medok." (Adapt STYLE and DIALECT to the requested ones).
    - THEN "### 🎬 SCENE BREAKDOWN" (Visuals + Audio).
-5. DO NOT ASK QUESTIONS. DO NOT SAY "I'm ready" or "I've noted". START DIRECTLY WITH "## Script 1".
-6. NO CONVERSATIONAL FILLER. JUST THE CONTENT.
+6. DO NOT ASK QUESTIONS. DO NOT SAY "I'm ready" or "I've noted". START DIRECTLY WITH "## Script 1".
+7. NO CONVERSATIONAL FILLER. JUST THE CONTENT.
 
 OUTPUT TEMPLATE (You MUST produce 3 of these):
 
@@ -226,23 +227,25 @@ TARGET AUDIENCE: Indonesian bikers (slang, casual, brotherhood vibes).
 
 MANDATORY RULES for EACH VARIATION:
 1. QUANTITY: Generate 3 DIFFERENT VARIATIONS.
-2. DURATION: 30-35 Seconds. Punchy & Concise.
-3. HOOK: Must use a "SHOCK HOOK" (Max 6 words). EXPLOSIVE & CLICKBAIT.
+2. DURATION: STRICT 30-35 Seconds.
+3. WORD COUNT: MAX 80 WORDS per variation (CRITICAL for retention).
+4. HOOK: Must use a "SHOCK HOOK" (Max 6 words). EXPLOSIVE & CLICKBAIT.
    - Example: "WHAAAT?! 3 JUTA ZONK?!" or "SUMPAH NYESEL BARU TAU!!"
-4. CONTENT: 
+5. CONTENT: 
    - Compare ${product} vs Competitors.
    - ${product} = Focus on 2-3 KEY SPECS ONLY.
    - DIALECT ADAPTATION: Use pronouns ("Gue/Lo", "Aku/Kamu", "Kulo/Panjenengan") MATCHING the requested dialect.
    - **HUMAN TOUCH**: Don't be robotic. Use pauses, rhetorical questions, and "slang" naturally.
    - DON'T BE GENERIC. Use "Ngab", "Bor", "Brother". No "Akan tetapi" or "Namun".
-5. FORMAT (Strict for GTTS): 
+6. FORMAT (Strict for GTTS): 
    - START with "## Story [Number]"
    - THEN "### 📝 NARRATIVE" (The spoken text ONLY).
    - **IMPORTANT**: The Narrative MUST START with the Hook phrase.
+   - **LENGTH**: Total narrative text MUST be under 80 words.
    - INSIDE NARRATIVE: Use [tag expresi: mood] tags FREQUENTLY (e.g. at the start of every sentence/phrase).
    - START NARRATIVE with Style Instruction: "di baca dengan nada [STYLE] ala video short dengan dialek [DIALECT] yang medok." (Adapt STYLE and DIALECT to the requested ones).
    - THEN "### 🎬 VISUAL BREAKDOWN" (The scenes/visuals).
-6. DO NOT ASK QUESTIONS. DO NOT SAY "I'm ready", "I've noted". START DIRECTLY WITH "## Story 1".
+7. DO NOT ASK QUESTIONS. DO NOT SAY "I'm ready", "I've noted". START DIRECTLY WITH "## Story 1".
    - IF YOU CANNOT WRITE A STORY, WRITE "ERROR: CANNOT WRITE STORY". DO NOT TRY TO READ FILES.
 
 OUTPUT FORMAT TEMPLATE (You MUST produce 3 of these):
