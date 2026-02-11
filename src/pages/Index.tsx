@@ -5,15 +5,28 @@ import ScriptOutputPanel from "@/components/ScriptOutputPanel";
 import { saveScript, getSavedScripts } from "@/lib/favorites";
 import { KENSHI_PRODUCTS, TEMPLATE_STYLES, TONES } from "@/lib/kenshi-data";
 import { toast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search, TrendingUp, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-script`;
+const CHAT_URL = "http://localhost:3000/api/generate-script";
+const STORY_URL = "http://localhost:3000/api/generate-story";
+const TREND_URL = "http://localhost:3000/api/research-trend";
 
 function parseScripts(text: string): string[] {
-  // Better parsing: Look for actual script content starting with "## SCRIPT" or similar headers
+  // Better parsing: Look for actual script content starting with "## SCRIPT" or "## STORY" headers
   // First, try to find scripts marked with ## SCRIPT 1, ## SCRIPT 2, etc.
-  const scriptHeaderPattern = /(?:^|\n)##\s*(?:SCRIPT|Script)\s*(\d+)/gi;
+  const scriptHeaderPattern = /(?:^|\n)##\s*(?:SCRIPT|Script|STORY|Story|Cerita)\s*(?:\d+|#\d+)/gi;
   const matches = [...text.matchAll(scriptHeaderPattern)];
-  
+
   if (matches.length >= 2) {
     // Split by script headers and extract content
     const scripts: string[] = [];
@@ -25,19 +38,19 @@ function parseScripts(text: string): string[] {
     }
     return scripts.slice(0, 3);
   }
-  
+
   // Fallback: Split by "---" separator
   const parts = text.split(/\n---+\s*\n/).filter((s) => s.trim());
-  
+
   // Filter out intro/preamble text (usually before actual scripts)
   const validScripts = parts.filter(part => {
     // A valid script should have scene/hook content, not just intro text
     return part.includes("HOOK") || part.includes("Scene") || part.includes("CTA") || part.length > 500;
   });
-  
+
   if (validScripts.length >= 1) return validScripts.slice(0, 3).map((s) => s.trim());
   if (parts.length >= 1) return parts.slice(0, 3).map((s) => s.trim());
-  
+
   return [text.trim()];
 }
 
@@ -47,6 +60,11 @@ const Index: React.FC = () => {
   const [streamingText, setStreamingText] = useState("");
   const [lastParams, setLastParams] = useState<any>(null);
 
+  // Trend Research State
+  const [isTrendLoading, setIsTrendLoading] = useState(false);
+  const [trendKeyword, setTrendKeyword] = useState("");
+  const [trendResult, setTrendResult] = useState("");
+
   const generate = async (params: {
     product: string;
     highlights: string;
@@ -54,22 +72,24 @@ const Index: React.FC = () => {
     style: string;
     tone: string;
     additionalInfo: string;
+    mode: "script" | "story";
   }, isRegenerate = false) => {
     setIsLoading(true);
     setLastParams(params);
-    
+
     // Only clear scripts on NEW generation, keep old scripts visible during regenerate
     if (!isRegenerate) {
       setScripts([]);
     }
     setStreamingText("");
 
+    const targetUrl = params.mode === 'story' ? STORY_URL : CHAT_URL;
+
     try {
-      const resp = await fetch(CHAT_URL, {
+      const resp = await fetch(targetUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify(params),
       });
@@ -79,53 +99,16 @@ const Index: React.FC = () => {
         throw new Error(err.error || "Gagal generate script");
       }
 
-      if (!resp.body) throw new Error("No response body");
+      const data = await resp.json();
+      const fullText = data.result || "";
 
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-      let fullText = "";
-
-      // Clear old scripts once streaming starts (for regenerate)
-      let hasStartedStreaming = false;
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-
-        let newlineIndex: number;
-        while ((newlineIndex = buffer.indexOf("\n")) !== -1) {
-          let line = buffer.slice(0, newlineIndex);
-          buffer = buffer.slice(newlineIndex + 1);
-          if (line.endsWith("\r")) line = line.slice(0, -1);
-          if (line.startsWith(":") || line.trim() === "") continue;
-          if (!line.startsWith("data: ")) continue;
-          const jsonStr = line.slice(6).trim();
-          if (jsonStr === "[DONE]") break;
-          try {
-            const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content;
-            if (content) {
-              // Clear old scripts once we start receiving new content
-              if (!hasStartedStreaming && isRegenerate) {
-                hasStartedStreaming = true;
-                setScripts([]);
-              }
-              fullText += content;
-              setStreamingText(fullText);
-            }
-          } catch {
-            buffer = line + "\n" + buffer;
-            break;
-          }
-        }
-      }
+      // Simulate streaming effect for UI feel
+      setStreamingText(fullText);
 
       const parsed = parseScripts(fullText);
-      // Use functional update to ensure latest state
       setScripts(parsed);
-      setStreamingText("");
+      setStreamingText(""); // Clear streaming text once parsed
+
     } catch (e: any) {
       toast({ title: "Error", description: e.message, variant: "destructive" });
     } finally {
@@ -153,18 +136,80 @@ const Index: React.FC = () => {
     toast({ title: "Script disimpan ke Koleksi! ❤️" });
   };
 
+  const handleTrendResearch = async () => {
+    if (!trendKeyword) return;
+    setIsTrendLoading(true);
+    setTrendResult("");
+
+    try {
+      const resp = await fetch(TREND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keyword: trendKeyword, category: "motorcycle_community" }),
+      });
+
+      if (!resp.ok) throw new Error("Trend research failed");
+
+      const data = await resp.json();
+      setTrendResult(data.insight);
+      toast({ title: "Riset Trend Berhasil!", description: "Database slang telah diperbarui." });
+    } catch (e: any) {
+      toast({ title: "Error", description: e.message, variant: "destructive" });
+    } finally {
+      setIsTrendLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
       <main className="max-w-7xl mx-auto px-4 py-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold tracking-tight" style={{ fontFamily: 'Rajdhani, sans-serif' }}>
-            UGC Script <span className="text-primary">Generator</span>
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Generate script UGC ads knalpot Kenshi yang akurat & siap syuting
-          </p>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight" style={{ fontFamily: 'Rajdhani, sans-serif' }}>
+              UGC Script <span className="text-primary">Generator</span>
+            </h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Generate script UGC ads knalpot Kenshi yang akurat & siap syuting
+            </p>
+          </div>
+
+          {/* Trend Research Feature */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <TrendingUp className="w-4 h-4" />
+                Riset Trend
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Riset Trend Otomatis</DialogTitle>
+                <DialogDescription>
+                  Cari tau apa yang lagi viral di komunitas motor. Hasil riset akan otomatis masuk ke database slang.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Contoh: Honda Vario, Sunmori..."
+                    value={trendKeyword}
+                    onChange={(e) => setTrendKeyword(e.target.value)}
+                  />
+                  <Button onClick={handleTrendResearch} disabled={isTrendLoading}>
+                    {isTrendLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                  </Button>
+                </div>
+                {trendResult && (
+                  <div className="bg-muted p-4 rounded-md text-sm max-h-[300px] overflow-y-auto whitespace-pre-wrap">
+                    {trendResult}
+                  </div>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
+
         <div className="grid lg:grid-cols-[380px_1fr] gap-6">
           <div className="bg-card border border-border rounded-xl p-5">
             <ScriptInputPanel onGenerate={generate} isLoading={isLoading} />

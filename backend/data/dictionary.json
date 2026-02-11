@@ -1,0 +1,425 @@
+{
+  "slang": {
+    "community": [
+      {
+        "term": "Sunmori",
+        "meaning": "Sunday Morning Ride",
+        "example": "Sunday Morning Ride (riding bareng Minggu pagi)"
+      },
+      {
+        "term": "Touring",
+        "meaning": "perjalanan jauh bareng komunitas",
+        "example": "perjalanan jauh bareng komunitas"
+      },
+      {
+        "term": "Kopdar",
+        "meaning": "kopi darat, ketemuan langsung",
+        "example": "kopi darat, ketemuan langsung"
+      },
+      {
+        "term": "Tikum",
+        "meaning": "titik kumpul sebelum touring",
+        "example": "titik kumpul sebelum touring"
+      },
+      {
+        "term": "Rolling",
+        "meaning": "konvoi bareng dalam jumlah besar",
+        "example": "konvoi bareng dalam jumlah besar"
+      },
+      {
+        "term": "Night Ride",
+        "meaning": "riding malam hari",
+        "example": "riding malam hari"
+      },
+      {
+        "term": "Nongki",
+        "meaning": "ngumpul santai bareng temen motor",
+        "example": "ngumpul santai bareng temen motor"
+      },
+      {
+        "term": "Warming up",
+        "meaning": "panasan mesin sebelum jalan",
+        "example": "panasan mesin sebelum jalan"
+      },
+      {
+        "term": "Rev",
+        "meaning": "muter gas, pamer suara mesin",
+        "example": "muter gas, pamer suara mesin"
+      },
+      {
+        "term": "Safety gear",
+        "meaning": "perlengkapan keselamatan",
+        "example": "perlengkapan keselamatan (helm, jaket, sarung tangan)"
+      },
+      {
+        "term": "Ngabers",
+        "meaning": "sapaan gaul sesama biker",
+        "example": "sapaan gaul sesama biker ('Halo ngabers!')"
+      }
+    ],
+    "technical": [
+      {
+        "term": "Tarikan enteng",
+        "meaning": "akselerasi responsif, gas langsung nyamber"
+      },
+      {
+        "term": "Ngempos",
+        "meaning": "tenaga loyo, akselerasi lemot"
+      },
+      {
+        "term": "Bore up",
+        "meaning": "modifikasi mesin biar lebih bertenaga (CC digedein)"
+      },
+      {
+        "term": "Standar",
+        "meaning": "kondisi motor tanpa modifikasi"
+      },
+      {
+        "term": "Korek harian",
+        "meaning": "modifikasi ringan buat daily"
+      },
+      {
+        "term": "Dyno test",
+        "meaning": "tes tenaga motor di mesin dyno"
+      },
+      {
+        "term": "Torsi",
+        "meaning": "tenaga putaran, penting buat akselerasi bawah"
+      },
+      {
+        "term": "Power band",
+        "meaning": "rentang RPM dimana tenaga optimal"
+      },
+      {
+        "term": "Top speed",
+        "meaning": "kecepatan maksimal"
+      },
+      {
+        "term": "Response throttle",
+        "meaning": "respon saat gas dibuka"
+      }
+    ],
+    "exhaust": [
+      {
+        "term": "Leheran",
+        "meaning": "pipa pertama yang nyambung ke mesin, bagian paling panas"
+      },
+      {
+        "term": "Pipa tengah",
+        "meaning": "pipa penghubung antara header dan silencer"
+      },
+      {
+        "term": "Silencer",
+        "meaning": "tabung peredam suara utama"
+      },
+      {
+        "term": "Moncong",
+        "meaning": "ujung knalpot yang terlihat"
+      },
+      {
+        "term": "Tabung",
+        "meaning": "badan utama silencer"
+      },
+      {
+        "term": "Inner tube",
+        "meaning": "pipa dalam silencer"
+      },
+      {
+        "term": "Outer tube",
+        "meaning": "pipa luar/casing silencer"
+      },
+      {
+        "term": "End cap",
+        "meaning": "tutup ujung silencer"
+      },
+      {
+        "term": "Bracket",
+        "meaning": "penahan knalpot ke body motor"
+      },
+      {
+        "term": "Sarteng",
+        "meaning": "Saringan Tengah — peredam di tengah silencer"
+      },
+      {
+        "term": "Sarfull",
+        "meaning": "Saringan Full — peredam penuh"
+      },
+      {
+        "term": "DB killer",
+        "meaning": "peredam suara yang bisa dilepas pasang"
+      },
+      {
+        "term": "Sekat",
+        "meaning": "pembatas/peredam dalam silencer"
+      },
+      {
+        "term": "Glasswool",
+        "meaning": "bahan peredam suara dari serat kaca"
+      },
+      {
+        "term": "Resonator",
+        "meaning": "ruang khusus buat meredam frekuensi tertentu"
+      },
+      {
+        "term": "Chamber",
+        "meaning": "ruang/rongga dalam silencer buat olah suara"
+      }
+    ],
+    "sound_character": [
+      {
+        "term": "Ngebass",
+        "meaning": "suara dalam, low frequency yang enak di kuping — KARAKTER KENSHI"
+      },
+      {
+        "term": "Cempreng",
+        "meaning": "suara tinggi yang annoying"
+      },
+      {
+        "term": "Gerung",
+        "meaning": "suara dalam yang bergema"
+      },
+      {
+        "term": "Adem",
+        "meaning": "suara halus, ga berisik, aman buat daily"
+      },
+      {
+        "term": "Gahar",
+        "meaning": "suara kencang dan bertenaga"
+      },
+      {
+        "term": "Brong",
+        "meaning": "knalpot racing TANPA peredam, suara keras banget"
+      }
+    ],
+    "expressions": {
+      "greetings": [
+        "Bro",
+        "Bos",
+        "Ngab",
+        "Cuy",
+        "Bre",
+        "Bray",
+        "Gaes",
+        "Bestie"
+      ],
+      "positive": [
+        "Gacor",
+        "Joss",
+        "Mantap",
+        "Mantul",
+        "Cakep",
+        "Rapih",
+        "Clean",
+        "Gahar",
+        "Enak",
+        "Nampol",
+        "Ngefek",
+        "Gokil",
+        "Gila",
+        "Parah",
+        "Beda",
+        "Worth it",
+        "Value",
+        "Solid",
+        "Anti drama",
+        "Plug and forget"
+      ],
+      "negative": [
+        "Zonk",
+        "PHP",
+        "Kaleng",
+        "Abal",
+        "Receh",
+        "Ribet",
+        "Drama",
+        "Capek",
+        "Bete",
+        "Nyesel",
+        "Ketipu",
+        "Boncos"
+      ],
+      "reaction": [
+        "Anjir",
+        "Anjay",
+        "Gila sih",
+        "Serius?",
+        "Nah ini",
+        "Baru tau",
+        "Ternyata",
+        "Pantesan"
+      ],
+      "fillers": [
+        "Sih",
+        "Dong",
+        "Aja",
+        "Mah",
+        "Tuh",
+        "Kan",
+        "Loh",
+        "Deh",
+        "Nih",
+        "Weh",
+        "Woy"
+      ]
+    }
+  },
+  "hooks": {
+    "categories": [
+      "ANGKA SHOCK",
+      "SITUASI EXTREME",
+      "KONTRAS TAJAM",
+      "PENGAKUAN",
+      "FAKTA NENDANG",
+      "REAKSI ORANG",
+      "PERBANDINGAN",
+      "CLIFFHANGER",
+      "DAILY LIFE",
+      "PROVOCATIVE"
+    ],
+    "examples": [
+      "3 juta, zonk semua",
+      "Ganti 4x setahun",
+      "Hampir celaka",
+      "Bracket patah, bahaya",
+      "Stainless tapi karat",
+      "Mahal tapi kaleng",
+      "Zonk 3x",
+      "Nyesel telat tau",
+      "Mahal lebih hemat",
+      "SS304 beda jauh",
+      "Temen nanya terus",
+      "Motor sebelah lirik",
+      "Yang lain belang",
+      "Temen ganti 3x",
+      "Bengkel ga kasih tau",
+      "Ini bedanya",
+      "Anti tilang",
+      "Daily approved",
+      "Beneran stainless?",
+      "Yakin las argon?"
+    ]
+  },
+  "themes": [
+    "CERITA KEGAGALAN",
+    "DISCOVERY",
+    "SOCIAL PROOF",
+    "TECHNICAL DEEP DIVE",
+    "DAILY USE",
+    "COMPARISON",
+    "MONEY TALK",
+    "FEAR AVOIDANCE",
+    "ASPIRATION",
+    "HONEST REVIEW"
+  ],
+  "system_prompt": "Kamu adalah seorang copywriter UGC ads profesional yang JAGO BANGET soal motor dan SANGAT menguasai produk knalpot KENSHI HANZO. Kamu BUKAN robot kaku — kamu adalah biker sejati yang paham banget dunia otomotif Indonesia, komunitas motor, dan cara ngobrol anak motor.\n\nPENTING: Kamu HARUS menulis dengan gaya yang RELATE dan NATURAL seperti biker asli Indonesia. JANGAN kaku atau formal seperti iklan TV. Gunakan bahasa dan istilah yang biasa dipakai anak motor.",
+  "dynamic_trends": [
+    {
+      "keyword": "Motor Listrik",
+      "timestamp": "2026-02-11T04:20:49.985Z",
+      "insight": "I will start a deep research task to identify the latest trends for \"Motor Listrik\" in the \"Automotive\" category.\nI will search for the latest trends in electric motorcycles (Motor Listrik) within the automotive category to gather up-to-date information.\nBerdasarkan riset mendalam mengenai tren terbaru **Motor Listrik** di kategori **Automotive** untuk tahun 2025-2026 di Indonesia, berikut adalah poin-poin utamanya:\n\n### 1. Dinamika Kebijakan dan Insentif\n*   **Penghentian Subsidi Langsung:** Mulai tahun 2025, pemerintah secara resmi menghentikan insentif pembelian tunai untuk motor listrik. Hal ini menyebabkan koreksi angka penjualan pada tahun 2025, namun industri mulai beradaptasi untuk tumbuh secara organik tanpa ketergantungan subsidi.\n*   **Insentif Non-Tunai Tetap Berjalan:** Meskipun subsidi beli dihentikan, insentif lain tetap berlaku, seperti:\n    *   **PPnBM 0%:** Untuk kendaraan yang memenuhi syarat Tingkat Komponen Dalam Negeri (TKDN).\n    *   **Pajak Kendaraan (PKB) & BBNKB 0%:** Memberikan efisiensi biaya kepemilikan jangka panjang bagi konsumen.\n*   **Target TKDN Tinggi:** Pemerintah menetapkan target TKDN sebesar **40% pada 2026** dan akan terus meningkat hingga 80% pada 2030, mendorong produsen untuk membangun basis produksi baterai dan komponen di dalam negeri.\n\n### 2. Pertumbuhan Pasar dan Proyeksi 2026\n*   **Populasi Kendaraan:** Hingga awal 2026, populasi motor listrik di Indonesia diperkirakan telah melampaui **200.000 unit**.\n*   **Target Penjualan:** Industri memproyeksikan penjualan sekitar **75.000 hingga 100.000 unit** pada tahun 2026 melalui strategi efisiensi biaya produksi dan inovasi fitur.\n*   **Dominasi Merek:** **Polytron** memimpin pasar dengan pangsa sekitar 60% pada tahun 2025, diikuti oleh pemain kuat lainnya seperti **Alva, United,** dan **Indomobil**.\n\n### 3. Tren Teknologi dan Produk Baru\n*   **Jangkauan Jarak Jauh & Fast Charging:** Fokus utama tahun 2026 adalah mengatasi *range anxiety*. Model terbaru seperti **Alva N3** menawarkan jangkauan hingga **140 km** dengan kemampuan pengisian daya cepat (*fast charging*).\n*   **Ekosistem Baterai:** Penguatan jaringan penukaran baterai (*battery swapping*) tetap menjadi tren utama bagi pengguna komuter perkotaan, sementara model dengan baterai tanam mulai mengadopsi standar pengisian daya yang lebih universal.\n*   **Masuknya Pemain Global:** **VinFast** dijadwalkan akan meluncurkan lini motor listriknya di Indonesia pada kuartal kedua 2026, yang diprediksi akan meningkatkan kompetisi harga dan teknologi.\n\n### 4. Perubahan Perilaku Konsumen\n*   Konsumen kini lebih selektif dan tidak lagi hanya mencari motor listrik termurah, melainkan mempertimbangkan **layanan purna jual, nilai jual kembali, dan ketahanan baterai**.\n*   Penggunaan motor listrik untuk kebutuhan logistik dan ojek online tetap menjadi pendorong volume terbesar, namun segmen gaya hidup (*lifestyle*) mulai tumbuh dengan hadirnya model-model premium dan bergaya *sporty*.\n\nTren 2026 menunjukkan masa transisi di mana industri motor listrik Indonesia beralih dari fase edukasi yang disubsidi menuju fase **kematangan pasar** yang didorong oleh kualitas produk dan infrastruktur pendukung.\n"
+    },
+    {
+      "keyword": "Motor Listrik",
+      "timestamp": "2026-02-11T04:30:37.670Z",
+      "insight": "I will start a deep research task to identify the latest trends for \"Motor Listrik\" (Electric Motorcycles) within the Automotive category.\n\nI will search for the latest trends in electric motorcycles (Motor Listrik) within the automotive industry to gather up-to-date information.\n\nBerdasarkan riset mendalam mengenai tren terbaru **Motor Listrik** di kategori **Automotive** untuk tahun 2025-2026, berikut adalah ringkasan laporannya:\n\n### 1. Inovasi Teknologi Baterai & Pengisian Daya\n*   **Baterai Solid-State:** Menjadi tren utama yang diprediksi mulai masif pada 2026. Teknologi ini menawarkan densitas energi lebih tinggi (jarak tempuh lebih jauh), waktu pengisian lebih cepat, dan tingkat keamanan yang jauh lebih baik dibanding Lithium-ion konvensional.\n*   **Fast & Wireless Charging:** Pengembangan infrastruktur *fast charging* yang memungkinkan pengisian penuh di bawah 30 menit. Selain itu, *wireless charging* (pengisian daya tanpa kabel) mulai diperkenalkan di area parkir khusus.\n*   **Smart BMS (Battery Management System):** Sistem manajemen baterai yang lebih cerdas untuk mengoptimalkan siklus hidup baterai dan pemantauan kondisi secara *real-time* melalui aplikasi smartphone.\n\n### 2. Desain Futuristik & Fitur Pintar (Smart Features)\n*   **Estetika Modern:** Tren desain beralih ke gaya futuristik dengan garis bodi tajam, lampu LED artistik, dan panel instrumen digital penuh warna (TFT Display).\n*   **Konektivitas Ekosistem:** Integrasi mendalam dengan smartphone (IOT) yang mencakup fitur navigasi di layar motor, pelacakan GPS anti-maling, *geofencing*, hingga diagnosa kerusakan mandiri melalui aplikasi.\n*   **Fitur Kenyamanan:** Penggunaan fitur *Reverse Mode* (mundur), *Push Assist* (membantu mendorong motor), dan *Keyless System* kini menjadi standar pada model menengah ke atas.\n\n### 3. Dinamika Pasar & Pemain Kunci\n*   **Pertumbuhan Agresif:** Pangsa pasar motor listrik di Indonesia diprediksi mencapai 13% pada akhir 2025. Meskipun beberapa subsidi pemerintah telah berakhir, minat masyarakat tetap tinggi karena efisiensi biaya operasional.\n*   **Dominasi Merek Lokal & Global:**\n    *   **Polytron:** Memimpin dengan seri FOX yang menawarkan jangkauan jauh dan sistem sewa baterai.\n    *   **Alva:** Fokus pada performa tinggi dan gaya hidup urban dengan model seperti N3.\n    *   **Honda & Yamaha:** Mulai meluncurkan model-model premium (seperti Honda CUV e:) untuk bersaing di pasar masal.\n    *   **VinFast:** Produsen asal Vietnam yang mulai melakukan ekspansi besar ke pasar Asia Tenggara termasuk Indonesia pada 2026.\n\n### 4. Pergeseran Model Bisnis\n*   **Battery Swapping:** Skema tukar baterai tetap menjadi tren untuk motor komuter guna mengatasi kendala waktu pengisian daya.\n*   **Sewa Baterai (Battery-as-a-Service):** Produsen mulai menawarkan harga motor yang lebih murah dengan memisahkan harga baterai melalui skema langganan/sewa, mengurangi kekhawatiran konsumen terhadap degradasi baterai.\n\nKesimpulannya, tren 2025-2026 menunjukkan transisi dari motor listrik sebagai \"kendaraan alternatif\" menjadi \"pilihan utama\" yang didorong oleh kematangan teknologi baterai dan ekosistem digital yang semakin terintegrasi.\n"
+    },
+    {
+      "keyword": "Motor Listrik",
+      "timestamp": "2026-02-11T04:30:57.837Z",
+      "insight": "I will start a deep research task to identify the latest trends for \"Motor Listrik\" in the \"Automotive\" category.\nI will search for the latest trends for \"Motor Listrik\" in the \"Automotive\" category, focusing on technology, market adoption, and government policies.\nI will search for 2026 projections and the latest developments in the electric motorcycle industry to provide a report that is current as of February 2026.\nBerikut adalah laporan riset komprehensif mengenai tren terbaru \"Motor Listrik\" di kategori \"Automotive\" per Februari 2026:\n\n# Laporan Riset: Tren Motor Listrik di Indonesia (Februari 2026)\n\n## 1. Ikhtisar Pasar & Adopsi (2025-2026)\nHingga awal 2026, populasi motor listrik di Indonesia terus menunjukkan tren pertumbuhan yang positif. Meskipun target ambisius pemerintah sebesar 2 juta unit di tahun 2025 belum sepenuhnya tercapai, jumlah kendaraan roda dua listrik telah melampaui angka **200.000 unit**. \n- **Pertumbuhan Investasi:** Sebanyak lebih dari 66 perusahaan motor listrik telah menanamkan modal sekitar Rp5,6 triliun, memperkuat basis manufaktur lokal.\n- **Dinamika Penjualan:** Penjualan di awal 2026 menunjukkan pemulihan setelah sempat mengalami fluktuasi pada tahun 2025 akibat ketidakpastian kebijakan subsidi. Konsumen kini lebih teredukasi mengenai efisiensi biaya operasional.\n\n## 2. Kebijakan Pemerintah & Subsidi\nPemerintah Indonesia tetap berkomitmen pada transisi energi hijau dengan fokus pada:\n- **Insentif Fiskal & Non-Fiskal:** Selain kelanjutan program potongan harga (subsidi), fokus beralih ke insentif non-fiskal seperti kemudahan parkir, akses jalur khusus, dan pembebasan pajak progresif di beberapa daerah.\n- **Standarisasi Baterai:** Upaya standarisasi dimensi dan konektor baterai semakin gencar untuk mendukung interoperabilitas antar merek.\n\n## 3. Tren Teknologi Terbaru\nTahun 2026 ditandai dengan kemajuan teknologi yang signifikan:\n- **Fast Charging & Long Range:** Model terbaru seperti **Polytron FOX 350** menawarkan daya tempuh hingga 130 km dengan kecepatan maksimal 95 km/jam dan kemampuan pengisian daya cepat.\n- **Sistem Penukaran Baterai (Battery Swapping):** Teknologi seperti **TriFast System** dari Uwinfly menjadi standar baru untuk mobilitas perkotaan yang cepat tanpa waktu tunggu pengisian.\n- **Konektivitas Pintar:** Integrasi aplikasi mobile untuk manajemen baterai, pelacakan GPS, dan diagnosa kendaraan secara real-time telah menjadi fitur standar pada segmen menengah ke atas.\n\n## 4. Pemain Kunci & Model Populer\nBeberapa model yang mendominasi pasar di awal 2026 meliputi:\n- **Polytron Fox R & FOX 350:** Memimpin dengan keseimbangan harga dan performa.\n- **Alva One & Alva Cervo:** Menargetkan segmen gaya hidup dengan desain premium.\n- **United MX-1200 Li:** Populer untuk mobilitas harian berkat efisiensinya.\n- **Gesits G1:** Tetap menjadi pilihan kuat sebagai motor listrik kebanggaan nasional.\n- **Merek Baru:** Masuknya model seperti **Indomobil eMotor Sprinto** menambah keragaman pilihan bagi konsumen dengan harga yang lebih kompetitif.\n\n## 5. Pengembangan Infrastruktur\nInfrastruktur pendukung telah berkembang pesat untuk mengurangi *range anxiety* (kecemasan akan jarak tempuh):\n- **SPKLU & SPBKLU:** Hingga pertengahan 2025, tercatat ada 4.186 unit SPKLU dan 1.902 Stasiun Penukaran Baterai. Di awal 2026, jumlah ini terus meningkat, terutama di area perkotaan besar dan pusat perbelanjaan.\n- **Ekosistem Digital:** Peta lokasi stasiun pengisian kini terintegrasi di hampir semua aplikasi navigasi utama.\n\n## 6. Tantangan & Outlook Masa Depan\n- **Tantangan:** Harga baterai yang masih relatif tinggi dan ketergantungan pada rantai pasok global tetap menjadi tantangan utama.\n- **Outlook:** Tahun 2026 diprediksi akan menjadi tahun konsolidasi di mana merek-merek dengan layanan purna jual yang kuat dan infrastruktur baterai yang luas akan mendominasi pasar. Motor listrik kecil yang praktis dan efisien diprediksi akan semakin diminati untuk penggunaan harian (commuter).\n\n**Kesimpulan:**\nIndustri motor listrik di Indonesia telah bergeser dari fase \"adopsi awal\" menuju fase \"pertumbuhan berkelanjutan\". Inovasi pada jangkauan baterai, kemudahan infrastruktur penukaran, dan desain yang semakin futuristik menjadi pendorong utama minat konsumen di tahun 2026.\n"
+    },
+    {
+      "keyword": "Motor Listrik",
+      "timestamp": "2026-02-11T04:32:35.025Z",
+      "insight": "I will initiate a comprehensive research task to analyze the latest trends for \"Motor Listrik\" (Electric Motorcycles) in the \"Automotive\" category.\nI will research the latest trends for electric motorcycles (\"Motor Listrik\") in the automotive category using Google Search to provide a comprehensive overview.\nI will attempt a more specific search for electric motorcycle trends in Indonesia for 2025 and 2026 to gather up-to-date market insights.\nBerdasarkan riset pasar terbaru, berikut adalah laporan komprehensif mengenai tren **Motor Listrik** di kategori **Automotive** untuk tahun 2025-2026:\n\n### **Laporan Tren Motor Listrik 2025-2026**\n\n#### **1. Dinamika Pasar dan Pertumbuhan**\nPasar motor listrik di Indonesia sedang memasuki fase krusial. Meskipun ada optimisme besar dengan target pangsa pasar kendaraan listrik mencapai 13% pada tahun 2025, realisasi penjualan menghadapi tantangan akibat fluktuasi kebijakan insentif.\n*   **Volume Penjualan:** Penjualan pada tahun 2025 tercatat sekitar 55.000 unit, mengalami penurunan dari 77.000 unit pada tahun 2024. Hal ini dipicu oleh masa transisi dan ketidakpastian subsidi.\n*   **Target 2026:** Industri menargetkan pemulihan dengan fokus pada model yang lebih praktis dan ekonomis untuk penggunaan harian (commuter).\n\n#### **2. Kebijakan Pemerintah dan Insentif**\nRegulasi tetap menjadi pendorong utama (atau penghambat jika tidak jelas) bagi adopsi motor listrik:\n*   **Kelanjutan Subsidi:** Terdapat diskusi intens mengenai subsidi Rp 7 juta. Kemenperin mengusulkan kelanjutan subsidi untuk tahun 2026, namun keputusan akhir masih bergantung pada ketersediaan ruang fiskal.\n*   **Tingkat Komponen Dalam Negeri (TKDN):** Target TKDN untuk tahun 2026 ditetapkan sebesar **40%**, naik menjadi 60% pada 2027. Ini memaksa produsen untuk memperkuat basis produksi lokal dan ekosistem baterai di dalam negeri.\n\n#### **3. Inovasi Produk dan Pemain Utama**\nTahun 2025-2026 ditandai dengan munculnya model-model baru yang lebih kompetitif:\n*   **Model Baru:** Peluncuran model seperti **ALVA N3 (Next Gen)**, **Polytron FOX 350**, dan **Indomobil eMotor Sprinto** menunjukkan pergeseran ke arah performa yang lebih baik dan fitur cerdas.\n*   **Pemain Lokal vs Global:** Brand lokal seperti United Motor dan Polytron terus bersaing dengan pendatang global seperti BYD yang mulai mendominasi pasar roda empat dan mulai melirik segmen ekosistem roda dua.\n*   **Fokus Desain:** Tren desain beralih ke motor listrik yang memiliki ruang bagasi luas, sistem pengisian daya cepat (fast charging), dan integrasi aplikasi smartphone untuk monitoring baterai.\n\n#### **4. Infrastruktur dan Teknologi**\n*   **Ekosistem Baterai:** Fokus utama bergeser dari sekadar menjual unit ke penyediaan **Sistem Penukaran Baterai (Battery Swapping)** untuk mengatasi *range anxiety*.\n*   **SPKLU:** Meskipun jumlah stasiun pengisian terus bertambah (mencapai ~3.300+ unit di awal 2025), angka ini masih jauh dari target jangka panjang, sehingga pengisian mandiri di rumah (home charging) tetap menjadi pilihan utama pengguna.\n\n#### **5. Tantangan Utama**\n*   **Harga Jual Kembali:** Kekhawatiran konsumen mengenai nilai jual kembali (resale value) dan umur pakai baterai masih menjadi hambatan psikologis.\n*   **Edukasi Konsumen:** Produsen kini lebih kreatif dalam pemasaran, menekankan pada biaya operasional yang jauh lebih murah dibandingkan motor bensin (ICE).\n\n### **Kesimpulan Strategis**\nTahun 2026 diprediksi akan menjadi tahun **konsolidasi industri**. Produsen yang mampu memenuhi ambang batas TKDN dan menawarkan skema baterai yang fleksibel (seperti sewa baterai atau swap) akan memenangkan pasar. Tren \"hijau\" bukan lagi sekadar gaya hidup, melainkan kebutuhan ekonomi bagi masyarakat urban di Indonesia.\n"
+    },
+    {
+      "keyword": "Motor Listrik",
+      "timestamp": "2026-02-11T04:34:17.058Z",
+      "insight": "I will start a deep research task to analyze the latest trends for \"Motor Listrik\" (Electric Motorcycles) in the \"Automotive\" category.\nI will search for the latest trends in electric motorcycles within the automotive industry to provide a comprehensive update.\nBerdasarkan riset mendalam mengenai tren terbaru \"Motor Listrik\" di kategori \"Automotive\" untuk tahun 2025-2026, berikut adalah laporan komprehensif mengenai perkembangan industri tersebut:\n\n### **Laporan Tren Motor Listrik (Automotive) 2025-2026**\n\nIndustri sepeda motor listrik sedang mengalami transisi besar dari pasar khusus (*niche*) menjadi segmen arus utama (*mainstream*). Pertumbuhan global diperkirakan akan mencapai nilai USD 39,2 miliar pada tahun 2033 dengan tingkat pertumbuhan (CAGR) sebesar 11,6%.\n\n#### **1. Revolusi Teknologi Baterai dan Pengisian Daya**\n*   **Baterai Solid-State:** Teknologi ini mulai diperkenalkan secara komersial (misalnya oleh Verge Motorcycles) yang menawarkan jangkauan hingga 600 km dalam sekali pengisian dan pengisian daya yang jauh lebih cepat (60 km jangkauan per menit pengisian).\n*   **Sistem Baterai Swappable (Tukar Pakai):** Menjadi standar di kawasan Asia (dipelopori oleh Gogoro dan konsorsium Honda/Yamaha/Suzuki/Kawasaki) untuk mengatasi kecemasan jangkauan (*range anxiety*) dan meminimalkan waktu tunggu pengisian.\n*   **Efisiensi Lebih Tinggi:** Penggunaan sel baterai berbasis graphene mulai dieksplorasi untuk meningkatkan kepadatan energi dan umur pakai baterai.\n\n#### **2. Integrasi Kecerdasan Buatan (AI) dan Konektivitas**\n*   **AI-Driven Performance:** AI digunakan untuk menganalisis gaya berkendara, memprediksi kesehatan baterai, dan mengoptimalkan penyaluran tenaga secara *real-time* berdasarkan kondisi medan.\n*   **Ekosistem Terhubung:** Konektivitas *smartphone* menjadi fitur standar yang mencakup navigasi terintegrasi, diagnostik jarak jauh (*remote diagnostics*), dan pembaruan perangkat lunak secara nirkabel (Over-the-Air/OTA updates).\n*   **Smart Safety:** Implementasi *Advanced Rider Assistance Systems* (ARAS) seperti peringatan tabrakan, deteksi titik buta (*blind-spot detection*), dan kontrol traksi adaptif.\n\n#### **3. Fokus pada Keberlanjutan dan Desain**\n*   **Material Ramah Lingkungan:** Penggunaan serat alami (seperti komposit serat rami), logam daur ulang, dan plastik ramah lingkungan dalam manufaktur bodi motor untuk mengurangi jejak karbon.\n*   **Desain Modular:** Tren motor yang mudah dikustomisasi secara modular, memungkinkan pengguna mengganti komponen estetik atau fungsional dengan mudah sesuai preferensi pribadi.\n*   **Target Gen Z:** Produsen (termasuk pemain lokal seperti Alva dan Polytron) semakin fokus pada estetika futuristik, personalisasi warna, dan fitur gaya hidup yang menarik bagi generasi muda.\n\n#### **4. Dinamika Pasar Regional (Fokus Asia Tenggara)**\n*   **Dominasi Asia Pasifik:** Kawasan ini menjadi pemimpin pertumbuhan berkat dukungan insentif pemerintah, investasi infrastruktur pengisian daya, dan adopsi besar-besaran oleh sektor logistik/pengiriman makanan.\n*   **Pemain Kunci:**\n    *   **Global:** Honda (seri WN7, CB1000GT), Harley-Davidson (LiveWire), Zero Motorcycles, dan Energica.\n    *   **Regional/Lokal:** Yadea, Niu, Ultraviolette, serta merek Indonesia seperti Alva, Polytron, dan Gesits yang terus memperkuat penetrasi pasar dengan model performa tinggi.\n\n#### **5. Tantangan dan Peluang**\n*   **Infrastruktur:** Meskipun jaringan pengisian daya terus tumbuh, pengembangan di daerah pedesaan masih menjadi tantangan.\n*   **Total Cost of Ownership (TCO):** Biaya operasional yang lebih rendah (biaya listrik vs bensin) dan perawatan yang minimal menjadi daya tarik utama bagi konsumen komersial dan komuter perkotaan.\n\n**Kesimpulan:**\nTahun 2026 akan menjadi titik balik di mana motor listrik tidak hanya bersaing dalam hal efisiensi, tetapi juga dalam hal performa yang setara dengan motor bermesin bensin (ICE), didukung oleh teknologi AI yang membuat berkendara lebih aman dan personal.\n"
+    },
+    {
+      "keyword": "Motor Listrik",
+      "timestamp": "2026-02-11T04:35:39.736Z",
+      "insight": "I will start a comprehensive research task to analyze the latest trends for \"Motor Listrik\" (Electric Motorcycles) in the \"Automotive\" category.\nI will search for the latest trends regarding electric motorcycles (\"Motor Listrik\") in the automotive industry to gather information for a comprehensive report.\nI will research current and upcoming trends for electric motorcycles in the automotive sector, focusing on the Indonesian market and global developments for 2025-2026.\nBerikut adalah laporan riset komprehensif mengenai tren terbaru \"Motor Listrik\" di kategori \"Automotive\" untuk tahun 2025-2026, dengan fokus pada pasar Indonesia dan perspektif global.\n\n# Comprehensive Research Report: Tren Motor Listrik 2025-2026\n\n## 1. Ringkasan Eksekutif\nIndustri motor listrik (e-motorcycle) memasuki fase krusial pada periode 2025-2026. Secara global, pasar terus berekspansi dengan pertumbuhan tahunan (CAGR) sekitar 11-12%. Di Indonesia, meskipun potensi pasar sangat besar dan populasi kendaraan listrik terus meningkat, tantangan kebijakan insentif dan infrastruktur menjadi penentu utama kecepatan adopsi massal.\n\n## 2. Tren Pasar Indonesia (2025-2026)\nPasar Indonesia menunjukkan dinamika yang kompleks namun progresif:\n\n*   **Pertumbuhan Populasi Kendaraan:** Pada awal 2025, populasi kendaraan listrik di Indonesia mencapai sekitar 330.000 unit, di mana motor listrik mendominasi dengan kontribusi sekitar 200.000 unit.\n*   **Dinamika Insentif & Subsidi:** \n    *   Terdapat ketidakpastian kebijakan yang signifikan. Setelah kuota subsidi 2024 habis, pasar sempat mengalami kelesuan.\n    *   Muncul wacana peralihan skema dari subsidi langsung ke diskon PPN yang diprediksi berlaku mulai paruh kedua 2025.\n    *   Ketidakkonsistenan ini menyebabkan fluktuasi angka penjualan tahunan yang diperkirakan berada di kisaran 50.000 - 55.000 unit pada 2025.\n*   **Dominasi Penggunaan Harian:** Motor listrik dengan desain praktis untuk komuter harian menjadi segmen paling populer. Brand lokal seperti **ALVA** terus memperkuat posisi melalui inovasi fitur dan kehadiran di pameran besar seperti IMOS.\n*   **Infrastruktur Pengisian:** PLN menargetkan penambahan hingga 1.100 SPKLU pada 2025, namun ketersediaan di luar Pulau Jawa masih menjadi tantangan utama bagi konsumen.\n\n## 3. Tren Pasar Global\nSecara global, industri otomotif listrik roda dua mengalami transformasi teknologi:\n\n*   **Asia Pasifik sebagai Pemimpin:** Kawasan ini mendominasi lebih dari 80% penjualan global, didorong oleh permintaan di China, India, Vietnam, dan Indonesia.\n*   **Adopsi di Sektor Komersial:** Sektor logistik dan pengiriman makanan (delivery) menjadi penggerak utama adopsi motor listrik melalui kemitraan antara platform digital dan startup mobilitas listrik.\n*   **Integrasi Teknologi Pintar:** Motor listrik keluaran 2026 semakin banyak yang mengintegrasikan IoT, konektivitas smartphone yang lebih dalam, navigasi GPS terintegrasi, dan diagnostik jarak jauh.\n\n## 4. Inovasi Teknologi & Desain (2025-2026)\nBeberapa lompatan teknologi yang menjadi tren utama:\n\n*   **Evolusi Baterai:** Pengembangan baterai *solid-state* mulai beralih dari fase riset ke implementasi prototipe komersial, menjanjikan kepadatan energi lebih tinggi, bobot lebih ringan, dan waktu pengisian yang jauh lebih cepat.\n*   **Material Berkelanjutan:** Produsen mulai menggunakan komposit ringan, logam daur ulang, dan plastik ramah lingkungan dalam proses manufaktur untuk meningkatkan efisiensi energi.\n*   **Segmen High-Performance:** Munculnya minat pada motor listrik berperforma tinggi (sport bikes) yang mampu bersaing dengan motor bensin kelas atas, seperti yang ditunjukkan oleh pertumbuhan pesat brand seperti **Stark Future**.\n\n## 5. Tantangan Utama\n1.  **Harga Beli Awal:** Meskipun biaya operasional rendah, harga beli awal yang lebih tinggi dibanding motor konvensional masih menjadi hambatan bagi sebagian besar konsumen.\n2.  **Range Anxiety (Kecemasan Jarak Tempuh):** Masalah standardisasi stasiun penukaran baterai (*battery swapping*) dan jarak tempuh per pengisian daya tetap menjadi kekhawatiran utama calon pembeli.\n3.  **Nilai Jual Kembali:** Ketidakpastian mengenai degradasi baterai jangka panjang mempengaruhi persepsi konsumen terhadap nilai jual kembali (resale value).\n\n## 6. Kesimpulan dan Outlook\nTahun 2026 diprediksi akan menjadi titik balik di mana motor listrik bukan lagi sekadar alternatif \"hijau\", melainkan segmen inti di industri otomotif. Di Indonesia, keberhasilan target pemerintah (13 juta motor listrik pada 2030) akan sangat bergantung pada transparansi kebijakan subsidi dan percepatan pembangunan infrastruktur pengisian daya nasional yang merata.\n"
+    },
+    {
+      "keyword": "Motor Listrik",
+      "timestamp": "2026-02-11T04:37:55.729Z",
+      "insight": "I will start a deep research task to identify the latest trends for \"Motor Listrik\" (Electric Motorcycles) in the \"Automotive\" category and generate a comprehensive report.\nI will search for the latest trends in electric motorcycles (\"Motor Listrik\") within the automotive category, focusing on market growth, new models, and government incentives.\nI will refine my search to gather specific data on electric motorcycle market trends, upcoming models, and infrastructure developments for 2025-2026.\nI will conduct additional searches to understand consumer preferences, identify specific upcoming electric motorcycle models for 2026, and analyze broader global market trends.\nBerikut adalah laporan riset mengenai tren terbaru motor listrik (Electric Motorcycles) untuk kategori \"Automotive\" tahun 2025-2026, baik di Indonesia maupun secara global.\n\n---\n\n# Laporan Riset: Tren Motor Listrik 2025-2026\n\n## 1. Ringkasan Eksekutif\nPasar motor listrik memasuki fase \"Adopsi Arus Utama\" (Mainstream Adoption) pada periode 2025-2026. Secara global, pasar diproyeksikan tumbuh pesat dengan CAGR sekitar 11,6%. Di Indonesia, terjadi pergeseran drastis di mana fokus kebijakan berpindah dari subsidi langsung ke konsumen menjadi kebijakan non-fiskal dan mandat penggunaan armada pemerintah, sementara produsen mulai berinovasi dengan skema mandiri dan teknologi baterai yang lebih efisien.\n\n## 2. Tren Pasar Global 2025-2026\n*   **Adopsi Arus Utama:** Motor listrik tidak lagi dianggap sebagai produk niche. Produsen besar (OEM) seperti Harley-Davidson (LiveWire), Royal Enfield (dengan seri FF-S6), dan TVS mulai meluncurkan model yang kompetitif secara performa dan harga dengan motor bensin.\n*   **Pertumbuhan Wilayah:** Asia-Pasifik (terutama China, India, dan Asia Tenggara) tetap menjadi pemimpin pasar dunia karena kekhawatiran atas emisi dan cadangan bahan bakar minyak.\n*   **Ekosistem Cerdas:** Integrasi IoT (Internet of Things) menjadi standar. Fitur seperti navigasi GPS terintegrasi, diagnostik jarak jauh, dan pembaruan perangkat lunak *over-the-air* (OTA) semakin umum ditemukan pada model tahun 2026.\n\n## 3. Dinamika Pasar di Indonesia\n*   **Penghentian Subsidi:** Salah satu tren paling signifikan adalah keputusan pemerintah Indonesia untuk menghentikan subsidi pembelian motor listrik pada tahun 2025 dan 2026 karena evaluasi fiskal.\n*   **Strategi Non-Fiskal:** Sebagai gantinya, pemerintah fokus pada Inpres No. 7 Tahun 2022 yang mewajibkan penggunaan kendaraan listrik bagi instansi pemerintah.\n*   **Inisiatif Produsen:** Menghadapi penghentian subsidi, merek seperti **Polytron** dan **ALVA** mulai menawarkan subsidi mandiri (diskon langsung) dan memperkuat layanan purna jual serta penyewaan baterai untuk menekan biaya kepemilikan bagi konsumen.\n\n## 4. Perkembangan Teknologi & Infrastruktur\n*   **Era Baterai Solid-State (2026):** Teknologi baterai *solid-state* diprediksi mulai masuk tahap produksi massal pada 2026. Teknologi ini menawarkan jangkauan lebih jauh, pengisian daya jauh lebih cepat (dalam hitungan menit), dan keamanan yang lebih tinggi dibandingkan lithium-ion konvensional.\n*   **Pengisian Cepat & Nirkabel:** Pengembangan stasiun *fast-charging* yang mampu mengisi daya kurang dari 30 menit menjadi prioritas infrastruktur. Teknologi *wireless charging* (pengisian tanpa kabel) juga mulai diperkenalkan untuk penggunaan di area parkir khusus.\n*   **Persaingan LFP vs NMC:** Di Indonesia, terdapat persaingan antara baterai berbasis Nikel (NMC) yang unggul di performa dan baterai Lithium Ferro Phosphate (LFP) yang lebih ekonomis untuk penggunaan perkotaan.\n\n## 5. Preferensi Konsumen & Fitur Baru\n*   **Sistem Keselamatan Canggih:** *Advanced Rider Assistance Systems* (ARAS) seperti sensor titik buta (*blind-spot detection*) dan peringatan tabrakan mulai diaplikasikan pada motor listrik kelas menengah ke atas.\n*   **Desain Modular:** Konsumen mulai melirik desain modular yang memungkinkan penggantian komponen atau peningkatan kapasitas baterai dengan mudah sesuai kebutuhan perjalanan.\n*   **Konektivitas IoT:** Pengendali jarak jauh melalui smartphone untuk memantau kesehatan kendaraan dan lokasi (anti-pencurian) menjadi fitur yang paling dicari.\n\n## 6. Kesimpulan & Proyeksi\nTahun 2026 akan menjadi tahun pembuktian bagi ketahanan industri motor listrik di Indonesia tanpa subsidi langsung. Kunci keberhasilan pasar akan sangat bergantung pada:\n1.  Penurunan biaya baterai melalui produksi lokal.\n2.  Kecepatan pembangunan infrastruktur pengisian daya.\n3.  Inovasi produsen dalam menawarkan skema pembiayaan atau sewa baterai yang meringankan beban awal konsumen.\n\n---\n"
+    },
+    {
+      "keyword": "Motor Listrik",
+      "timestamp": "2026-02-11T04:38:07.139Z",
+      "insight": "I will start a deep research task to investigate the latest trends for \"Motor Listrik\" (Electric Motorcycles) in the \"Automotive\" category.\nI will search for the latest trends in electric motorcycles (\"Motor Listrik\") within the automotive category to provide a comprehensive update.\nBerikut adalah rangkuman riset tren terbaru untuk **Motor Listrik (EV Two-Wheelers)** di kategori **Automotive** untuk tahun 2026, mencakup aspek global dan lokal (Indonesia):\n\n### 1. Tren Teknologi Global (2026)\n*   **Revolusi Baterai:** Fokus utama bergeser ke baterai *solid-state* dan kimia lithium-ion yang ditingkatkan. Hasilnya adalah pengisian daya yang jauh lebih cepat (ultra-fast charging), bobot lebih ringan, dan jarak tempuh yang lebih jauh.\n*   **Konektivitas Cerdas & IoT:** Motor listrik bukan lagi sekadar alat transportasi, melainkan perangkat cerdas. Integrasi *smartphone* yang mendalam, navigasi GPS *real-time*, diagnostik jarak jauh, dan pembaruan perangkat lunak *over-the-air* (OTA) menjadi standar.\n*   **Fitur Keamanan Canggih (ARAS):** Implementasi *Advanced Rider Assistance Systems* seperti peringatan tabrakan, deteksi titik buta (*blind-spot detection*), dan *adaptive cruise control* mulai merambah ke model-model premium.\n*   **Desain Modular:** Tren penggunaan material daur ulang dan desain modular yang memudahkan penggantian suku cadang atau kustomisasi secara cepat.\n\n### 2. Lanskap Pasar di Indonesia (2026)\n*   **Pertumbuhan Tanpa Subsidi:** Industri mulai mencapai titik kemandirian. Produsen tetap optimis terhadap pertumbuhan tinggi meskipun insentif pemerintah berkurang, didorong oleh kesadaran lingkungan dan efisiensi biaya operasional.\n*   **Ekspansi Infrastruktur Pengisian Daya:** PLN telah memperluas jaringan SPKLU (Stasiun Pengisian Kendaraan Listrik Umum) hingga lebih dari 5.000 titik secara nasional, mengurangi *range anxiety* di kalangan pengguna.\n*   **Dominasi Segmen B2B:** Perusahaan logistik dan armada layanan operasional menjadi penggerak utama adopsi motor listrik skala besar untuk menekan biaya pemeliharaan.\n*   **Produksi Lokal & Harga Kompetitif:** Munculnya lebih banyak merek lokal (seperti ALVA, United, dan lainnya) yang menawarkan performa setara motor bensin dengan harga yang semakin terjangkau (ekonomis).\n\n### 3. Model & Pemain Utama\n*   **Model Baru 2026:** Peluncuran seri terbaru seperti ALVA N3 Next Gen, Indomobil eMotor (QT series), dan ekspansi merek global seperti VinFast di pasar domestik.\n*   **IIMS 2026:** Ajang *Indonesia International Motor Show* menjadi katalisator utama dengan pameran teknologi baterai terbaru dan program tukar tambah (*trade-in*) dari motor bensin ke listrik.\n\n### 4. Kesimpulan Strategis\nTahun 2026 menandai transisi dari motor listrik sebagai \"produk alternatif\" menjadi \"pilihan utama\" (mainstream). Konsumen kini lebih fokus pada **performa dan total biaya kepemilikan (TCO)** daripada sekadar isu lingkungan. Infrastruktur yang semakin matang dan teknologi baterai yang lebih efisien menjadi kunci utama percepatan tren ini.\n"
+    }
+  ],
+  "story_structures": [
+    {
+      "name": "The Open Loop",
+      "description": "Start with a mystery or question that keeps them watching.",
+      "template": "**Hook:** [Mystery/Question that grabs attention immediately]\\n**Context:** [The Struggle or Situation]\\n**Solution:** [Product Reveal as the answer]\\n**Resolution:** [Happy Outcome/CTA]"
+    },
+    {
+      "name": "The Transformation",
+      "description": "Before vs After story.",
+      "template": "**Hook:** [Show the 'After' state first]\\n**Context:** [Flashback to the 'Before' struggle]\\n**The Fix:** [How the product changed everything]\\n**Result:** [Final satisfaction/CTA]"
+    },
+    {
+      "name": "The Contrarian",
+      "description": "Challenge a common belief.",
+      "template": "**Hook:** [Controversial Statement]\\n**Context:** [Why everyone thinks X]\\n**The Truth:** [Why Y (Product) is actually better]\\n**Resolution:** [Prove it/CTA]"
+    },
+    {
+      "name": "The Relatable Struggle",
+      "description": "Empathy-first narrative.",
+      "template": "**Hook:** [Common Pain Point]\\n**Context:** [\"I know exactly how that feels...\"]\\n**Empathy:** [Validation]\\n**Solution:** [The Product that helps]\\n**Resolution:** [Relief/CTA]"
+    }
+  ],
+  "kenshi_specs": {
+    "material": "Stainless Steel SS304 (Japan quality, anti-karat, bukan monel/besi)",
+    "thickness": "1.2mm (Tebal, kokoh, durability tinggi)",
+    "inlet_options": [
+      "38mm (Standar/Harian)",
+      "50mm (Racing/Bore Up)",
+      "50mm (Competition)"
+    ],
+    "welding": "Las Argon / Tig Weld (Rapih, motif cacing, kuat)",
+    "finish": "Sandblast / Titan Look (Mewah, elegan)",
+    "sound_character": "Bass Gahar (Ngebass bulet di RPM bawah, teriak di RPM atas, tidak pecah)",
+    "glaswool": "Serat Putih Tahan Panas (Awet, suara stabil)",
+    "features": [
+      "Laser Marking Name",
+      "Plug and Play (PnP)",
+      "Include DB Killer (Opsional)"
+    ],
+    "guarantee": "Garansi Kebocoran Las"
+  },
+  "gtts_styles": {
+    "instructions_template": "Baca Dengan Intonasi [STYLE], Dialek [DIALECT] yang pas untuk video short:",
+    "styles": [
+      "Cepat",
+      "Semangat",
+      "Sedih/Kecewa",
+      "Marah",
+      "Bisik-bisik",
+      "Storytelling"
+    ],
+    "dialects": [
+      "JAWA Medok",
+      "JAKSEL Gaul",
+      "SUNDA Halus",
+      "BATAK Tegas",
+      "FORMAL"
+    ],
+    "tags": [
+      "[tag expresi: marah]",
+      "[tag expresi: kaget]",
+      "[tag expresi: sedih]",
+      "[tag expresi: semangat]",
+      "[tag expresi: bingung]",
+      "[tag expresi: bisik]",
+      "[tag expresi: tertawa]"
+    ]
+  }
+}

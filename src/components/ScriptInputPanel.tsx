@@ -9,7 +9,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles, FileVideo, BookOpen } from "lucide-react";
 import {
   KENSHI_PRODUCTS,
   HIGHLIGHTS,
@@ -26,11 +26,13 @@ interface ScriptInputPanelProps {
     style: string;
     tone: string;
     additionalInfo: string;
+    mode: "script" | "story";
   }) => void;
   isLoading: boolean;
 }
 
 const ScriptInputPanel: React.FC<ScriptInputPanelProps> = ({ onGenerate, isLoading }) => {
+  const [mode, setMode] = useState<"script" | "story">("script");
   const [product, setProduct] = useState("");
   const [selectedHighlights, setSelectedHighlights] = useState<string[]>([]);
   const [platform, setPlatform] = useState("");
@@ -61,6 +63,7 @@ const ScriptInputPanel: React.FC<ScriptInputPanelProps> = ({ onGenerate, isLoadi
       style: styleLabel,
       tone: toneLabel,
       additionalInfo,
+      mode,
     });
   };
 
@@ -68,6 +71,30 @@ const ScriptInputPanel: React.FC<ScriptInputPanelProps> = ({ onGenerate, isLoadi
 
   return (
     <div className="space-y-5">
+      {/* Mode Selection */}
+      <div className="bg-secondary/50 p-1 rounded-lg flex gap-1">
+        <button
+          onClick={() => setMode("script")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all ${mode === "script"
+            ? "bg-background shadow-sm text-foreground"
+            : "text-muted-foreground hover:text-foreground"
+            }`}
+        >
+          <FileVideo className="w-4 h-4" />
+          Video Script
+        </button>
+        <button
+          onClick={() => setMode("story")}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-md transition-all ${mode === "story"
+            ? "bg-background shadow-sm text-foreground"
+            : "text-muted-foreground hover:text-foreground"
+            }`}
+        >
+          <BookOpen className="w-4 h-4" />
+          Story / Cerita
+        </button>
+      </div>
+
       <div>
         <label className="block text-sm font-semibold mb-2 text-foreground">Pilih Produk</label>
         <Select value={product} onValueChange={setProduct}>
@@ -114,11 +141,10 @@ const ScriptInputPanel: React.FC<ScriptInputPanelProps> = ({ onGenerate, isLoadi
             <button
               key={p.id}
               onClick={() => setPlatform(p.id)}
-              className={`p-3 rounded-lg border text-sm font-medium transition-all ${
-                platform === p.id
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border bg-secondary text-muted-foreground hover:border-primary/50"
-              }`}
+              className={`p-3 rounded-lg border text-sm font-medium transition-all ${platform === p.id
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border bg-secondary text-muted-foreground hover:border-primary/50"
+                }`}
             >
               {p.label}
             </button>
@@ -133,11 +159,10 @@ const ScriptInputPanel: React.FC<ScriptInputPanelProps> = ({ onGenerate, isLoadi
             <button
               key={s.id}
               onClick={() => setStyle(s.id)}
-              className={`w-full text-left p-3 rounded-lg border transition-all ${
-                style === s.id
-                  ? "border-primary bg-primary/10"
-                  : "border-border bg-secondary hover:border-primary/50"
-              }`}
+              className={`w-full text-left p-3 rounded-lg border transition-all ${style === s.id
+                ? "border-primary bg-primary/10"
+                : "border-border bg-secondary hover:border-primary/50"
+                }`}
             >
               <div className="font-medium text-sm">{s.label}</div>
               <div className="text-xs text-muted-foreground">{s.desc}</div>
@@ -153,11 +178,10 @@ const ScriptInputPanel: React.FC<ScriptInputPanelProps> = ({ onGenerate, isLoadi
             <button
               key={t.id}
               onClick={() => setTone(t.id)}
-              className={`p-3 rounded-lg border text-sm font-medium transition-all ${
-                tone === t.id
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border bg-secondary text-muted-foreground hover:border-primary/50"
-              }`}
+              className={`p-3 rounded-lg border text-sm font-medium transition-all ${tone === t.id
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border bg-secondary text-muted-foreground hover:border-primary/50"
+                }`}
             >
               {t.label}
             </button>
@@ -178,6 +202,12 @@ const ScriptInputPanel: React.FC<ScriptInputPanelProps> = ({ onGenerate, isLoadi
         />
       </div>
 
+      {isLoading && (
+        <div className="flex items-center justify-center p-2 bg-secondary/50 rounded-lg animate-pulse">
+          <span className="text-sm font-medium text-primary">Creating magic... Please wait.</span>
+        </div>
+      )}
+
       <Button
         onClick={handleSubmit}
         disabled={!isValid || isLoading}
@@ -187,12 +217,12 @@ const ScriptInputPanel: React.FC<ScriptInputPanelProps> = ({ onGenerate, isLoadi
         {isLoading ? (
           <>
             <Loader2 className="animate-spin" />
-            Generating...
+            Generating {mode === 'script' ? 'Script' : 'Story'}...
           </>
         ) : (
           <>
             <Sparkles />
-            Generate Script
+            Generate {mode === 'script' ? 'Script' : 'Story'}
           </>
         )}
       </Button>
