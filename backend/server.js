@@ -165,8 +165,8 @@ MANDATORY RULES for EACH VARIATION:
    - START with "## Script [Number]"
    - THEN "### 📝 NARRATIVE (GTTS)" (Just the spoken text, minimal punctuation for natural flow).
    - **IMPORTANT**: The Narrative MUST START with the Hook phrase.
-   - INSIDE NARRATIVE: Use [expression: mood] tags FREQUENTLY (e.g. start of every sentence).
-   - START NARRATIVE with: "Intonasi: Cepat & Semangat (Fast & Enthusiastic). Dialek: [DIALECT]."
+   - INSIDE NARRATIVE: Use [tag expresi: mood] tags FREQUENTLY (e.g. at the start of every sentence/phrase).
+   - START NARRATIVE with Style Instruction: "di baca dengan nada [STYLE] ala video short dengan dialek [DIALECT] yang medok." (Adapt STYLE and DIALECT to the requested ones).
    - THEN "### 🎬 SCENE BREAKDOWN" (Visuals + Audio).
 5. DO NOT ASK QUESTIONS. DO NOT SAY "I'm ready" or "I've noted". START DIRECTLY WITH "## Script 1".
 6. NO CONVERSATIONAL FILLER. JUST THE CONTENT.
@@ -174,9 +174,10 @@ MANDATORY RULES for EACH VARIATION:
 OUTPUT TEMPLATE (You MUST produce 3 of these):
 
 ## Script 1: [Title] (🔥 [Theme])
-**⏱️ Durasi:** 30-60 detik
+**⏱️ Durasi:** 30-35 detik
 **🪝 Hook:** [Shock Hook]
 ### 📝 NARRATIVE (GTTS)
+di baca dengan nada Cepat & Semangat ala video short dengan dialek [DIALECT] yang medok.
 ...
 ### 🎬 SCENE BREAKDOWN
 ...
@@ -225,7 +226,7 @@ TARGET AUDIENCE: Indonesian bikers (slang, casual, brotherhood vibes).
 
 MANDATORY RULES for EACH VARIATION:
 1. QUANTITY: Generate 3 DIFFERENT VARIATIONS.
-2. DURATION: 45-60 Seconds. Detailed & Nuanced.
+2. DURATION: 30-35 Seconds. Punchy & Concise.
 3. HOOK: Must use a "SHOCK HOOK" (Max 6 words). EXPLOSIVE & CLICKBAIT.
    - Example: "WHAAAT?! 3 JUTA ZONK?!" or "SUMPAH NYESEL BARU TAU!!"
 4. CONTENT: 
@@ -238,8 +239,8 @@ MANDATORY RULES for EACH VARIATION:
    - START with "## Story [Number]"
    - THEN "### 📝 NARRATIVE" (The spoken text ONLY).
    - **IMPORTANT**: The Narrative MUST START with the Hook phrase.
-   - INSIDE NARRATIVE: Use [expression: mood] tags FREQUENTLY (e.g. start of every sentence).
-   - START NARRATIVE with: "Intonasi: Cepat & Semangat (Fast & Enthusiastic). Dialek: [DIALECT]."
+   - INSIDE NARRATIVE: Use [tag expresi: mood] tags FREQUENTLY (e.g. at the start of every sentence/phrase).
+   - START NARRATIVE with Style Instruction: "di baca dengan nada [STYLE] ala video short dengan dialek [DIALECT] yang medok." (Adapt STYLE and DIALECT to the requested ones).
    - THEN "### 🎬 VISUAL BREAKDOWN" (The scenes/visuals).
 6. DO NOT ASK QUESTIONS. DO NOT SAY "I'm ready", "I've noted". START DIRECTLY WITH "## Story 1".
    - IF YOU CANNOT WRITE A STORY, WRITE "ERROR: CANNOT WRITE STORY". DO NOT TRY TO READ FILES.
@@ -247,9 +248,10 @@ MANDATORY RULES for EACH VARIATION:
 OUTPUT FORMAT TEMPLATE (You MUST produce 3 of these):
 
 ## Story 1: [Title]
-**⏱️ Durasi:** 30-45 det
+**⏱️ Durasi:** 30-35 det
 **🪝 Hook:** [Shock Hook Text]
 ### 📝 NARRATIVE
+di baca dengan nada Cepat & Semangat ala video short dengan dialek [DIALECT] yang medok.
 ...
 ### 🎬 VISUAL BREAKDOWN
 ...
