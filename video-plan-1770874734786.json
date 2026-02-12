@@ -1,0 +1,89 @@
+{
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "durationInFrames": 2304,
+  "tracks": [
+    {
+      "type": "video",
+      "clips": [
+        {
+          "type": "video",
+          "src": "C:\\KONSEP\\backend\\data\\raw_footage\\grok_video_59169e04_aeab_473b_8f90_1935e65650ba.mp4",
+          "startFrom": 0,
+          "duration": 2,
+          "startAt": 47.599999999999994
+        }
+      ]
+    },
+    {
+      "type": "audio",
+      "clips": []
+    },
+    {
+      "type": "text",
+      "clips": [
+        {
+          "type": "text",
+          "content": "**⏱️ Durasi:** 30-35 detik",
+          "startAt": 0,
+          "duration": 2
+        },
+        {
+          "type": "text",
+          "content": "**🪝 Hook:** Yakin knalpot lo stainless asli?",
+          "startAt": 2,
+          "duration": 2.8
+        },
+        {
+          "type": "text",
+          "content": "Baca dengan kecepatan TINGGI (1.2x - 1.5x speed). Gunakan intonasi Kaget/Shock (Viral News) dengan dialek JAWA Medok yang medok. Ikuti tanda baca sebagai instruksi napas:",
+          "startAt": 4.8,
+          "duration": 10
+        },
+        {
+          "type": "text",
+          "content": "Yakin knalpot lo stainless asli? [emosi: bingung] Hati-hati mas, [jeda: pendek] banyak yang cuma gaya doang tapi dalemnya kaleng. [emosi: kaget] Liat nih Kenshi Hanzo! [jeda: pendek] Ketebalannya satu koma dua mili, [tekanan: kuat] kokoh banget! [emosi: bangga] Desain Oval Tube-nya bikin suara makin padat, [jeda: pendek] bukan kaleng-kaleng. [emosi: sombong] Gak bakalan nyesel [jeda: pendek] soalnya SS304 ini anti karat selamanya. [emosi: senang] Joss tenan pokoke! [jeda: pendek] Buruan sikat sebelum kehabisan! [emosi: kaget]",
+          "startAt": 14.8,
+          "duration": 30
+        },
+        {
+          "type": "text",
+          "content": "| Time | Visual | Audio |",
+          "startAt": 44.8,
+          "duration": 2.8
+        },
+        {
+          "type": "text",
+          "content": "|------|--------|-------|",
+          "startAt": 47.599999999999994,
+          "duration": 2
+        },
+        {
+          "type": "text",
+          "content": "| 00-05s | Talent mendekatkan magnet ke knalpot kompetitor (nempel). | SFX \"Zonk\" / Fail. |",
+          "startAt": 49.599999999999994,
+          "duration": 6.4
+        },
+        {
+          "type": "text",
+          "content": "| 05-15s | Makro shot las argon \"cacing\" di Kenshi Hanzo. | SFX \"Ding\" / High quality sound. |",
+          "startAt": 55.99999999999999,
+          "duration": 7.6
+        },
+        {
+          "type": "text",
+          "content": "| 15-25s | Demonstrasi suara (Sound check) di bengkel. | Suara Bass Gahar yang sangat jernih. |",
+          "startAt": 63.599999999999994,
+          "duration": 6.8
+        },
+        {
+          "type": "text",
+          "content": "| 25-30s | Text \"GARANSI KEBOCORAN\" muncul besar di layar. | BGM semangat & upbeat. |",
+          "startAt": 70.39999999999999,
+          "duration": 6.4
+        }
+      ]
+    }
+  ]
+}

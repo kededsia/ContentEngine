@@ -378,48 +378,70 @@
   ],
   "kenshi_specs": {
     "material": "Stainless Steel SS304 (Japan quality, anti-karat, bukan monel/besi)",
-    "thickness": "1.2mm (Tebal, kokoh, durability tinggi)",
+    "thickness": "satu koma dua mili (Tebal, kokoh, durability tinggi)",
+    "design": "Oval Tube (Desain modern, bikin suara lebih padat & ngebass, tidak cempreng)",
     "inlet_options": [
       "38mm (Standar/Harian)",
       "50mm (Racing/Bore Up)",
       "50mm (Competition)"
     ],
     "welding": "Las Argon / Tig Weld (Rapih, motif cacing, kuat)",
-    "finish": "Sandblast / Titan Look (Mewah, elegan)",
+    "finish": "Titan Look / Satin (Mewah, halus, bukan kasar)",
     "sound_character": "Bass Gahar (Ngebass bulet di RPM bawah, teriak di RPM atas, tidak pecah)",
     "glaswool": "Serat Putih Tahan Panas (Awet, suara stabil)",
     "features": [
-      "Laser Marking Name",
+      "Emblem Plat Stainless (Riveted/Paku Keling Premium)",
+      "End Cap Hitam Sporty (Aerodinamis)",
+      "Cover/Heat Shield Hitam (Pelindung Panas Futuristik)",
       "Plug and Play (PnP)",
       "Include DB Killer (Opsional)"
     ],
     "guarantee": "Garansi Kebocoran Las"
   },
   "gtts_styles": {
-    "instructions_template": "Baca Dengan Intonasi [STYLE], Dialek [DIALECT] yang pas untuk video short:",
+    "instructions_template": "Baca dengan kecepatan TINGGI (tempo 1.50). Gunakan intonasi [STYLE] yang sangat ekspresif. Ikuti tanda baca sebagai instruksi napas:",
+    "pacing_rules": [
+      "Gunakan tanda koma (,) untuk jeda super pendek (micro-pause)",
+      "Gunakan tanda titik (.) untuk jeda tegas (full stop)",
+      "Gunakan tanda seru (!) untuk nada naik/teriak",
+      "Gunakan tanda tanya (?) untuk nada intrik/penasaran",
+      "Gunakan ellipsis (...) untuk suspense/menggantung"
+    ],
     "styles": [
-      "Cepat",
-      "Semangat",
-      "Sedih/Kecewa",
-      "Marah",
-      "Bisik-bisik",
-      "Storytelling"
+      "Cepat & Agresif (Hard Selling)",
+      "Storytelling Emosional (Soft Selling)",
+      "Bisik-bisik (ASMR/Rahasia)",
+      "Marah/Kecewa (Komplain)",
+      "Kaget/Shock (Viral News)"
     ],
     "dialects": [
-      "JAWA Medok",
-      "JAKSEL Gaul",
-      "SUNDA Halus",
-      "BATAK Tegas",
-      "FORMAL"
+      "JAWA Medok (Cth: 'Waduh, piye toh mas?')",
+      "JAKSEL Gaul (Cth: 'Literally, ini worth it banget')",
+      "SUNDA Halus (Cth: 'Mangga atuh di cek')",
+      "BATAK Tegas (Cth: 'Bah! Macam mana pula ini?')",
+      "FORMAL (Berita/Resmi)"
     ],
     "tags": [
-      "[tag expresi: marah]",
-      "[tag expresi: kaget]",
-      "[tag expresi: sedih]",
-      "[tag expresi: semangat]",
-      "[tag expresi: bingung]",
-      "[tag expresi: bisik]",
-      "[tag expresi: tertawa]"
+      "[emosi: marah]",
+      "[emosi: kecewa]",
+      "[emosi: kaget]",
+      "[emosi: senang]",
+      "[emosi: sedih]",
+      "[emosi: bingung]",
+      "[emosi: takut]",
+      "[emosi: bangga]",
+      "[emosi: sombong]",
+      "[emosi: genit]",
+      "[emosi: berbisik]",
+      "[emosi: terengah-engah]",
+      "[emosi: tertawa]",
+      "[emosi: menangis]",
+      "[jeda: pendek]",
+      "[jeda: panjang]",
+      "[tekanan: kuat]",
+      "[tekanan: lembut]",
+      "[speed: cepat]",
+      "[speed: lambat]"
     ]
   }
 }

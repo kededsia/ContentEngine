@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import AppHeader from "@/components/AppHeader";
 import ScriptInputPanel from "@/components/ScriptInputPanel";
 import ScriptOutputPanel from "@/components/ScriptOutputPanel";
-import { saveScript, getSavedScripts } from "@/lib/favorites";
-import { KENSHI_PRODUCTS, TEMPLATE_STYLES, TONES } from "@/lib/kenshi-data";
+
+import { saveScript } from "@/lib/favorites";
+import { KENSHI_PRODUCTS } from "@/lib/kenshi-data";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,13 +23,10 @@ const STORY_URL = "http://localhost:3000/api/generate-story";
 const TREND_URL = "http://localhost:3000/api/research-trend";
 
 function parseScripts(text: string): string[] {
-  // Better parsing: Look for actual script content starting with "## SCRIPT" or "## STORY" headers
-  // First, try to find scripts marked with ## SCRIPT 1, ## SCRIPT 2, etc.
   const scriptHeaderPattern = /(?:^|\n)##\s*(?:SCRIPT|Script|STORY|Story|Cerita)\s*(?:\d+|#\d+)/gi;
   const matches = [...text.matchAll(scriptHeaderPattern)];
 
   if (matches.length >= 2) {
-    // Split by script headers and extract content
     const scripts: string[] = [];
     for (let i = 0; i < matches.length; i++) {
       const start = matches[i].index!;
@@ -39,12 +37,8 @@ function parseScripts(text: string): string[] {
     return scripts.slice(0, 3);
   }
 
-  // Fallback: Split by "---" separator
   const parts = text.split(/\n---+\s*\n/).filter((s) => s.trim());
-
-  // Filter out intro/preamble text (usually before actual scripts)
   const validScripts = parts.filter(part => {
-    // A valid script should have scene/hook content, not just intro text
     return part.includes("HOOK") || part.includes("Scene") || part.includes("CTA") || part.length > 500;
   });
 
@@ -60,7 +54,6 @@ const Index: React.FC = () => {
   const [streamingText, setStreamingText] = useState("");
   const [lastParams, setLastParams] = useState<any>(null);
 
-  // Trend Research State
   const [isTrendLoading, setIsTrendLoading] = useState(false);
   const [trendKeyword, setTrendKeyword] = useState("");
   const [trendResult, setTrendResult] = useState("");
@@ -77,7 +70,6 @@ const Index: React.FC = () => {
     setIsLoading(true);
     setLastParams(params);
 
-    // Only clear scripts on NEW generation, keep old scripts visible during regenerate
     if (!isRegenerate) {
       setScripts([]);
     }
@@ -102,12 +94,11 @@ const Index: React.FC = () => {
       const data = await resp.json();
       const fullText = data.result || "";
 
-      // Simulate streaming effect for UI feel
       setStreamingText(fullText);
 
       const parsed = parseScripts(fullText);
       setScripts(parsed);
-      setStreamingText(""); // Clear streaming text once parsed
+      setStreamingText("");
 
     } catch (e: any) {
       toast({ title: "Error", description: e.message, variant: "destructive" });
@@ -174,7 +165,6 @@ const Index: React.FC = () => {
             </p>
           </div>
 
-          {/* Trend Research Feature */}
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline" className="gap-2">
@@ -211,8 +201,11 @@ const Index: React.FC = () => {
         </div>
 
         <div className="grid lg:grid-cols-[380px_1fr] gap-6">
-          <div className="bg-card border border-border rounded-xl p-5">
-            <ScriptInputPanel onGenerate={generate} isLoading={isLoading} />
+          <div className="space-y-6">
+            <div className="bg-card border border-border rounded-xl p-5">
+              <ScriptInputPanel onGenerate={generate} isLoading={isLoading} />
+            </div>
+
           </div>
           <div className="bg-card/50 border border-border rounded-xl p-5 min-h-[500px]">
             <ScriptOutputPanel

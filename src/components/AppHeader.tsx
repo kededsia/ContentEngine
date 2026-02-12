@@ -17,24 +17,32 @@ const AppHeader: React.FC = () => {
         <nav className="flex gap-1">
           <Link
             to="/"
-            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-              location.pathname === "/"
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${location.pathname === "/"
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:text-foreground"
-            }`}
+              }`}
           >
             Generator
           </Link>
           <Link
             to="/collection"
-            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 ${
-              location.pathname === "/collection"
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 ${location.pathname === "/collection"
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:text-foreground"
-            }`}
+              }`}
           >
             <BookMarked className="h-3.5 w-3.5" />
             Koleksi
+          </Link>
+          <Link
+            to="/videos"
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-1.5 ${location.pathname === "/videos"
+                ? "bg-primary/10 text-primary"
+                : "text-muted-foreground hover:text-foreground"
+              }`}
+          >
+            <span role="img" aria-label="video">🎬</span>
+            Videos
           </Link>
         </nav>
       </div>
