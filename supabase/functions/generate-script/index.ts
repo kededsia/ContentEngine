@@ -1483,6 +1483,10 @@ ${dbContent.themesText || "Gunakan kreativitas sendiri untuk tema edukatif"}
 - Bikin viewer mikir "Ini gue banget!" dalam 2 detik!
 
 **BODY:**
+- KOMPOSISI WAJIB dalam narasi:
+  * 40% drama/emosi (pain, konflik, tension relatable)
+  * 20% proses masuk/transisi solusi (alur problem → solusi)
+  * 40% penerangan produk (fitur, benefit, bukti)
 - WAJIB mention motor ${motorName} minimal sekali
 - WAJIB pakai slang: gacor, zonk, cempreng, ngebass, mantul, ribet, awet, solid
 - WAJIB pakai filler: sih, dong, aja, mah, tuh, kan, loh, deh, nih

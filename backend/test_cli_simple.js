@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 
 console.log("Testing Gemini CLI with simple prompt...");
 
-const child = spawn('gemini', ['prompt', 'Hello'], { shell: true });
+const child = spawn('gemini', ['prompt', 'Hello'], { shell: process.platform === 'win32' });
 
 child.stdout.on('data', (data) => {
     console.log(`STDOUT: ${data}`);
