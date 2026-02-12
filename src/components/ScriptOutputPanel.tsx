@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Copy, RefreshCw, Heart, Mic, Download, Loader2, Sparkles } from "lucide-react";
+import { Copy, RefreshCw, Heart, Mic, Download, Loader2, Sparkles, Clapperboard, Upload, Wand2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface ScriptOutputPanelProps {
@@ -23,10 +23,19 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
 }) => {
   const [generatingTTS, setGeneratingTTS] = useState<number | null>(null);
   const [generatedAudios, setGeneratedAudios] = useState<Record<number, string>>({});
+  const [creatingDirectorPlan, setCreatingDirectorPlan] = useState<number | null>(null);
+  const [directorPlans, setDirectorPlans] = useState<Record<number, string>>({});
+  const [creatingRemotionSkill, setCreatingRemotionSkill] = useState<number | null>(null);
+  const [remotionSkills, setRemotionSkills] = useState<Record<number, string>>({});
+  const audioInputs = useRef<Record<number, HTMLInputElement | null>>({});
 
   useEffect(() => {
     setGeneratedAudios({});
     setGeneratingTTS(null);
+    setCreatingDirectorPlan(null);
+    setDirectorPlans({});
+    setCreatingRemotionSkill(null);
+    setRemotionSkills({});
   }, [scripts]);
 
   const copyScript = (text: string, index: number) => {
@@ -35,7 +44,7 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
   };
 
   const extractScriptText = (script: string): string => {
-    return script.replace(/[\*\#]/g, "").substring(0, 2500);
+    return script.replace(/[*#]/g, "").substring(0, 2500);
   };
 
   const generateTTS = async (scriptIndex: number) => {
@@ -57,8 +66,9 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
       const data = await response.json();
       setGeneratedAudios((prev) => ({ ...prev, [scriptIndex]: `data:audio/mpeg;base64,${data.audioContent}` }));
       toast({ title: "Voiceover berhasil! 🎙️" });
-    } catch (e: any) {
-      toast({ title: "Error", description: e.message, variant: "destructive" });
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Terjadi kesalahan";
+      toast({ title: "Error", description: message, variant: "destructive" });
     } finally {
       setGeneratingTTS(null);
     }
@@ -69,6 +79,127 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
     link.href = audioUrl;
     link.download = `kenshi-vo-${index + 1}.mp3`;
     link.click();
+  };
+
+  const getAudioDuration = (file: File) => {
+    return new Promise<number>((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const audio = new Audio(url);
+      audio.preload = "metadata";
+      audio.onloadedmetadata = () => {
+        resolve(audio.duration);
+        URL.revokeObjectURL(url);
+      };
+      audio.onerror = () => {
+        reject(new Error("File audio tidak valid"));
+        URL.revokeObjectURL(url);
+      };
+    });
+  };
+
+  const buildAudioAnalysis = (script: string, durationSec: number) => {
+    const emotionMatches = [...script.matchAll(/\[\s*emosi\s*:\s*([^\]]+)\]/gi)]
+      .map((m) => m[1].trim())
+      .filter(Boolean);
+
+    const words = script
+      .replace(/\[[^\]]+\]/g, "")
+      .replace(/[*#]/g, "")
+      .split(/\s+/)
+      .map((w) => w.trim())
+      .filter(Boolean);
+
+    const cueSamples = Math.min(12, words.length);
+    const step = cueSamples > 0 ? Math.max(1, Math.floor(words.length / cueSamples)) : 1;
+
+    const cueWords = Array.from({ length: cueSamples }).map((_, idx) => {
+      const wordIndex = Math.min(words.length - 1, idx * step);
+      const atSec = words.length > 0 ? Number(((wordIndex / words.length) * durationSec).toFixed(2)) : 0;
+      return { atSec, word: words[wordIndex] || "" };
+    });
+
+    const emotionTimeline = emotionMatches.length > 0
+      ? emotionMatches.map((emotion, idx) => {
+          const atSec = Number(((idx / Math.max(1, emotionMatches.length)) * durationSec).toFixed(2));
+          return { atSec, emotion };
+        })
+      : [{ atSec: 0, emotion: "neutral" }];
+
+    return {
+      durationSec: Number(durationSec.toFixed(2)),
+      emotionTimeline,
+      cueWords,
+    };
+  };
+
+  const generateDirectorPlan = async (scriptIndex: number, file: File) => {
+    if (!file) return;
+
+    setCreatingDirectorPlan(scriptIndex);
+    try {
+      const durationSec = await getAudioDuration(file);
+      const audio = buildAudioAnalysis(scripts[scriptIndex], durationSec);
+
+      const resp = await fetch("http://localhost:3000/api/director-plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          script: scripts[scriptIndex],
+          audio,
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.error || "Gagal membuat director plan");
+      }
+
+      const data = await resp.json();
+      const plan = data.plan || "Director plan tidak tersedia";
+      setDirectorPlans((prev) => ({ ...prev, [scriptIndex]: plan }));
+      toast({ title: "Director plan siap", description: "Timeline & arahan Remotion sudah dibuat." });
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Terjadi kesalahan";
+      toast({ title: "Error", description: message, variant: "destructive" });
+    } finally {
+      setCreatingDirectorPlan(null);
+    }
+  };
+
+
+  const generateRemotionSkill = async (scriptIndex: number) => {
+    const directorPlan = directorPlans[scriptIndex];
+    if (!directorPlan) {
+      toast({ title: "Director plan belum ada", description: "Generate director plan dulu sebelum Remotion skill." });
+      return;
+    }
+
+    setCreatingRemotionSkill(scriptIndex);
+    try {
+      const resp = await fetch("http://localhost:3000/api/remotion-skill", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          script: scripts[scriptIndex],
+          directorPlan,
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.error || "Gagal membuat Remotion skill pack");
+      }
+
+      const data = await resp.json();
+      const skillPack = data.skillPack || "Remotion skill pack tidak tersedia";
+      setRemotionSkills((prev) => ({ ...prev, [scriptIndex]: skillPack }));
+      toast({ title: "Remotion skill siap", description: "Blueprint MP4 sudah dibuat." });
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Terjadi kesalahan";
+      toast({ title: "Error", description: message, variant: "destructive" });
+    } finally {
+      setCreatingRemotionSkill(null);
+    }
   };
 
   // Custom Markdown Parser for "Lovable" Look
@@ -226,7 +357,7 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
                 </div>
 
                 {/* Footer (Actions) */}
-                <div className="p-4 bg-secondary/10 border-t border-border flex justify-end">
+                <div className="p-4 bg-secondary/10 border-t border-border flex flex-col gap-3">
                   {generatedAudios[i] ? (
                     <div className="flex items-center gap-2 w-full bg-background p-2 rounded-md border border-border">
                       <audio controls src={generatedAudios[i]} className="flex-1 h-8" />
@@ -240,7 +371,58 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
                       {generatingTTS === i ? "Generating Audio..." : "Generate Voiceover (AI)"}
                     </Button>
                   )}
+
+                  <input
+                    ref={(el) => {
+                      audioInputs.current[i] = el;
+                    }}
+                    type="file"
+                    accept="audio/mpeg,audio/wav,.mp3,.wav"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) generateDirectorPlan(i, file);
+                      e.currentTarget.value = "";
+                    }}
+                  />
+
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="w-full sm:w-auto"
+                    onClick={() => audioInputs.current[i]?.click()}
+                    disabled={creatingDirectorPlan === i}
+                  >
+                    {creatingDirectorPlan === i ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <Clapperboard className="h-3 w-3 mr-2" />}
+                    {creatingDirectorPlan === i ? "Menganalisa Audio..." : "Buat Video (Director)"}
+                    <Upload className="h-3 w-3 ml-2" />
+                  </Button>
                 </div>
+
+                {directorPlans[i] && (
+                  <div className="p-4 border-t border-border bg-background/60 space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <h4 className="text-sm font-bold text-primary">Director Plan (Remotion Ready)</h4>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => generateRemotionSkill(i)}
+                        disabled={creatingRemotionSkill === i}
+                      >
+                        {creatingRemotionSkill === i ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <Wand2 className="h-3 w-3 mr-2" />}
+                        {creatingRemotionSkill === i ? "Building Skill..." : "Build Remotion Skill"}
+                      </Button>
+                    </div>
+                    <pre className="text-xs whitespace-pre-wrap leading-relaxed text-foreground/90 font-mono max-h-[360px] overflow-y-auto">{directorPlans[i]}</pre>
+                  </div>
+                )}
+
+                {remotionSkills[i] && (
+                  <div className="p-4 border-t border-border bg-secondary/20">
+                    <h4 className="text-sm font-bold mb-2 text-primary">Remotion Skill Pack (MP4 Ready)</h4>
+                    <pre className="text-xs whitespace-pre-wrap leading-relaxed text-foreground/90 font-mono max-h-[360px] overflow-y-auto">{remotionSkills[i]}</pre>
+                  </div>
+                )}
               </CardContent>
             </Card>
           );
