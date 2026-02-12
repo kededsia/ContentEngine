@@ -134,6 +134,63 @@ const runGemini = (prompt, taskType = 'Content', retries = 1) => {
     });
 };
 
+// Helper to run Codex with the specified path
+const runCodex = (prompt, taskType = 'Content', retries = 1) => {
+    return new Promise((resolve, reject) => {
+        const startTime = Date.now();
+        console.log(`[Codex] Spawning process for ${taskType}... (Retries left: ${retries})`);
+
+        const codexPath = 'C:\\Users\\USER\\AppData\\Roaming\\npm\\codex.cmd';
+        // Using cmd /c and shell: true for reliable execution on Windows
+        const child = spawn('cmd', ['/c', codexPath, 'exec'], { shell: true });
+
+        let stdout = '';
+        let stderr = '';
+
+        if (prompt) {
+            child.stdin.write(prompt);
+            child.stdin.end();
+        }
+
+        child.stdout.on('data', (data) => {
+            const chunk = data.toString();
+            stdout += chunk;
+            process.stdout.write(chunk);
+        });
+
+        child.stderr.on('data', (data) => {
+            const chunk = data.toString();
+            stderr += chunk;
+        });
+
+        child.on('error', (err) => {
+            console.error(`[Codex Spawn Error]`, err);
+            reject(err);
+        });
+
+        child.on('close', (code) => {
+            const durationMs = Date.now() - startTime;
+            console.log(`[Codex] ${taskType} finished in ${durationMs}ms (exit: ${code})`);
+
+            if (code !== 0) {
+                console.error(`[Codex Error] Exit Code: ${code}, Stderr: ${stderr}`);
+                return reject(new Error(stderr || `Codex exited with code ${code}`));
+            }
+
+            let output = stdout.trim();
+            const cleaned = cleanOutput(output);
+
+            const isValid = (TASK_VALIDATORS[taskType] || TASK_VALIDATORS.Content)(cleaned);
+
+            if (!isValid && retries > 0) {
+                return runCodex(prompt, taskType, retries - 1).then(resolve).catch(reject);
+            }
+
+            resolve(cleaned || output);
+        });
+    });
+};
+
 const getOrRefreshTrends = async (category) => {
     const existing = videoDAO.getTrend(category);
     const now = new Date();
@@ -405,7 +462,7 @@ RULES:
 4. Do not ask questions. Output final plan only.`;
 
     try {
-        const result = await runGemini(prompt, 'DirectorPlan');
+        const result = await runCodex(prompt, 'DirectorPlan');
         res.json({ plan: result });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -496,7 +553,7 @@ RULES:
 5. Do not ask questions. Output final result only.`;
 
     try {
-        const result = await runGemini(prompt, 'RemotionSkill');
+        const result = await runCodex(prompt, 'RemotionSkill');
         res.json({ skillPack: result });
     } catch (error) {
         res.status(500).json({ error: error.message });
