@@ -32,6 +32,12 @@ export const RemotionRoot: React.FC = () => {
                 width={1080}
                 height={1920}
                 defaultProps={defaultProps}
+                calculateMetadata={async ({ props }) => {
+                    return {
+                        durationInFrames: props.plan?.durationInFrames || 300,
+                        props
+                    };
+                }}
             />
         </>
     );

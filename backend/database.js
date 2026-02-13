@@ -11,6 +11,8 @@ if (!fs.existsSync(path.dirname(dbPath))) {
 
 const db = new Database(dbPath, { verbose: console.log });
 db.pragma('journal_mode = WAL');
+const mode = db.pragma('journal_mode', { simple: true });
+console.log(`[Database] Journal Mode: ${mode}`);
 
 // Initialize Schema
 const init = () => {

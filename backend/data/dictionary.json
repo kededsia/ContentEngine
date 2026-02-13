@@ -297,6 +297,18 @@
       "Daily approved",
       "Beneran stainless?",
       "Yakin las argon?"
+    ],
+    "psychological": [
+      "Motor ganteng kok suaranya bisu?",
+      "Yakin itu stainless asli?",
+      "Awas, leheranmu mulai kuning!",
+      "Jangan ngaku biker kalau begini.",
+      "Stop! Jangan asal ngegas.",
+      "Malu sama tetangga sebelah?",
+      "Suara motor lo bikin ilfeel.",
+      "Hati-hati, mesin jebol lho!",
+      "Cewek lo gak suka motor ini?",
+      "Rugi beli knalpot mahal doang."
     ]
   },
   "themes": [
@@ -443,5 +455,12 @@
       "[speed: cepat]",
       "[speed: lambat]"
     ]
+  },
+  "technical_explanations": {
+    "bass_sound": "Glasswool padat berkualitas tinggi menyerap frekuensi tinggi (cempreng), sehingga hanya gelombang frekuensi rendah (bass) yang lolos. Desain saringan dalam juga mengatur turbulensi udara agar suaranya bulat.",
+    "power_acceleration": "Desain free-flow meminimalisir backpressure yang berlebihan, sehingga gas buang lancar. Ini membuat mesin bernapas lebih lega, RPM naik lebih cepat, dan tarikan jadi enteng.",
+    "durability_anti_rust": "Stainless Steel 304 (SS304) memiliki kandungan nikel dan kromium tinggi yang membentuk lapisan oksida pelindung. Ini membuatnya tahan korosi bahkan di cuaca ekstrem, beda dengan besi atau monel yang mudah keropos.",
+    "appearance_racing_look": "Finishing sandblast atau titan-look memberi kesan mewah dan agresif. Las argon (Tig Weld) dengan motif cacing bukan cuma estetika, tapi menjamin sambungan yang sangat kuat dan rapi.",
+    "easy_installation": "Didesain presisi dengan ukuran inlet standar (38mm/50mm) yang umum. Plug and Play (PnP) berarti tidak perlu las ulang atau ubah dudukan, langsung pasang dan gas."
   }
 }
