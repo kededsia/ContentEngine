@@ -14,6 +14,28 @@ const PORT = 3001; // Dedicated Port
 app.use(cors());
 app.use(bodyParser.json());
 
+// --- LOGGING SYSTEM ---
+let logClients = [];
+const broadcastLog = (message) => {
+    const timestamp = new Date().toLocaleTimeString();
+    const logData = `[${timestamp}] ${message}`;
+    logClients.forEach(client => {
+        client.res.write(`data: ${JSON.stringify({ message: logData })}\n\n`);
+    });
+};
+
+app.get('/api/logs', (req, res) => {
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache'
+    });
+    const clientId = Date.now();
+    logClients.push({ id: clientId, res });
+    res.write(`data: ${JSON.stringify({ message: "Connected to Director Log Stream..." })}\n\n`);
+    req.on('close', () => { logClients = logClients.filter(c => c.id !== clientId); });
+});
+
 // Serve static files from data/raw_footage
 app.use('/footage', express.static(path.join(__dirname, 'data', 'raw_footage')));
 app.use('/temp_footage', express.static(path.join(__dirname, 'data', 'temp_footage'))); // Serving trims
@@ -82,6 +104,7 @@ const runGemini = (prompt, taskType = 'Content', retries = 1) => {
     return new Promise((resolve, reject) => {
         const startTime = Date.now();
         console.log(`[Gemini] Spawning process for ${taskType}...`);
+        broadcastLog(`[AI] Starting ${taskType} phase...`);
 
         // Using gemini.cmd -p for direct prompting
         const child = spawn('gemini.cmd', ['-p', `${taskType}:`, '-o', 'text', '-e', 'none'], { shell: true });
@@ -98,6 +121,7 @@ const runGemini = (prompt, taskType = 'Content', retries = 1) => {
         child.on('close', (code) => {
             const durationMs = Date.now() - startTime;
             console.log(`[Gemini] ${taskType} finished in ${durationMs}ms (exit: ${code})`);
+            broadcastLog(`[AI] ${taskType} completed (${(durationMs / 1000).toFixed(1)}s).`);
 
             if (code !== 0 && !stdout.trim()) {
                 console.warn(`[Gemini Warning] Exit Code: ${code}, Stderr: ${stderr}`);
@@ -141,6 +165,7 @@ const runGemini = (prompt, taskType = 'Content', retries = 1) => {
 
 async function transcribeAndAnalyzeAudio(filePath) {
     console.log("[Whisper Local] Analyzing Audio:", filePath);
+    broadcastLog(`[Whisper] Analyzing Audio: ${path.basename(filePath)}`);
     return new Promise((resolve, reject) => {
         const pythonProcess = spawn('python', ['transcribe_whisper.py', filePath], { cwd: __dirname });
         let stdout = '';
@@ -344,6 +369,7 @@ CRITICAL:
             // sourceFile must be absolute path
             const args = ['-y', '-ss', start.toString(), '-to', end.toString(), '-i', sourceFile, '-c', 'copy', targetFile];
             console.log(`[FFmpeg] Trimming: ${cmd} ${args.join(' ')}`);
+            broadcastLog(`[Video] Trimming segment: ${path.basename(sourceFile)} (${start}s to ${end}s)`);
 
             const child = spawn(cmd, args, { shell: true });
 
@@ -450,9 +476,10 @@ app.post('/api/auto-render', async (req, res) => {
         ];
 
         console.log(`[Render] Starting: ${cmd} ${args.join(' ')}`);
+        broadcastLog(`[Render] Starting Remotion render engine...`);
 
         // Use shell: true for Windows npx.cmd to work correctly and avoid EINVAL
-        const child = spawn(cmd, args, { cwd: path.join(__dirname, '..'), shell: true, stdio: 'inherit' }); // stdio inherit for better logs 
+        const child = spawn(cmd, args, { cwd: path.join(__dirname, '..'), shell: true, stdio: 'inherit' });
 
         // child.stdout.on('data'...) // With stdio: inherit, logs go to main console directly, which is safer for debugging now.
 

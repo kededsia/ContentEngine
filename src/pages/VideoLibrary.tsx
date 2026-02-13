@@ -37,7 +37,7 @@ export default function VideoLibrary() {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        const sse = new EventSource('http://localhost:3000/api/logs');
+        const sse = new EventSource('http://127.0.0.1:3001/api/logs'); // Listen to Director Service
         sse.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
@@ -52,7 +52,7 @@ export default function VideoLibrary() {
     const fetchVideos = async () => {
         setIsLoadingVideos(true);
         try {
-            const res = await fetch('http://localhost:3000/api/videos');
+            const res = await fetch('http://127.0.0.1:3000/api/videos');
             const data = await res.json();
             if (res.ok) {
                 setVideos(data.videos || []);
@@ -72,7 +72,7 @@ export default function VideoLibrary() {
         if (!confirm(`Delete video "${filename}"? This cannot be undone.`)) return;
 
         try {
-            const res = await fetch(`http://localhost:3000/api/videos/${id}`, {
+            const res = await fetch(`http://127.0.0.1:3000/api/videos/${id}`, {
                 method: 'DELETE'
             });
             if (res.ok) {
@@ -159,7 +159,7 @@ export default function VideoLibrary() {
             formData.append('audioFile', audioFile);
 
             // Director Service now runs on Port 3001
-            const res = await fetch('http://localhost:3001/api/director-transcribe', {
+            const res = await fetch('http://127.0.0.1:3001/api/director-transcribe', {
                 method: 'POST',
                 body: formData
             });
@@ -188,7 +188,7 @@ export default function VideoLibrary() {
     const onGeneratePlan = async () => {
         setIsProcessing(true);
         try {
-            const res = await fetch('http://localhost:3001/api/director-plan-only', {
+            const res = await fetch('http://127.0.0.1:3001/api/director-plan-only', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -410,7 +410,7 @@ export default function VideoLibrary() {
                                             try {
                                                 // 1. Convert Markdown Plan -> Remotion JSON (Skill Pack)
                                                 // We must provide the script as well for context
-                                                const skillRes = await fetch('http://localhost:3001/api/remotion-skill', {
+                                                const skillRes = await fetch('http://127.0.0.1:3001/api/remotion-skill', {
                                                     method: 'POST',
                                                     headers: { 'Content-Type': 'application/json' },
                                                     body: JSON.stringify({
@@ -428,7 +428,7 @@ export default function VideoLibrary() {
 
                                                 // 2. Send JSON to Auto-Renderer
                                                 toast({ title: "Rendering", description: "Sending to render engine..." });
-                                                const res = await fetch('http://localhost:3001/api/auto-render', {
+                                                const res = await fetch('http://127.0.0.1:3001/api/auto-render', {
                                                     method: 'POST',
                                                     headers: { 'Content-Type': 'application/json' },
                                                     body: JSON.stringify({

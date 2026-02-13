@@ -21,7 +21,7 @@ export default function VideoIngestPanel() {
 
     // SSE Connection for Live Logs
     useEffect(() => {
-        const eventSource = new EventSource('http://localhost:3000/api/logs');
+        const eventSource = new EventSource('http://127.0.0.1:3000/api/logs');
 
         eventSource.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -59,7 +59,7 @@ export default function VideoIngestPanel() {
         });
 
         try {
-            const res = await fetch('http://localhost:3000/api/ingest-upload', {
+            const res = await fetch('http://127.0.0.1:3000/api/ingest-upload', {
                 method: 'POST',
                 body: formData
             });

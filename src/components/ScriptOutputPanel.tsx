@@ -85,7 +85,7 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
   const handleAutoRender = async (scriptText: string, index: number) => {
     setRenderingVideo(index);
     try {
-      const resp = await fetch('http://localhost:3000/api/auto-render', {
+      const resp = await fetch('http://127.0.0.1:3000/api/auto-render', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ script: scriptText })
@@ -166,7 +166,7 @@ const ScriptOutputPanel: React.FC<ScriptOutputPanelProps> = ({
       const durationSec = await getAudioDuration(file);
       const audio = buildAudioAnalysis(scripts[scriptIndex], durationSec);
 
-      const resp = await fetch("http://localhost:3000/api/director-plan", {
+      const resp = await fetch("http://127.0.0.1:3000/api/director-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
