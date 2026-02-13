@@ -43,6 +43,16 @@ export default function VideoLibrary() {
                 const data = JSON.parse(event.data);
                 if (data.message) {
                     setLogs(prev => [data.message, ...prev].slice(0, 100)); // Keep last 100 logs
+
+                    // Auto-dismiss processing overlay when render is fully complete
+                    if (data.message.includes("Success! Video ready in Library")) {
+                        setIsProcessing(false);
+                        setPlan(null); // Exit Studio Mode
+                        fetchVideos(); // Refresh library
+                    }
+                    if (data.message.includes("Render failed")) {
+                        setIsProcessing(false);
+                    }
                 }
             } catch (e) { console.error("SSE Parse Error", e); }
         };
@@ -406,25 +416,27 @@ export default function VideoLibrary() {
                                             toast({ title: "Plan Saved", description: "Changes kept in memory." });
                                         }}
                                         onRender={async (textPlan) => {
+                                            setIsProcessing(true); // Switch to Log View
+                                            setLogs(["[System] Starting render pipeline..."]);
+
                                             toast({ title: "Building Render Pipeline", description: "Converting Director Plan to Remotion Skill Pack..." });
                                             try {
                                                 // 1. Convert Markdown Plan -> Remotion JSON (Skill Pack)
-                                                // We must provide the script as well for context
                                                 const skillRes = await fetch('http://127.0.0.1:3001/api/remotion-skill', {
                                                     method: 'POST',
                                                     headers: { 'Content-Type': 'application/json' },
                                                     body: JSON.stringify({
                                                         script: scriptData,
                                                         directorPlan: textPlan,
-                                                        audioFilename: audioFilename, // Pass filename
-                                                        audioDuration: analysisData?.duration_sec || 0 // Pass duration
+                                                        audioFilename: audioFilename,
+                                                        audioDuration: analysisData?.duration_sec || 0
                                                     })
                                                 });
 
                                                 const skillData = await skillRes.json();
                                                 if (!skillRes.ok) throw new Error(skillData.error || "Failed to parse plan");
 
-                                                const finalVideoPlan = skillData.skillPack; // This is the JSON object
+                                                const finalVideoPlan = skillData.skillPack;
 
                                                 // 2. Send JSON to Auto-Renderer
                                                 toast({ title: "Rendering", description: "Sending to render engine..." });
@@ -436,16 +448,22 @@ export default function VideoLibrary() {
                                                     })
                                                 });
                                                 const data = await res.json();
-                                                if (data.success || data.status === "Rendering started") {
+                                                if (data.success) {
                                                     toast({
-                                                        title: "Success",
-                                                        description: data.message || `Video saved: ${data.filename}`
+                                                        title: "Rendering Started",
+                                                        description: "Check the log stream for real-time progress."
                                                     });
+
+                                                    // We stay in isProcessing=true to see logs.
+                                                    // The logs will eventually say "Success! Video ready in Library."
+                                                    // We can poll or just wait for a specific log message to set isProcessing(false)
                                                 } else {
+                                                    setIsProcessing(false);
                                                     toast({ title: "Failed", description: "Render failed check logs.", variant: "destructive" });
                                                 }
                                             } catch (e: any) {
                                                 console.error(e);
+                                                setIsProcessing(false);
                                                 toast({ title: "Error", description: e.message || "Network error", variant: "destructive" });
                                             }
                                         }}

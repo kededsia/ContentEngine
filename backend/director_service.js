@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 require('dotenv').config();
-const { videoDAO } = require('./database'); // Import Database Access
+const { videoDAO, db } = require('./database'); // Import Database Access
 
 const app = express();
 const PORT = 3001; // Dedicated Port
@@ -39,8 +39,24 @@ app.get('/api/logs', (req, res) => {
 // Serve static files from data/raw_footage
 app.use('/footage', express.static(path.join(__dirname, 'data', 'raw_footage')));
 app.use('/temp_footage', express.static(path.join(__dirname, 'data', 'temp_footage'))); // Serving trims
+app.use('/projects', express.static(path.join(__dirname, 'data', 'projects'))); // Per-project assets
 
 // --- CONFIGURATION ---
+
+// Artistic Handbook & Dictionary
+const capabilitiesPath = path.join(__dirname, 'data', 'remotion_capabilities.json');
+const dictionaryPath = path.join(__dirname, 'data', 'dictionary.json');
+
+let remotionCapabilities = {};
+let slangDictionary = {};
+
+try {
+    if (fs.existsSync(capabilitiesPath)) remotionCapabilities = JSON.parse(fs.readFileSync(capabilitiesPath, 'utf8'));
+    if (fs.existsSync(dictionaryPath)) slangDictionary = JSON.parse(fs.readFileSync(dictionaryPath, 'utf8'));
+    console.log('✅ [Director Service] Handbook and Dictionary loaded.');
+} catch (e) {
+    console.warn('⚠️ [Director Service] Failed to load handbook/dictionary:', e.message);
+}
 
 // Multer for Audio Uploads
 const storage = multer.diskStorage({
@@ -56,17 +72,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Load Dictionary (Optional, but good for context if needed later)
-const dictionaryPath = path.join(__dirname, 'data', 'dictionary.json');
-let dictionary = {};
-try {
-    if (fs.existsSync(dictionaryPath)) {
-        dictionary = JSON.parse(fs.readFileSync(dictionaryPath, 'utf8'));
-        console.log("✅ [Director Service] Dictionary loaded.");
-    }
-} catch (err) {
-    console.error("⚠️ [Director Service] Dictionary load failed:", err);
-}
 
 // Banned phrases for validation
 const BANNED_PHRASES = [
@@ -99,6 +104,70 @@ const cleanOutput = (text) => {
     });
     return filteredLines.join('\n').trim();
 };
+
+const getEnrichedFootageDetails = () => {
+    try {
+        const footageDir = path.join(__dirname, 'data', 'raw_footage');
+        if (!fs.existsSync(footageDir)) return "No footage available.";
+
+        const files = fs.readdirSync(footageDir).filter(f => f.endsWith('.mp4') || f.endsWith('.mov'));
+        if (files.length === 0) return "No footage files found.";
+
+        const enriched = files.map(filename => {
+            const video = videoDAO.getVideoByPath(path.join(footageDir, filename));
+            let detail = `FILE: "${filename}"`;
+            if (video) {
+                // Get all forensics for this video id
+                const segments = db.prepare('SELECT * FROM forensics WHERE video_id = ?').all(video.id);
+                if (segments.length > 0) {
+                    const descriptions = segments.map(s => `- [${s.start_time}s-${s.end_time}s]: ${s.description} (Tags: ${s.objects || 'none'})`).join('\n');
+                    detail += `\n  CONTENTS:\n${descriptions}`;
+                } else {
+                    detail += " (No forensics available)";
+                }
+            }
+            return detail;
+        });
+
+        return enriched.join('\n\n');
+    } catch (e) {
+        console.error("[Enrichment] Failed:", e);
+        return "Failed to read database metadata.";
+    }
+};
+
+const createProjectFolder = (projectId) => {
+    const projectDir = path.join(__dirname, 'data', 'projects', projectId);
+    const assetsDir = path.join(projectDir, 'assets');
+    if (!fs.existsSync(assetsDir)) fs.mkdirSync(assetsDir, { recursive: true });
+    return assetsDir;
+};
+
+const autoCleanupProjects = () => {
+    const projectsDir = path.join(__dirname, 'data', 'projects');
+    if (!fs.existsSync(projectsDir)) return;
+
+    const now = Date.now();
+    const MAX_AGE = 24 * 60 * 60 * 1000; // 24 hours
+
+    fs.readdir(projectsDir, (err, folders) => {
+        if (err) return;
+        folders.forEach(folder => {
+            const folderPath = path.join(projectsDir, folder);
+            fs.stat(folderPath, (err, stats) => {
+                if (err) return;
+                if (now - stats.mtimeMs > MAX_AGE) {
+                    console.log(`[Cleanup] Removing old project folder: ${folder}`);
+                    fs.rm(folderPath, { recursive: true, force: true }, () => { });
+                }
+            });
+        });
+    });
+};
+
+// Start cleanup cycle (every 6 hours)
+setInterval(autoCleanupProjects, 6 * 60 * 60 * 1000);
+autoCleanupProjects(); // Run once at startup
 
 const runGemini = (prompt, taskType = 'Content', retries = 1) => {
     return new Promise((resolve, reject) => {
@@ -235,51 +304,15 @@ app.post('/api/director-plan-only', async (req, res) => {
 
         if (!script) return res.status(400).json({ error: "No script provided" });
 
-        // Get available footage with Forensics
-        const footageDir = path.join(__dirname, 'data', 'raw_footage');
-        let availableFootage = [];
-        let footageDetails = "No footage available.";
-
-        try {
-            // 1. Get physical files
-            if (fs.existsSync(footageDir)) {
-                availableFootage = fs.readdirSync(footageDir).filter(f => f.endsWith('.mp4') || f.endsWith('.mov'));
-            }
-
-            // 2. Enrich with DB Metadata (if available)
-            if (availableFootage.length > 0) {
-                const enrichedList = availableFootage.map(filename => {
-                    let info = `Filename: "${filename}"`;
-
-                    // Try to find in DB
-                    try {
-                        const video = videoDAO.getVideoByPath(path.join(footageDir, filename));
-                        if (video) {
-                            // Get forensics for this video? 
-                            // For now, let's just use the filename as the primary key for simplicity in prompt
-                            // If we had a specific 'getForensicsByVideoId' we could list segments.
-                            // Let's assume the filename itself is good enough for now, 
-                            // BUT if the user wants "specific moments", we should eventually list segments.
-                            // For MVP of "Advanced Features", let's list the filename and say "Available for use".
-                            info += ` (Available)`;
-                        }
-                    } catch (dbErr) {
-                        // DB might not be init or file not tracked
-                    }
-                    return info;
-                });
-                footageDetails = enrichedList.join('\n');
-            }
-
-        } catch (e) {
-            console.error("Failed to read footage dir:", e);
-        }
+        // Get available footage with ENRICHED forensics (This replaces the old simple list)
+        const footageDetails = getEnrichedFootageDetails();
 
         // Build Prompt
         const prompt = `ROLE: You are a WORLD-CLASS Film Director.
 GOAL: Build a highly engaging, converting video plan using specific visual effects.
+Be CREATIVE. Use cinematic terminology.
 
-AVAILABLE FOOTAGE (You MUST use these filenames if relevant):
+AVAILABLE FOOTAGE (With Forensic Data):
 ${footageDetails}
 
 INPUT SCRIPT:
@@ -290,19 +323,20 @@ Duration: ${audioDuration || "Unknown"}s
 Emotion Profile: ${JSON.stringify(audioAnalysis?.emotion_timeline || [])}
 
 CREATIVE CAPABILITIES (STRICTLY USE THESE):
-1. **VISUAL EFFECTS** (Apply to "visual_intent" or "rendering_effect"):
-   - "ken_burns", "glitch", "bw_filter", "zoom_in", "none"
-2. **TRANSITIONS**:
-   - "fade", "slide", "wipe", "none"
-3. **TEXT ANIMATIONS**:
-   - "scale", "typewriter", "shake", "color_pulse"
+${JSON.stringify(remotionCapabilities, null, 2)}
 
-CRITICAL: DO NOT OUTPUT REMOTION CODE, JSX, OR WIDTH/HEIGHT.
-ONLY OUTPUT THE CREATIVE PLAN JSON BELOW.
+SLANG & TONE DICTIONARY (Use these to match the "slang" style if the script is in Indonesian/Informal):
+${JSON.stringify(slangDictionary?.slang || {}, null, 2)}
+
+**CREATIVE ADAPTATION PROTOCOL**:
+1. If specific footage is not an exact match for the script, find the **closest contextual match** (e.g., if you need a "Racing" shot but only have "Detail of Wheel", use "Detail of Wheel" and add a 'glitch' effect to imply intensity).
+2. If NO related footage exists, **REDESIGN** the scene using "placeholder.svg" but add a strong "text_overlay" and "text_animation" to carry the message.
+3. Match the "Artistic Impact" from the handbook with the "Audio Emotion" profile.
 
 MANDATORY OUTPUT FORMAT (JSON ONLY):
 {
   "script_analysis": { "estimated_duration": number, "tone": string },
+  "global_style": { "vignette": boolean, "letterbox": boolean, "grain": boolean },
   "segments": [
       {
           "time_range": "0-3s",
@@ -312,7 +346,7 @@ MANDATORY OUTPUT FORMAT (JSON ONLY):
           "effect": "ken_burns",
           "transition": "fade",
           "text_overlay": "...",
-          "text_animation": "scale"
+          "text_animation": "spring_scale"
       }
   ]
 }
@@ -339,25 +373,51 @@ GOAL: Convert a Director's Text Plan into a structured JSON "Skill Pack" for Rem
 INPUT CONTEXT:
 Script: "${script.substring(0, 200)}..."
 Director Plan: ${typeof directorPlan === 'string' ? directorPlan : JSON.stringify(directorPlan, null, 2)}
+Handbook Reference: ${JSON.stringify(remotionCapabilities, null, 2)}
 
 TARGET SCHEMA (Use this EXACTLY):
 {
   "width": 1080, "height": 1920, "fps": 30, "durationInFrames": number,
+  "vignette": boolean, "letterbox": boolean, "grain": boolean,
   "tracks": [
     {
       "type": "video",
       "clips": [
-        { "src": "http://127.0.0.1:3001/footage/[filename].mp4", "startAt": number, "duration": number, "effect": "ken_burns", "transition": "fade", "source_range": [number, number] }
+        { 
+          "src": "http://127.0.0.1:3001/footage/[filename].mp4", 
+          "startAt": number, 
+          "duration": number, 
+          "startFrom": number, // Seconds to offset in source (NATIVE TRIMMING)
+          "effect": "ken_burns", 
+          "transition": "fade", 
+          "source_range": [number, number], // Optional for FFmpeg physical trim
+          "useFfmpeg": boolean // True if segment is long and needs physical trim, false if native is enough
+        }
       ]
     },
     { "type": "audio", "clips": [...] },
-    { "type": "text", "clips": [{ "content": string, "startAt": number, "duration": number, "textStyle": { "animation": "scale" } }] }
+    { 
+      "type": "text", 
+      "clips": [{ 
+        "content": string, 
+        "startAt": number, 
+        "duration": number, 
+        "textStyle": { 
+          "animation": "spring_scale", 
+          "fontSize": number, 
+          "color": "string (hex or vibrant colors)", 
+          "fontFamily": "Impact, Montserrat, 'Bebas Neue', 'Segoe UI', serif",
+          "bg": "rgba(0,0,0,0.5) OR null"
+        } 
+      }] 
+    }
   ]
 }
 CRITICAL: 
 1. OUTPUT PURE JSON.
-3. If no footage is suggested, use "public/placeholder.svg".
-4. If the Director text plan specifies a precise timestamp (e.g., "Use 00:10-00:15"), include "source_range": [10, 15] in the clip object.
+2. NATIVE TRIMMING: Use "startFrom" to skip parts of the source video without physical trimming.
+3. PHYSICAL TRIMMING: Only use "useFfmpeg: true" and "source_range" if the clip is very specific or from a huge source file (>60s). Prefer native trimming (useFfmpeg: false) for speed.
+4. If no footage is suggested, use "public/placeholder.svg".
 5. All video sources from the library MUST start with http://127.0.0.1:3001/footage/[filename].mp4
 `;
 
@@ -382,72 +442,78 @@ CRITICAL:
     };
 
     try {
+        const projectId = `project_${Date.now()}`;
+        const assetsDir = createProjectFolder(projectId);
+        console.log(`[Project] Isolated environment created: ${projectId}`);
+        broadcastLog(`[System] Initializing isolated project: ${projectId}`);
+
         const result = await runGemini(prompt, 'RemotionSkill');
         const skillPack = JSON.parse(result);
 
-        // POST-PROCESSING: TRIM VIDEOS
-        // Iterate over video tracks and check if we need to trim real footage
-        // The Director Plan (passed in body) has the segments with "time_range" or "suggested_footage".
-        // RemotioSkill (AI) might have already mapped them.
-        // Let's look at skillPack.tracks for 'video' type.
+        // Map global styles from Director Plan if present
+        if (directorPlan && directorPlan.global_style) {
+            skillPack.vignette = !!directorPlan.global_style.vignette;
+            skillPack.letterbox = !!directorPlan.global_style.letterbox;
+            skillPack.grain = !!directorPlan.global_style.grain;
+        }
 
+        // POST-PROCESSING: TRIM VIDEOS & GATHER ASSETS
         const videoTrack = skillPack.tracks.find(t => t.type === 'video');
         if (videoTrack && videoTrack.clips) {
             for (let i = 0; i < videoTrack.clips.length; i++) {
                 const clip = videoTrack.clips[i];
-                // Check for real file AND source_range
-                if (clip.src.includes('127.0.0.1:3001/footage/') && clip.source_range && Array.isArray(clip.source_range) && clip.source_range.length === 2) {
+                const filename = clip.src.split('/').pop();
+                const sourcePath = path.join(__dirname, 'data', 'raw_footage', filename);
+
+                // Scenario A: Physical Trim (FFmpeg)
+                if (clip.useFfmpeg && fs.existsSync(sourcePath) && clip.source_range && Array.isArray(clip.source_range)) {
                     try {
-                        const filename = clip.src.split('/').pop();
-                        const sourcePath = path.join(__dirname, 'data', 'raw_footage', filename);
+                        const trimName = `trim_${i}_${filename}`;
+                        const trimPath = path.join(assetsDir, trimName);
 
-                        // Create temp file
-                        const tempName = `trim_${Date.now()}_${i}_${filename}`;
-                        const tempPath = path.join(__dirname, 'data', 'temp_footage', tempName);
-                        // Ensure temp dir
-                        if (!fs.existsSync(path.dirname(tempPath))) fs.mkdirSync(path.dirname(tempPath), { recursive: true });
-
-                        await trimVideo(sourcePath, clip.source_range[0], clip.source_range[1], tempPath);
-
-                        // Update clip src to point to temp file
-                        clip.src = `http://127.0.0.1:3001/temp_footage/${tempName}`;
-
-                        console.log(`[Director] Trimmed ${filename} (${clip.source_range}) -> ${tempName}`);
+                        await trimVideo(sourcePath, clip.source_range[0], clip.source_range[1], trimPath);
+                        clip.src = `http://127.0.0.1:3001/projects/${projectId}/assets/${trimName}`;
+                        clip.startFrom = 0;
                     } catch (trimErr) {
-                        console.error("[Director] Trimming failed, using original:", trimErr);
+                        console.error("[Director] Trimming failed:", trimErr);
                     }
+                }
+                // Scenario B: Native Trim (startFrom) - Still map to project folder if we want total isolation (opt-in)
+                // For now, let's just keep the original source URL to avoid redundant copies, 
+                // BUT if it's missing from raw_footage, fallback to placeholder.
+                else if (!fs.existsSync(sourcePath) && !clip.src.includes('placeholder')) {
+                    console.warn(`[Director] Footage missing: ${filename}. Using placeholder.`);
+                    clip.src = "public/placeholder.svg";
                 }
             }
         }
 
-
         // FORCE INJECT AUDIO TRACK (Override AI)
         if (audioFilename) {
+            // Copy audio to project assets if possible, or just use direct URL
             const audioUrl = `http://127.0.0.1:3001/footage/${audioFilename}`;
 
-            // Find audio track or create one
             let audioTrack = skillPack.tracks.find(t => t.type === 'audio');
             if (!audioTrack) {
                 audioTrack = { type: 'audio', clips: [] };
                 skillPack.tracks.push(audioTrack);
             }
 
-            // Reset clips to just the main audio
             audioTrack.clips = [{
-                src: audioUrl, // Use localhost URL for Remotion
+                src: audioUrl,
                 startAt: 0,
-                duration: audioDuration || skillPack.durationInFrames / 30, // Fallback to video duration from AI
+                duration: audioDuration || skillPack.durationInFrames / 30,
                 volume: 1.0
             }];
 
-            // Ensure total duration matches audio if audio is longer
             const audioFrames = Math.ceil((audioDuration || 0) * 30);
             if (audioFrames > skillPack.durationInFrames) {
                 skillPack.durationInFrames = audioFrames;
             }
         }
 
-        res.json({ skillPack });
+        // Return skillPack with projectId context
+        res.json({ skillPack, projectId });
     } catch (error) {
         console.error("Remotion Skill Error:", error);
         res.status(500).json({ error: "Failed to compile skill pack: " + error.message });
@@ -478,40 +544,75 @@ app.post('/api/auto-render', async (req, res) => {
         console.log(`[Render] Starting: ${cmd} ${args.join(' ')}`);
         broadcastLog(`[Render] Starting Remotion render engine...`);
 
-        // Use shell: true for Windows npx.cmd to work correctly and avoid EINVAL
-        const child = spawn(cmd, args, { cwd: path.join(__dirname, '..'), shell: true, stdio: 'inherit' });
+        const child = spawn(cmd, args, { cwd: path.join(__dirname, '..'), shell: true });
 
-        // child.stdout.on('data'...) // With stdio: inherit, logs go to main console directly, which is safer for debugging now.
+        child.stdout.on('data', (data) => {
+            const msg = data.toString().trim();
+            if (msg) {
+                // Look for Remotion progress (%) or specific key states
+                if (msg.includes('%') || msg.includes('Rendering') || msg.includes('Success')) {
+                    broadcastLog(`[Remotion] ${msg}`);
+                }
+                console.log(`[Remotion] ${msg}`);
+            }
+        });
 
-        // REMOVED to prevent crash. stdio: 'inherit' handles logging.
-        // child.stdout.on('data', (d) => console.log(`[Remotion] ${d}`));
-        // child.stderr.on('data', (d) => console.error(`[Remotion Err] ${d}`));
+        child.stderr.on('data', (data) => {
+            const msg = data.toString().trim();
+            if (msg) {
+                console.error(`[Remotion Error] ${msg}`);
+                broadcastLog(`[Error] ${msg}`);
+            }
+        });
 
-        child.on('close', (code) => {
+        child.on('close', async (code) => {
             if (code === 0) {
                 console.log(`[Render] Finished successfully: ${outputFile}`);
+                broadcastLog(`[System] Render finished! Starting auto-ingest...`);
+
+                try {
+                    const finalFilename = `kenshi_video_${Date.now()}.mp4`;
+                    const libraryPath = path.join(__dirname, 'data', 'raw_footage', finalFilename);
+
+                    // Windows fix: Small delay to let Remotion release the handle, then copy + unlink
+                    await new Promise(r => setTimeout(r, 1000));
+
+                    fs.copyFileSync(outputFile, libraryPath);
+                    fs.unlinkSync(outputFile);
+
+                    console.log(`[Ingest] Moved to library: ${libraryPath}`);
+                    broadcastLog(`[System] Video moved to library: ${finalFilename}`);
+
+                    // Register in DB
+                    const videoId = Date.now().toString();
+                    videoDAO.addVideo({
+                        id: videoId,
+                        filename: finalFilename,
+                        path: libraryPath,
+                        duration: 0 // Will be updated by scanner if needed, or we could pass it here
+                    });
+                    console.log(`[Ingest] Registered in database: ${videoId}`);
+                    broadcastLog(`[System] Success! Video ready in Library.`);
+                } catch (ingestErr) {
+                    console.error("[Ingest Error]", ingestErr);
+                    broadcastLog(`[Error] Auto-ingest failed: ${ingestErr.message}`);
+                }
 
                 // CLEANUP TEMP FILES
-                // We can't easily know WHICH files were used here without parsing 'plan' again.
-                // A simple strategy: Delete files in 'temp_footage' older than X minutes? 
-                // Or, if we track them?
-                // Let's just do a simple sweep of 'temp_footage' for now.
-                // "buang setelah proses selesai"
-
                 const tempDir = path.join(__dirname, 'data', 'temp_footage');
                 if (fs.existsSync(tempDir)) {
                     fs.readdir(tempDir, (err, files) => {
                         if (err) return;
                         files.forEach(file => {
-                            if (file.startsWith('trim_')) { // Safety check
+                            if (file.startsWith('trim_')) {
                                 const filePath = path.join(tempDir, file);
-                                // Check creation time to avoid deleting files currently in use by OTHER renders?
-                                // For single user app, deleting all trim_* is probably fine after render.
-                                fs.unlink(filePath, () => console.log(`[Cleanup] Deleted ${file}`));
+                                fs.unlink(filePath, () => { });
                             }
                         });
                     });
                 }
+            } else {
+                broadcastLog(`[Error] Render failed with code ${code}. Check logs.`);
             }
         });
 
@@ -519,7 +620,7 @@ app.post('/api/auto-render', async (req, res) => {
         res.json({
             success: true,
             message: "Rendering started in background",
-            filename: `video-${renderId}.mp4`
+            renderId: renderId
         });
 
     } catch (e) {

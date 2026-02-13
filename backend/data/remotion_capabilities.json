@@ -1,0 +1,68 @@
+{
+    "cinematic_overlays": [
+        {
+            "name": "vignette",
+            "impact": "Focusses attention on the center, adds a premium film look, and hides distracting edges.",
+            "best_for": "Professional, moody, or product-focused scenes."
+        },
+        {
+            "name": "letterbox",
+            "impact": "Creates a 21:9 cinematic feel by adding black bars at the top and bottom.",
+            "best_for": "Storytelling, dramatic reveals, and high-production value ads."
+        },
+        {
+            "name": "grain",
+            "impact": "Adds a subtle film texture to digital footage, making it feel more 'organic' and less 'clinical'.",
+            "best_for": "Vintage, street-style, or high-end lifestyle content."
+        }
+    ],
+    "text_animations": [
+        {
+            "name": "spring_scale",
+            "impact": "The text 'pops' in with a natural bounce using spring physics.",
+            "best_for": "Energetic calls to action, price reveals, and exciting hooks."
+        },
+        {
+            "name": "spring_up",
+            "impact": "Text slides up from the bottom with a elastic bounce.",
+            "best_for": "Subtitles, key features, and information that needs to 'land' softly but firmly."
+        },
+        {
+            "name": "blur_reveal",
+            "impact": "Text emerges from a cloud of blur into sharp focus.",
+            "best_for": "Dreamy, high-end cinematic titles, or emotional storytelling."
+        },
+        {
+            "name": "typewriter",
+            "impact": "Characters appear one by one like a mechanical typewriter.",
+            "best_for": "Narration, factual statements, or tech-inspired scenes."
+        }
+    ],
+    "visual_effects": [
+        {
+            "name": "ken_burns",
+            "impact": "A slow panning and zooming effect on static images.",
+            "best_for": "Bringing life to photos, creating a sense of history or focus."
+        },
+        {
+            "name": "glitch",
+            "impact": "Digital artifacts and color shifts for a high-energy, modern look.",
+            "best_for": "Fast-paced hooks, technical disruptions, or 'edgy' street content."
+        },
+        {
+            "name": "bw_filter",
+            "impact": "Turns footage into black and white with high contrast.",
+            "best_for": "Flashbacks, dramatic emphasis, or high-fashion elegance."
+        },
+        {
+            "name": "zoom_in",
+            "impact": "A steady zoom towards the center of the frame.",
+            "best_for": "Creating a sense of intimacy or increasing the 'stakes' of a shot."
+        }
+    ],
+    "artistic_guidelines": {
+        "pacing": "Fast cuts (1-2s) for high energy. Slow transitions (3-5s) for emotional or technical explanations.",
+        "color_theory": "Use vibrant colors for hooks. Use muted, high-contrast grays for technical specifications to look 'premium'.",
+        "trimming": "Native trimming (startFrom) is preferred for short segments to maintain speed. Physical FFmpeg trimming is reserved for extracting moments from very large master files."
+    }
+}

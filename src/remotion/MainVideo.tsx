@@ -1,4 +1,4 @@
-import { AbsoluteFill, Sequence, Video, Audio, Img, interpolate, useCurrentFrame, useVideoConfig, random } from 'remotion';
+import { AbsoluteFill, Sequence, Video, Audio, Img, interpolate, useCurrentFrame, useVideoConfig, random, spring } from 'remotion';
 import { VideoPlan, VideoClip, TextClip, AudioClip } from '../types/video';
 
 // --- EFFECTS & TRANSITIONS ---
@@ -26,6 +26,34 @@ const GlitchEffect = ({ children, frame }: { children: React.ReactNode, frame: n
     );
 };
 
+// --- CINEMATIC EFFECTS ---
+
+const Vignette = () => (
+    <AbsoluteFill style={{
+        boxShadow: 'inset 0 0 200px rgba(0,0,0,0.8)',
+        pointerEvents: 'none'
+    }} />
+);
+
+const Letterbox = () => (
+    <AbsoluteFill style={{ pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: 0, width: '100%', height: '10%', backgroundColor: 'black' }} />
+        <div style={{ position: 'absolute', bottom: 0, width: '100%', height: '10%', backgroundColor: 'black' }} />
+    </AbsoluteFill>
+);
+
+const FilmGrain = ({ frame }: { frame: number }) => {
+    const opacity = random(frame) * 0.05;
+    return (
+        <AbsoluteFill style={{
+            opacity,
+            pointerEvents: 'none',
+            backgroundColor: 'white',
+            mixBlendMode: 'overlay'
+        }} />
+    );
+};
+
 const KenBurns = ({ src, frame, duration, intensity = 1.2 }: { src: string, frame: number, duration: number, intensity?: number }) => {
     const scale = interpolate(frame, [0, duration], [1, intensity]);
     return (
@@ -38,17 +66,30 @@ const KenBurns = ({ src, frame, duration, intensity = 1.2 }: { src: string, fram
 // --- TEXT ANIMATIONS ---
 
 const AnimatedText = ({ content, style, animation, frame }: { content: string, style: any, animation?: string, frame: number }) => {
+    const { fps } = useVideoConfig();
     let transform = "";
     let opacity = 1;
     let displayText = content;
 
-    if (animation === "up") {
-        const y = interpolate(frame, [0, 20], [50, 0], { extrapolateRight: "clamp" });
+    const springConfig = {
+        damping: 12,
+        stiffness: 100,
+        mass: 0.5,
+    };
+
+    if (animation === "up" || animation === "spring_up") {
+        const s = spring({ frame, fps, config: springConfig });
+        const y = interpolate(s, [0, 1], [50, 0]);
         transform = `translateY(${y}px)`;
-        opacity = interpolate(frame, [0, 20], [0, 1], { extrapolateRight: "clamp" });
-    } else if (animation === "scale") {
-        const s = interpolate(frame, [0, 10, 20], [0, 1.2, 1], { extrapolateRight: "clamp" });
+        opacity = s;
+    } else if (animation === "scale" || animation === "spring_scale") {
+        const s = spring({ frame, fps, config: springConfig });
         transform = `scale(${s})`;
+    } else if (animation === "blur_reveal") {
+        const s = spring({ frame, fps, config: springConfig });
+        opacity = s;
+        const blur = interpolate(s, [0, 1], [20, 0]);
+        style = { ...style, filter: `blur(${blur}px)` };
     } else if (animation === "shake") {
         const x = Math.sin(frame / 2) * 10;
         transform = `translateX(${x}px)`;
@@ -130,6 +171,10 @@ export const MainVideo: React.FC<{ plan: VideoPlan }> = ({ plan }) => {
                     </Sequence>
                 );
             })}
+            {/* 4. Global Cinematic Overlays */}
+            {(plan as any).vignette && <Vignette />}
+            {(plan as any).letterbox && <Letterbox />}
+            {(plan as any).grain && <FilmGrain frame={useCurrentFrame()} />}
         </AbsoluteFill>
     );
 };
@@ -150,6 +195,7 @@ const ClipRenderer = ({ clip, durationFrames }: { clip: any, durationFrames: num
                 <Video
                     src={clip.src}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    startFrom={Math.round((clip.startFrom || 0) * 30)} // Support native startFrom
                     muted={true}
                     delayRenderTimeoutInMilliseconds={60000}
                 />

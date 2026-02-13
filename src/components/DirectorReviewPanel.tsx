@@ -16,15 +16,15 @@ interface DirectorReviewPanelProps {
 const DirectorReviewPanel: React.FC<DirectorReviewPanelProps> = ({
     initialPlan,
     script,
-    analysis,
     onSave,
     onCancel,
     onRender
 }) => {
-    // Determine if plan is string or object (legacy support)
-    const planText = typeof initialPlan === 'string'
-        ? initialPlan
-        : JSON.stringify(initialPlan, null, 2);
+    const [planText, setPlanText] = React.useState(
+        typeof initialPlan === 'string'
+            ? initialPlan
+            : JSON.stringify(initialPlan, null, 2)
+    );
 
     return (
         <Card className="h-full flex flex-col border-none shadow-none bg-background/50">
@@ -35,8 +35,8 @@ const DirectorReviewPanel: React.FC<DirectorReviewPanelProps> = ({
                             <MonitorPlay className="w-5 h-5 text-orange-500" />
                         </div>
                         <div>
-                            <CardTitle className="text-base text-foreground">Director's Plan (Text Mode)</CardTitle>
-                            <CardDescription className="text-xs">Review the raw creative direction before rendering.</CardDescription>
+                            <CardTitle className="text-base text-foreground">Director's Studio</CardTitle>
+                            <CardDescription className="text-xs">Edit the creative plan or change Remotion parameters below.</CardDescription>
                         </div>
                     </div>
                     <div className="flex gap-2">
@@ -65,10 +65,14 @@ const DirectorReviewPanel: React.FC<DirectorReviewPanelProps> = ({
 
                         {/* Plan Text Section */}
                         <div className="space-y-2">
-                            <h3 className="text-xs font-bold uppercase tracking-widest text-orange-500 mb-2">Director's Creative Plan</h3>
-                            <div className="p-6 bg-slate-950 rounded-lg border border-slate-800 font-mono text-sm leading-relaxed whitespace-pre-wrap text-green-400/90 shadow-inner">
-                                {planText}
-                            </div>
+                            <h3 className="text-xs font-bold uppercase tracking-widest text-orange-500 mb-2">Creative Direction (JSON/Markdown)</h3>
+                            <textarea
+                                value={planText}
+                                onChange={(e) => setPlanText(e.target.value)}
+                                className="w-100 min-h-[500px] p-6 bg-slate-950 rounded-lg border border-slate-800 font-mono text-sm leading-relaxed text-green-400/90 shadow-inner focus:outline-none focus:ring-1 focus:ring-orange-500/50 resize-y"
+                                spellCheck={false}
+                            />
+                            <p className="text-[10px] text-muted-foreground italic">Tip: You can change "useFfmpeg": true to false for faster native trimming.</p>
                         </div>
                     </div>
                 </ScrollArea>
