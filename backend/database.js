@@ -9,7 +9,7 @@ if (!fs.existsSync(path.dirname(dbPath))) {
     fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 }
 
-const db = new Database(dbPath, { verbose: console.log });
+const db = new Database(dbPath, { verbose: null }); // Disable verbose logging
 db.pragma('journal_mode = WAL');
 const mode = db.pragma('journal_mode', { simple: true });
 console.log(`[Database] Journal Mode: ${mode}`);

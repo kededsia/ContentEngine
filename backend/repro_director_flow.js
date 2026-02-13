@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 // Node 22+ globals: fetch, FormData, Blob
 
-const AUDIO_FILE = String.raw`C:\Users\USER\Downloads\download (1).wav`;
-const API_BASE = 'http://localhost:3001/api';
+const AUDIO_FILE = String.raw`C:\KONSEP\backend\data\raw_footage\download.wav`;
+const API_BASE = 'http://127.0.0.1:3001/api';
 
 async function runTest() {
     console.log("🚀 Starting Full Flow Test with:", AUDIO_FILE);

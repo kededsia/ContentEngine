@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 require('dotenv').config();
+const { videoDAO } = require('./database'); // Import Database Access
 
 const app = express();
 const PORT = 3001; // Dedicated Port
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 
 // Serve static files from data/raw_footage
 app.use('/footage', express.static(path.join(__dirname, 'data', 'raw_footage')));
+app.use('/temp_footage', express.static(path.join(__dirname, 'data', 'temp_footage'))); // Serving trims
 
 // --- CONFIGURATION ---
 
@@ -208,24 +210,52 @@ app.post('/api/director-plan-only', async (req, res) => {
 
         if (!script) return res.status(400).json({ error: "No script provided" });
 
-        // Get available footage
+        // Get available footage with Forensics
         const footageDir = path.join(__dirname, 'data', 'raw_footage');
         let availableFootage = [];
+        let footageDetails = "No footage available.";
+
         try {
+            // 1. Get physical files
             if (fs.existsSync(footageDir)) {
                 availableFootage = fs.readdirSync(footageDir).filter(f => f.endsWith('.mp4') || f.endsWith('.mov'));
             }
+
+            // 2. Enrich with DB Metadata (if available)
+            if (availableFootage.length > 0) {
+                const enrichedList = availableFootage.map(filename => {
+                    let info = `Filename: "${filename}"`;
+
+                    // Try to find in DB
+                    try {
+                        const video = videoDAO.getVideoByPath(path.join(footageDir, filename));
+                        if (video) {
+                            // Get forensics for this video? 
+                            // For now, let's just use the filename as the primary key for simplicity in prompt
+                            // If we had a specific 'getForensicsByVideoId' we could list segments.
+                            // Let's assume the filename itself is good enough for now, 
+                            // BUT if the user wants "specific moments", we should eventually list segments.
+                            // For MVP of "Advanced Features", let's list the filename and say "Available for use".
+                            info += ` (Available)`;
+                        }
+                    } catch (dbErr) {
+                        // DB might not be init or file not tracked
+                    }
+                    return info;
+                });
+                footageDetails = enrichedList.join('\n');
+            }
+
         } catch (e) {
             console.error("Failed to read footage dir:", e);
         }
-        const footageList = availableFootage.length > 0 ? availableFootage.join(', ') : "No footage available.";
 
         // Build Prompt
         const prompt = `ROLE: You are a WORLD-CLASS Film Director.
 GOAL: Build a highly engaging, converting video plan using specific visual effects.
 
 AVAILABLE FOOTAGE (You MUST use these filenames if relevant):
-[${footageList}]
+${footageDetails}
 
 INPUT SCRIPT:
 "${script}"
@@ -292,7 +322,7 @@ TARGET SCHEMA (Use this EXACTLY):
     {
       "type": "video",
       "clips": [
-        { "src": "http://localhost:3001/footage/[filename].mp4", "startAt": number, "duration": number, "effect": "ken_burns", "transition": "fade" }
+        { "src": "http://127.0.0.1:3001/footage/[filename].mp4", "startAt": number, "duration": number, "effect": "ken_burns", "transition": "fade", "source_range": [number, number] }
       ]
     },
     { "type": "audio", "clips": [...] },
@@ -301,17 +331,73 @@ TARGET SCHEMA (Use this EXACTLY):
 }
 CRITICAL: 
 1. OUTPUT PURE JSON.
-2. If the director plan suggests a footage filename, USE IT in the "src" field as "http://localhost:3001/footage/FILENAME".
 3. If no footage is suggested, use "public/placeholder.svg".
+4. If the Director text plan specifies a precise timestamp (e.g., "Use 00:10-00:15"), include "source_range": [10, 15] in the clip object.
+5. All video sources from the library MUST start with http://127.0.0.1:3001/footage/[filename].mp4
 `;
+
+    // FFmpeg Trimming Helper
+    const trimVideo = async (sourceFile, start, end, targetFile) => {
+        return new Promise((resolve, reject) => {
+            const cmd = 'ffmpeg';
+            // -ss before -i for fast seek, -to for duration/end
+            // sourceFile must be absolute path
+            const args = ['-y', '-ss', start.toString(), '-to', end.toString(), '-i', sourceFile, '-c', 'copy', targetFile];
+            console.log(`[FFmpeg] Trimming: ${cmd} ${args.join(' ')}`);
+
+            const child = spawn(cmd, args, { shell: true });
+
+            child.on('close', (code) => {
+                if (code === 0) resolve(targetFile);
+                else reject(new Error(`FFmpeg exited with code ${code}`));
+            });
+            child.on('error', (err) => reject(err));
+        });
+    };
 
     try {
         const result = await runGemini(prompt, 'RemotionSkill');
         const skillPack = JSON.parse(result);
 
+        // POST-PROCESSING: TRIM VIDEOS
+        // Iterate over video tracks and check if we need to trim real footage
+        // The Director Plan (passed in body) has the segments with "time_range" or "suggested_footage".
+        // RemotioSkill (AI) might have already mapped them.
+        // Let's look at skillPack.tracks for 'video' type.
+
+        const videoTrack = skillPack.tracks.find(t => t.type === 'video');
+        if (videoTrack && videoTrack.clips) {
+            for (let i = 0; i < videoTrack.clips.length; i++) {
+                const clip = videoTrack.clips[i];
+                // Check for real file AND source_range
+                if (clip.src.includes('127.0.0.1:3001/footage/') && clip.source_range && Array.isArray(clip.source_range) && clip.source_range.length === 2) {
+                    try {
+                        const filename = clip.src.split('/').pop();
+                        const sourcePath = path.join(__dirname, 'data', 'raw_footage', filename);
+
+                        // Create temp file
+                        const tempName = `trim_${Date.now()}_${i}_${filename}`;
+                        const tempPath = path.join(__dirname, 'data', 'temp_footage', tempName);
+                        // Ensure temp dir
+                        if (!fs.existsSync(path.dirname(tempPath))) fs.mkdirSync(path.dirname(tempPath), { recursive: true });
+
+                        await trimVideo(sourcePath, clip.source_range[0], clip.source_range[1], tempPath);
+
+                        // Update clip src to point to temp file
+                        clip.src = `http://127.0.0.1:3001/temp_footage/${tempName}`;
+
+                        console.log(`[Director] Trimmed ${filename} (${clip.source_range}) -> ${tempName}`);
+                    } catch (trimErr) {
+                        console.error("[Director] Trimming failed, using original:", trimErr);
+                    }
+                }
+            }
+        }
+
+
         // FORCE INJECT AUDIO TRACK (Override AI)
         if (audioFilename) {
-            const audioUrl = `http://localhost:3001/footage/${audioFilename}`;
+            const audioUrl = `http://127.0.0.1:3001/footage/${audioFilename}`;
 
             // Find audio track or create one
             let audioTrack = skillPack.tracks.find(t => t.type === 'audio');
@@ -373,6 +459,34 @@ app.post('/api/auto-render', async (req, res) => {
         // REMOVED to prevent crash. stdio: 'inherit' handles logging.
         // child.stdout.on('data', (d) => console.log(`[Remotion] ${d}`));
         // child.stderr.on('data', (d) => console.error(`[Remotion Err] ${d}`));
+
+        child.on('close', (code) => {
+            if (code === 0) {
+                console.log(`[Render] Finished successfully: ${outputFile}`);
+
+                // CLEANUP TEMP FILES
+                // We can't easily know WHICH files were used here without parsing 'plan' again.
+                // A simple strategy: Delete files in 'temp_footage' older than X minutes? 
+                // Or, if we track them?
+                // Let's just do a simple sweep of 'temp_footage' for now.
+                // "buang setelah proses selesai"
+
+                const tempDir = path.join(__dirname, 'data', 'temp_footage');
+                if (fs.existsSync(tempDir)) {
+                    fs.readdir(tempDir, (err, files) => {
+                        if (err) return;
+                        files.forEach(file => {
+                            if (file.startsWith('trim_')) { // Safety check
+                                const filePath = path.join(tempDir, file);
+                                // Check creation time to avoid deleting files currently in use by OTHER renders?
+                                // For single user app, deleting all trim_* is probably fine after render.
+                                fs.unlink(filePath, () => console.log(`[Cleanup] Deleted ${file}`));
+                            }
+                        });
+                    });
+                }
+            }
+        });
 
         // Respond immediately that render started
         res.json({
