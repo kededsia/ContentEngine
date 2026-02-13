@@ -141,48 +141,73 @@ export default function VideoLibrary() {
 
     const [scriptData, setScriptData] = useState<string>("");
     const [analysisData, setAnalysisData] = useState<any>(null);
+    const [audioFilename, setAudioFilename] = useState<string | null>(null);
 
     // ... (keep useEffect and other funcs)
 
-    const handleGeneratePlan = async () => {
-        // ... (keep validation)
+    // STEP 1: Transcribe
+    const onTranscribe = async () => {
+        if (!audioFile) {
+            toast({ title: "Error", description: "Please select an audio file first.", variant: "destructive" });
+            return;
+        }
+
         setIsProcessing(true);
         try {
-            // ... (keep FormData setup)
+            console.log("[Frontend] Uploading audio:", audioFile.name, audioFile.type, audioFile.size);
             const formData = new FormData();
-            formData.append('script', script);
-            if (audioFile) {
-                formData.append('audioFile', audioFile);
-                try {
-                    const duration = await getAudioDuration(audioFile);
-                    toast({ title: "Audio Analyzed", description: `Duration: ${duration.toFixed(1)}s` });
-                    const audioMeta = { durationSec: duration };
-                    formData.append('audio', JSON.stringify(audioMeta));
-                } catch (e) {
-                    console.warn("Client-side audio analysis failed, relying on backend.");
-                }
-            } else {
-                formData.append('audio', JSON.stringify({}));
-            }
+            formData.append('audioFile', audioFile);
 
-            // Fetch with FormData (Content-Type auto-set)
-            const res = await fetch('http://localhost:3000/api/director-plan', {
+            // Director Service now runs on Port 3001
+            const res = await fetch('http://localhost:3001/api/director-transcribe', {
                 method: 'POST',
                 body: formData
             });
 
             const data = await res.json();
             if (res.ok) {
+                setScriptData(data.script);
+                setAnalysisData(data.audioAnalysis);
+                if (data.filename) setAudioFilename(data.filename); // Capture filename
+                toast({ title: "Transcription Complete", description: "Please review the text below." });
+            } else {
+                toast({ title: "Error", description: data.error, variant: "destructive" });
+            }
+        } catch (e: any) {
+            console.error("[Transcription Error]", e);
+            toast({
+                title: "Error",
+                description: `Transcription failed: ${e.message}`,
+                variant: "destructive"
+            });
+        }
+        setIsProcessing(false);
+    };
+
+    // STEP 2: Generate Plan
+    const onGeneratePlan = async () => {
+        setIsProcessing(true);
+        try {
+            const res = await fetch('http://localhost:3001/api/director-plan-only', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    script: scriptData,
+                    audioAnalysis: analysisData,
+                    audioDuration: analysisData?.duration_sec || 0
+                })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
                 setPlan(data.plan);
-                setScriptData(data.script || "");       // New
-                setAnalysisData(data.audioAnalysis || null); // New
-                toast({ title: "Plan Generated", description: "Director Mode plan created successfully." });
+                toast({ title: "Plan Generated", description: "Director plan created successfully." });
             } else {
                 toast({ title: "Error", description: data.error, variant: "destructive" });
             }
         } catch (e) {
             console.error(e);
-            toast({ title: "Error", description: "Failed to generate plan", variant: "destructive" });
+            toast({ title: "Error", description: "Plan generation failed", variant: "destructive" });
         }
         setIsProcessing(false);
     };
@@ -266,14 +291,15 @@ export default function VideoLibrary() {
                         <CardHeader>
                             <CardTitle>Director Mode (Audio-First)</CardTitle>
                             <CardDescription>
-                                {isProcessing ? "AI is analyzing your audio..." :
+                                {isProcessing ? "AI is working..." :
                                     plan ? "Review and edit the plan before rendering." :
-                                        "Upload voiceover to generate a video plan automatically."}
+                                        scriptData ? "Review transcription before generating plan." :
+                                            "Upload voiceover to start."}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="flex-1 flex flex-col min-h-0 space-y-4">
 
-                            {/* STATE 1: IDLE (Upload) */}
+                            {/* STATE 1: IDLE / REVIEW (Upload or Edit Script) */}
                             {!isProcessing && !plan && (
                                 <div className="flex flex-col items-center justify-center h-full space-y-6 border-2 border-dashed rounded-lg p-10 bg-slate-950/50">
                                     <div className="text-center space-y-2">
@@ -308,21 +334,41 @@ export default function VideoLibrary() {
                                         />
 
                                         <div className="space-y-2">
+                                            <div className="flex justify-between items-center">
+                                                <label className="text-sm font-medium">
+                                                    {scriptData ? "Review Transcription / Script" : "Optional Script Context"}
+                                                </label>
+                                                {scriptData && (
+                                                    <span className="text-xs text-green-400">
+                                                        ✅ Transcription Ready
+                                                    </span>
+                                                )}
+                                            </div>
                                             <Textarea
-                                                placeholder="Optional: Enter a script or context here..."
-                                                value={script}
-                                                onChange={(e) => setScript(e.target.value)}
-                                                className="resize-none"
+                                                placeholder="Enter a script or context here..."
+                                                value={scriptData || script}
+                                                onChange={(e) => {
+                                                    if (scriptData) setScriptData(e.target.value);
+                                                    else setScript(e.target.value);
+                                                }}
+                                                className="resize-none h-40 font-mono text-sm"
                                             />
                                         </div>
 
                                         <Button
-                                            onClick={handleGeneratePlan}
+                                            onClick={scriptData ? onGeneratePlan : onTranscribe}
                                             className="w-full"
                                             size="lg"
-                                            disabled={!audioFile && !script}
+                                            disabled={isProcessing || (!audioFile && !script && !scriptData)}
                                         >
-                                            Start Process
+                                            {isProcessing ? (
+                                                <span className="flex items-center gap-2">
+                                                    <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+                                                    {scriptData ? "Designing Plan..." : "Transcribing..."}
+                                                </span>
+                                            ) : (
+                                                scriptData ? "Generate Video Plan" : "Start Transcription"
+                                            )}
                                         </Button>
                                     </div>
                                 </div>
@@ -359,14 +405,34 @@ export default function VideoLibrary() {
                                             setPlan(updatedPlan);
                                             toast({ title: "Plan Saved", description: "Changes kept in memory." });
                                         }}
-                                        onRender={async (finalPlan) => {
-                                            toast({ title: "Rendering", description: "This may take a while..." });
+                                        onRender={async (textPlan) => {
+                                            toast({ title: "Building Render Pipeline", description: "Converting Director Plan to Remotion Skill Pack..." });
                                             try {
-                                                const res = await fetch('http://localhost:3000/api/auto-render', {
+                                                // 1. Convert Markdown Plan -> Remotion JSON (Skill Pack)
+                                                // We must provide the script as well for context
+                                                const skillRes = await fetch('http://localhost:3001/api/remotion-skill', {
                                                     method: 'POST',
                                                     headers: { 'Content-Type': 'application/json' },
                                                     body: JSON.stringify({
-                                                        plan: finalPlan
+                                                        script: scriptData,
+                                                        directorPlan: textPlan,
+                                                        audioFilename: audioFilename, // Pass filename
+                                                        audioDuration: analysisData?.duration_sec || 0 // Pass duration
+                                                    })
+                                                });
+
+                                                const skillData = await skillRes.json();
+                                                if (!skillRes.ok) throw new Error(skillData.error || "Failed to parse plan");
+
+                                                const finalVideoPlan = skillData.skillPack; // This is the JSON object
+
+                                                // 2. Send JSON to Auto-Renderer
+                                                toast({ title: "Rendering", description: "Sending to render engine..." });
+                                                const res = await fetch('http://localhost:3001/api/auto-render', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify({
+                                                        plan: finalVideoPlan
                                                     })
                                                 });
                                                 const data = await res.json();
@@ -378,8 +444,9 @@ export default function VideoLibrary() {
                                                 } else {
                                                     toast({ title: "Failed", description: "Render failed check logs.", variant: "destructive" });
                                                 }
-                                            } catch (e) {
-                                                toast({ title: "Error", description: "Network error", variant: "destructive" });
+                                            } catch (e: any) {
+                                                console.error(e);
+                                                toast({ title: "Error", description: e.message || "Network error", variant: "destructive" });
                                             }
                                         }}
                                     />

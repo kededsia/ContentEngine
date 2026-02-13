@@ -21,8 +21,12 @@ taskkill /F /IM node.exe >nul 2>&1
 taskkill /F /IM cmd.exe /FI "WINDOWTITLE eq Konsep*" >nul 2>&1
 echo       Cleanup done.
 
+
 echo [3/4] Starting Backend Server...
 start "Konsep Backend" /min cmd /K "cd /d %~dp0backend && node server.js"
+
+echo [3.5/4] Starting Director Service (Port 3001)...
+start "Director Service" /min cmd /K "cd /d %~dp0backend && node director_service.js"
 
 echo [4/4] Starting Frontend Server...
 start "Konsep Frontend" /min cmd /K "cd /d %~dp0 && npm run dev"
@@ -37,6 +41,7 @@ echo ==========================================
 echo      SYSTEM IS RUNNING
 echo ==========================================
 echo Backend running on Port 3000
+echo Director Service running on Port 3001
 echo Frontend running on Port 8080/5173
 echo.
 pause

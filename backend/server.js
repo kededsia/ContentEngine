@@ -293,8 +293,8 @@ const TASK_VALIDATORS = {
     Script: (cleaned) => cleaned.includes('## Script 1') && cleaned.length >= 80,
     Story: (cleaned) => cleaned.includes('## Story 1') && cleaned.length >= 80,
     Research: (cleaned) => /(^|\n)\s*\d+\./.test(cleaned) && cleaned.length >= 40,
-    DirectorPlan: (cleaned) => (cleaned.startsWith('{') || cleaned.includes('```json')) && cleaned.includes('"tracks"'),
-    RemotionSkill: (cleaned) => cleaned.includes('## Remotion Skill Pack') && cleaned.includes('```json') && cleaned.length >= 400,
+    DirectorPlan: (cleaned) => (cleaned.startsWith('{') || cleaned.includes('```json')) && (cleaned.includes('segments') || cleaned.includes('script_analysis')),
+    RemotionSkill: (cleaned) => cleaned.startsWith('{') && cleaned.includes('"tracks"') && cleaned.length >= 100,
     Content: (cleaned) => cleaned.length >= 80,
     AudioAnalysis: (cleaned) => (cleaned.startsWith('{') || cleaned.includes('```json')) && cleaned.length >= 20
 };
@@ -396,15 +396,35 @@ const runGemini = (prompt, taskType = 'Content', retries = 1) => {
             // Let's exempt AudioAnalysis from Banned Phrases if strict JSON
             const isBanned = (taskType !== 'AudioAnalysis') && hasBanned;
 
+            // ... AudioAnalysis exemption ...
+            // const isBanned = (taskType !== 'AudioAnalysis') && hasBanned; // REMOVED DUPLICATE
+
             const isValid = (TASK_VALIDATORS[taskType] || TASK_VALIDATORS.Content)(cleaned);
 
+            if (!isValid) {
+                console.warn(`[Gemini Validation Failed] Type: ${taskType}`);
+                console.warn(`[Raw Length]: ${output.length}, [Cleaned Length]: ${cleaned.length}`);
+                console.warn(`[Cleaned Start]: ${cleaned.substring(0, 50)}...`);
+                // Broadcasting snippet to UI for debugging
+                broadcastLog(`[System] Val Fail ${taskType}: ${cleaned.substring(0, 50)}...`);
+            }
+
             if ((!isValid || isBanned) && retries > 0) {
+                // If it looks like Remotion JSON (tracks/width), explicitly warn the model
+                let extraInstruction = "";
+                if (taskType === 'DirectorPlan' && (cleaned.includes('tracks') || cleaned.includes('width'))) {
+                    extraInstruction = "CRITICAL: YOU ARE OUTPUTTING REMOTION CODE (tracks/width). STOP. OUTPUT ONLY THE DIRECTOR PLAN JSON (segments).";
+                }
+
                 const startMarker = taskType === 'Research' ? '1.' : (taskType === 'AudioAnalysis' ? '{' : `## ${taskType} 1`);
-                const retryPrompt = `PREVIOUS OUTPUT WAS INVALID. STOP CHATTING. CONTINUE GENERATING THE ${taskType.toUpperCase()} FROM "${startMarker}". JUST THE CONTENT. \n\n${prompt}`;
+                const retryPrompt = `PREVIOUS OUTPUT WAS INVALID. ${extraInstruction} STOP CHATTING. CONTINUE GENERATING THE ${taskType.toUpperCase()} FROM "${startMarker}". JUST THE CONTENT. \n\n${prompt}`;
                 return runGemini(retryPrompt, taskType, retries - 1).then(resolve).catch(reject);
             }
 
             if (!isValid || isBanned) {
+                // Log the failure to the user interface so they know WHY it failed
+                broadcastLog(`[System] ${taskType} Generation Failed. Output was not valid format.`);
+                console.error(`[Gemini Final Failure] Invalid Output: ${cleaned.substring(0, 200)}...`);
                 return reject(new Error(`Validation failed for ${taskType}. Output must meet format rules.`));
             }
 
@@ -533,69 +553,7 @@ const getOrRefreshTrends = async (category) => {
 
 // ... (keep existing code)
 
-function fileToGenerativePart(path, mimeType) {
-    return {
-        inlineData: {
-            data: fs.readFileSync(path).toString("base64"),
-            mimeType
-        },
-    };
-}
-
-// WRAPPER for Local Whisper Python Script
-async function transcribeAndAnalyzeAudio(filePath, mimeType = "audio/mp3") {
-    console.log("[Whisper Local] Analyzing Audio:", filePath);
-    broadcastLog(`[Audio] Starting Whisper Analysis for ${path.basename(filePath)}...`);
-
-    return new Promise((resolve, reject) => {
-        // Spawn Python script
-        const pythonProcess = spawn('python', ['transcribe_whisper.py', filePath], {
-            cwd: __dirname
-        });
-
-        let stdout = '';
-        let stderr = '';
-
-        pythonProcess.stdout.on('data', (data) => {
-            stdout += data.toString();
-        });
-
-        pythonProcess.stderr.on('data', (data) => {
-            const msg = data.toString();
-            stderr += msg;
-            // Whisper prints progress to stderr usually (e.g. 10%...)
-            // We can optional filter and broadcast specific progress lines if needed
-            if (msg.includes('%') || msg.includes('Transcribing')) {
-                broadcastLog(`[Whisper] ${msg.trim()}`);
-            }
-        });
-
-        pythonProcess.on('close', (code) => {
-            if (code !== 0) {
-                console.error(`[Whisper Error] Exit Code: ${code}, Stderr: ${stderr}`);
-                broadcastLog(`[Audio] Transcription Failed: ${stderr.substring(0, 100)}...`);
-                // Fallback: return simple error but don't crash
-                return resolve({
-                    error: "Whisper Transcription Failed",
-                    details: stderr
-                });
-            }
-
-            try {
-                // Whisper script prints JSON to stdout
-                // Note: It might print other warnings (like FP16) to stderr, which is fine.
-                const jsonOutput = JSON.parse(stdout.trim());
-                console.log("[Whisper Local] Success:", jsonOutput.script_text.substring(0, 50) + "...");
-                broadcastLog(`[Audio] Transcription Complete. Text length: ${jsonOutput.script_text.length}`);
-                resolve(jsonOutput);
-            } catch (e) {
-                console.error("[Whisper Local] JSON Parse Error:", e, stdout);
-                broadcastLog(`[Audio] JSON Parse Error from Whisper output.`);
-                resolve({ error: "Invalid JSON from Whisper" });
-            }
-        });
-    });
-}
+// function fileToGenerativePart(...) moved to director_service.js
 
 
 app.post('/api/generate-script', async (req, res) => {
@@ -660,6 +618,80 @@ ${styles.instructions_template} [SARKAS/TEGAS] dialek [DIALECT].
         res.json({ result });
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+});
+
+// [NEW] Remotion Skill Endpoint (Text -> JSON)
+app.post('/api/remotion-skill', async (req, res) => {
+    console.log('[API] POST /api/remotion-skill triggered');
+    const { script, directorPlan } = req.body;
+    const prompt = `SYSTEM: You are a Senior Remotion Developer.
+GOAL: Convert a Director's Text Plan into a structured JSON "Skill Pack" for Remotion.
+
+INPUT CONTEXT:
+Script: "${script.substring(0, 200)}..."
+Director Plan:
+${directorPlan}
+
+TARGET SCHEMA (Use this EXACTLY):
+{
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "durationInFrames": number,
+  "tracks": [
+    {
+      "type": "video",
+      "clips": [
+        {
+          "src": string, // "GEN_IMG:..." or URL
+          "startAt": number, // seconds
+          "duration": number, // seconds
+          "effect": "ken_burns" | "glitch" | "bw_filter" | "zoom_in" | "none",
+          "transition": "fade" | "slide" | "wipe" | "none"
+        }
+      ]
+    },
+    { "type": "audio", "clips": [...] },
+    {
+      "type": "text",
+      "clips": [
+        {
+          "content": string,
+          "startAt": number,
+          "duration": number,
+          "textStyle": {
+             "fontSize": number,
+             "color": string,
+             "animation": "scale" | "typewriter" | "shake" | "color_pulse"
+          }
+        }
+      ]
+    }
+  ]
+}
+
+CRITICAL MAPPING RULES:
+1. **TIMING**: Parse the "Time Range" from the plan accurately.
+2. **EFFECTS**: 
+   - Look for "Effect" column in plan -> map to 'effect'.
+   - Look for "Transition" column -> map to 'transition'.
+   - Look for "Text Anim" -> map to 'textStyle.animation'.
+3. **DEFAULTS**: 
+   - If effect is missing, use "ken_burns" for images.
+   - If transition missing, use "none".
+4. **JSON ONLY**: Output pure JSON. No markdown.
+`;
+
+    try {
+        const result = await runGemini(prompt, 'RemotionSkill');
+        // Clean markdown code blocks if present // TODO extract cleanup to helper
+        const jsonStr = result.replace(/```json/g, '').replace(/```/g, '').trim();
+        const skillPack = JSON.parse(jsonStr);
+        res.json({ skillPack });
+    } catch (error) {
+        console.error("Remotion Skill Error:", error);
+        res.status(500).json({ error: "Failed to compile skill pack: " + error.message });
     }
 });
 
@@ -1051,8 +1083,8 @@ app.post('/api/generate-video-plan', (req, res) => {
 // [REMOVED] Duplicate Auto Render Endpoint (Plan + Render) - Logic merged into first endpoint
 // app.post('/api/auto-render', async (req, res) => { ... });
 
+// [CLEANED] Old Director logic fully removed.
+
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
-
-

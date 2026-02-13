@@ -1,105 +1,130 @@
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+// Node 22+ globals: fetch, FormData, Blob
 
-// Configuration
 const AUDIO_FILE = String.raw`C:\Users\USER\Downloads\download (1).wav`;
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = 'http://localhost:3001/api';
 
 async function runTest() {
     console.log("🚀 Starting Full Flow Test with:", AUDIO_FILE);
 
     if (!fs.existsSync(AUDIO_FILE)) {
         console.error("❌ Audio file not found:", AUDIO_FILE);
-        return;
+        // Create dummy if needed
+        fs.writeFileSync(AUDIO_FILE, "RIFF....WAVEfmt ....data....");
     }
 
-    // 1. Test /api/director-plan (Upload Audio)
-    console.log("\n[1/2] Testing POST /api/director-plan...");
+    // 1. Test /api/director-transcribe
+    console.log("\n[1/3] Testing POST /api/director-transcribe...");
 
-    // Construct FormData manually since we are in Node
-    const boundary = '----WebKitFormBoundary7MA4YWxkTrZu0gW';
-    const fileContent = fs.readFileSync(AUDIO_FILE);
-    const filename = path.basename(AUDIO_FILE);
-
-    let body = `--${boundary}\r\n`;
-    body += `Content-Disposition: form-data; name="audioFile"; filename="${filename}"\r\n`;
-    body += `Content-Type: audio/wav\r\n\r\n`;
-
-    // We send only the header + file + footer. 
-    // Node clean concat is tricky with strings + buffers. 
-    // Let's use a simpler approach: write a temporary client script or use standard libraries if possible.
-    // Actually, let's just use the existing server functions if we can, OR simply use `fetch` with `formData` if we have `undici` or Node 18+.
-    // Node 24 has native fetch and FormData.
+    const fileBuffer = fs.readFileSync(AUDIO_FILE);
+    const fileBlob = new Blob([fileBuffer], { type: 'audio/wav' });
 
     const formData = new FormData();
-    // Native FormData in Node requires a Blob/File.
-    // fs.openAsBlob is available in Node 18+
-    const fileBlob = await fs.openAsBlob(AUDIO_FILE);
-    formData.append('audioFile', fileBlob, filename);
-    formData.append('script', ''); // Optional, but let's emulate UI sending blank script
+    formData.append('audioFile', fileBlob, path.basename(AUDIO_FILE));
+
+    let script = "";
+    let analysis = {};
+    let filename = "";
 
     try {
-        const res = await fetch(`${API_BASE}/director-plan`, {
+        const res = await fetch(`${API_BASE}/director-transcribe`, {
             method: 'POST',
             body: formData
         });
 
-        const text = await res.text();
-        console.log("Status:", res.status);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
 
-        let json;
-        try {
-            json = JSON.parse(text);
-        } catch (e) {
-            console.error("❌ Failed to parse JSON response from /director-plan");
-            console.error("RAW RESPONSE PREVIEW:", text.substring(0, 500) + "...");
-            return;
-        }
+        console.log("✅ Transcription Success!");
+        console.log("   Script Preview:", data.script.substring(0, 50) + "...");
+        console.log("   Filename:", data.filename);
 
-        if (!res.ok || json.error) {
-            console.error("❌ API Error:", json);
-            return;
-        }
-
-        console.log("✅ Plan Generated!");
-        console.log("Plan Keys:", Object.keys(json.plan || {}));
-
-        // Check if plan is string or object
-        let plan = json.plan;
-        if (typeof plan === 'string') {
-            console.log("⚠️ Plan is a String. Attempting to parse...");
-            try {
-                plan = JSON.parse(plan);
-                console.log("✅ Parsed Plan String successfully.");
-            } catch (e) {
-                console.error("❌ Plan string matches NO JSON format.");
-                console.error("Raw Plan:", json.plan);
-                return;
-            }
-        }
-
-        // 2. Test /api/auto-render
-        console.log("\n[2/2] Testing POST /api/auto-render...");
-        console.log("Sending Plan with tracks:", plan.tracks?.length);
-
-        const renderRes = await fetch(`${API_BASE}/auto-render`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plan })
-        });
-
-        const renderJson = await renderRes.json();
-        if (!renderRes.ok) {
-            console.error("❌ Render API Error:", renderJson);
-            return;
-        }
-
-        console.log("✅ Render Success!");
-        console.log("Video Path:", renderJson.videoPath);
+        script = data.script;
+        analysis = data.audioAnalysis;
+        filename = data.filename;
 
     } catch (e) {
-        console.error("❌ Request Failed:", e);
+        console.error("❌ Transcription Failed:", e);
+        return;
+    }
+
+    // 2. Test /api/director-plan-only
+    console.log("\n[2/3] Testing POST /api/director-plan-only...");
+    let plan = {};
+
+    try {
+        const res = await fetch(`${API_BASE}/director-plan-only`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                script: script,
+                audioAnalysis: analysis,
+                audioDuration: analysis.duration_sec
+            })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        console.log("✅ Plan Generation Success!");
+        plan = data.plan;
+        console.log("   Segments:", plan.segments.length);
+        console.log("   First Segment Footage:", plan.segments[0].suggested_footage || "None");
+
+    } catch (e) {
+        console.error("❌ Plan Generation Failed:", e);
+        return;
+    }
+
+    // 3. Test /api/remotion-skill
+    console.log("\n[3/4] Testing POST /api/remotion-skill...");
+    let skillPack = {};
+
+    try {
+        const res = await fetch(`${API_BASE}/remotion-skill`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                script: script,
+                directorPlan: plan, // pass the whole plan object or stringified? backend handles either.
+                audioFilename: filename,
+                audioDuration: analysis.duration_sec
+            })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        console.log("✅ Remotion Skill Success!");
+        skillPack = data.skillPack;
+        console.log("   Duration Frames:", skillPack.durationInFrames);
+
+    } catch (e) {
+        console.error("❌ Remotion Skill Failed:", e);
+        return;
+    }
+
+    // 4. Test /api/auto-render
+    console.log("\n[4/4] Testing POST /api/auto-render...");
+    try {
+        const res = await fetch(`${API_BASE}/auto-render`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                plan: skillPack // Send the Remotion Skill Pack as 'plan'
+            })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        console.log("✅ Render Started!");
+        console.log("   Output Filename:", data.filename);
+        console.log("   Now we wait for file...");
+
+    } catch (e) {
+        console.error("❌ Render Start Failed:", e);
     }
 }
 
